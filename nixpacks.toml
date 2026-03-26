@@ -1,0 +1,11 @@
+[phases.setup]
+nixPkgs = ["nodejs"]
+
+[phases.install]
+cmds = ["npm install"]
+
+[phases.build]
+cmds = ["rm -rf .cache", "echo 'Building...'"]
+
+[start]
+cmd = "npx serve . -p ${PORT:-3000} -s"
