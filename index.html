@@ -19,69 +19,82 @@
 
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: #F8F4EE; font-family: 'Outfit', sans-serif; color: #1E1510; }
+body { background: #F8F4EE; font-family: 'Outfit', sans-serif; color: #1E1510; font-weight: 300; }
 
-.hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; background: linear-gradient(135deg, #F8F4EE, #EFE7D8); }
+.hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; background: linear-gradient(135deg, #F8F4EE, #EFE7D8); padding: 20px; }
 .hero h1 { font-family: 'Cormorant', serif; font-size: clamp(48px, 12vw, 82px); font-weight: 300; color: #1E1510; line-height: 0.95; }
 .hero h1 span { display: block; font-style: italic; font-size: 0.5em; color: #A14B38; }
 .hero .date { color: #806558; letter-spacing: 4px; font-size: 12px; margin-top: 20px; }
 
-.nav { position: sticky; top: 0; background: rgba(248,244,238,0.95); backdrop-filter: blur(10px); display: flex; justify-content: center; gap: 20px; padding: 12px; border-bottom: 1px solid rgba(161,75,56,0.2); }
-.nav button { background: none; border: none; padding: 8px 16px; cursor: pointer; font-size: 12px; letter-spacing: 2px; color: #806558; }
+.nav { position: sticky; top: 0; background: rgba(248,244,238,0.95); backdrop-filter: blur(10px); display: flex; justify-content: center; gap: 20px; padding: 12px; border-bottom: 1px solid rgba(161,75,56,0.2); flex-wrap: wrap; z-index: 100; }
+.nav button { background: none; border: none; padding: 8px 16px; cursor: pointer; font-size: 12px; letter-spacing: 2px; color: #806558; transition: all 0.3s; }
+.nav button i { font-size: 16px; margin-right: 6px; vertical-align: middle; }
 .nav button.active { color: #A14B38; border-bottom: 2px solid #A14B38; }
 
 .sec { max-width: 600px; margin: 0 auto; padding: 60px 24px; }
-.sec h2 { font-family: 'Cormorant', serif; font-size: 36px; font-weight: 300; margin-bottom: 30px; }
+.sec h2 { font-family: 'Cormorant', serif; font-size: 36px; font-weight: 300; margin-bottom: 30px; color: #1E1510; }
 .sec h2 i { font-style: italic; color: #A14B38; }
 
 .timeline-item { margin-bottom: 30px; padding-left: 30px; border-left: 1px solid rgba(161,75,56,0.2); position: relative; }
-.timeline-item .time { font-size: 12px; color: #A14B38; }
-.timeline-item .title { font-family: 'Cormorant', serif; font-size: 20px; font-weight: 400; }
+.timeline-item .time { font-size: 12px; color: #A14B38; margin-bottom: 5px; }
+.timeline-item .title { font-family: 'Cormorant', serif; font-size: 20px; font-weight: 400; margin-bottom: 5px; }
 .timeline-item .desc { font-size: 14px; color: #806558; }
-.timeline-item::before { content: ''; position: absolute; left: -5px; top: 0; width: 9px; height: 9px; border-radius: 50%; background: #C9913A; }
+.timeline-item::before { content: ''; position: absolute; left: -5px; top: 0; width: 9px; height: 9px; border-radius: 50%; background: #C9913A; border: 2px solid #F8F4EE; }
 
 .menu-section { margin-bottom: 40px; }
-.menu-section h3 { font-size: 12px; letter-spacing: 3px; color: #A14B38; border-bottom: 1px solid rgba(161,75,56,0.2); padding-bottom: 8px; margin-bottom: 20px; }
+.menu-section h3 { font-size: 12px; letter-spacing: 3px; color: #A14B38; border-bottom: 1px solid rgba(161,75,56,0.2); padding-bottom: 8px; margin-bottom: 20px; text-transform: uppercase; }
 .menu-item { margin-bottom: 20px; }
-.menu-item .name { font-family: 'Cormorant', serif; font-size: 18px; font-weight: 400; }
+.menu-item .name { font-family: 'Cormorant', serif; font-size: 18px; font-weight: 400; margin-bottom: 4px; }
 .menu-item .desc { font-size: 13px; color: #806558; }
 
-.upload-zone { border: 2px dashed rgba(161,75,56,0.3); border-radius: 20px; padding: 40px; text-align: center; cursor: pointer; margin-bottom: 20px; }
-.upload-zone i { font-size: 48px; color: #A14B38; }
+.upload-zone { border: 2px dashed rgba(161,75,56,0.3); border-radius: 20px; padding: 40px 20px; text-align: center; cursor: pointer; transition: all 0.3s; margin-bottom: 20px; }
+.upload-zone.drag-over { border-color: #A14B38; background: rgba(161,75,56,0.05); }
+.upload-zone i { font-size: 48px; color: #A14B38; margin-bottom: 12px; display: block; }
+.upload-zone .title { font-size: 16px; margin-bottom: 6px; }
+.upload-zone .hint { font-size: 12px; color: #806558; }
 .upload-zone input { display: none; }
 
 .previews { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
 .preview-item { position: relative; width: 80px; height: 80px; }
-.preview-item img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
-.preview-remove { position: absolute; top: -6px; right: -6px; width: 22px; height: 22px; border-radius: 50%; background: #7A2A38; color: white; border: none; cursor: pointer; }
+.preview-item img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; border: 2px solid #EFE7D8; }
+.preview-remove { position: absolute; top: -6px; right: -6px; width: 22px; height: 22px; border-radius: 50%; background: #7A2A38; color: white; border: none; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; }
 
-.input-name { width: 100%; padding: 14px; background: #EFE7D8; border: 1px solid rgba(161,75,56,0.2); border-radius: 12px; margin-bottom: 16px; }
+.input-name { width: 100%; padding: 14px; background: #EFE7D8; border: 1px solid rgba(161,75,56,0.2); border-radius: 12px; font-family: inherit; font-size: 14px; margin-bottom: 16px; }
 
-.btn-primary { width: 100%; padding: 14px; background: #A14B38; color: white; border: none; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
-.btn-primary:disabled { opacity: 0.5; }
-.btn-secondary { width: 100%; padding: 12px; background: #7A2A38; color: white; border: none; border-radius: 12px; cursor: pointer; }
+.btn-primary { width: 100%; padding: 14px; background: #A14B38; color: white; border: none; border-radius: 12px; font-family: 'Outfit', sans-serif; font-size: 14px; letter-spacing: 1px; cursor: pointer; transition: transform 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.btn-primary:active { transform: scale(0.98); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 
-.progress-bar { height: 3px; background: #EFE7D8; margin: 15px 0; display: none; }
-.progress-fill { height: 100%; background: #A14B38; width: 0%; }
+.btn-secondary { width: 100%; padding: 12px; background: #7A2A38; color: white; border: none; border-radius: 12px; font-family: 'Outfit', sans-serif; font-size: 14px; letter-spacing: 1px; cursor: pointer; }
 
-.gallery-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 20px; }
+.progress-bar { height: 3px; background: #EFE7D8; border-radius: 3px; margin: 15px 0; overflow: hidden; display: none; }
+.progress-fill { height: 100%; background: #A14B38; width: 0%; transition: width 0.3s; }
+
+.gallery-header { display: flex; justify-content: space-between; align-items: center; margin: 30px 0 20px; }
+.gallery-header h3 { font-family: 'Cormorant', serif; font-size: 24px; font-weight: 300; }
+.gallery-refresh { background: none; border: none; font-size: 18px; cursor: pointer; color: #A14B38; }
+
+.gallery-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
 .gallery-card { position: relative; aspect-ratio: 1; background: #EFE7D8; border-radius: 16px; overflow: hidden; cursor: pointer; }
-.gallery-card img { width: 100%; height: 100%; object-fit: cover; }
-.gallery-card .name { position: absolute; bottom: 0; left: 0; right: 0; padding: 12px; background: linear-gradient(transparent, rgba(0,0,0,0.6)); color: white; font-size: 11px; }
+.gallery-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+.gallery-card:hover img { transform: scale(1.05); }
+.gallery-card .name { position: absolute; bottom: 0; left: 0; right: 0; padding: 12px 8px 8px; background: linear-gradient(transparent, rgba(0,0,0,0.7)); color: white; font-size: 11px; font-family: 'Cormorant', serif; font-style: italic; }
 
-.empty-gallery { text-align: center; padding: 60px; color: #806558; }
+.empty-gallery { text-align: center; padding: 60px 20px; color: #806558; grid-column: 1 / -1; }
+.empty-gallery i { font-size: 48px; margin-bottom: 16px; display: block; opacity: 0.5; }
 
 .msg-card { border-bottom: 1px solid #EFE7D8; padding: 16px 0; }
-.msg-card .name { font-size: 11px; color: #A14B38; text-transform: uppercase; }
-.msg-card .message { font-family: 'Cormorant', serif; font-size: 18px; margin: 8px 0; }
+.msg-card .name { font-size: 11px; letter-spacing: 1px; color: #A14B38; margin-bottom: 6px; text-transform: uppercase; }
+.msg-card .message { font-family: 'Cormorant', serif; font-size: 18px; line-height: 1.4; margin-bottom: 6px; }
 .msg-card .date { font-size: 11px; color: #806558; }
 
-.toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1E1510; color: white; padding: 12px 24px; border-radius: 50px; font-size: 13px; opacity: 0; transition: opacity 0.3s; z-index: 10000; }
+.toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1E1510; color: white; padding: 12px 24px; border-radius: 50px; font-size: 13px; opacity: 0; transition: opacity 0.3s; z-index: 10000; pointer-events: none; white-space: nowrap; }
 .toast.show { opacity: 1; }
 .toast.error { background: #7A2A38; }
 
-.footer { text-align: center; padding: 60px 24px; border-top: 1px solid rgba(161,75,56,0.1); }
-.footer .monogram { font-family: 'Cormorant', serif; font-size: 28px; font-style: italic; color: #C9913A; }
+.footer { text-align: center; padding: 60px 24px 40px; border-top: 1px solid rgba(161,75,56,0.1); }
+.footer .monogram { font-family: 'Cormorant', serif; font-size: 28px; font-style: italic; color: #C9913A; margin-bottom: 12px; }
+.footer .date { font-size: 10px; letter-spacing: 3px; color: #806558; }
 </style>
 </head>
 <body>
@@ -94,59 +107,96 @@ body { background: #F8F4EE; font-family: 'Outfit', sans-serif; color: #1E1510; }
 </div>
 
 <nav class="nav">
-  <button data-sec="cronograma" class="active">Cronograma</button>
-  <button data-sec="cardapio">Cardápio</button>
-  <button data-sec="album">Álbum</button>
-  <button data-sec="mensagens">Mensagens</button>
+  <button data-sec="cronograma" class="active"><i class="bi bi-calendar3"></i> Cronograma</button>
+  <button data-sec="cardapio"><i class="bi bi-cup-hot"></i> Cardápio</button>
+  <button data-sec="album"><i class="bi bi-camera"></i> Álbum</button>
+  <button data-sec="mensagens"><i class="bi bi-envelope-heart"></i> Mensagens</button>
 </nav>
 
+<!-- CRONOGRAMA -->
 <section id="cronograma" class="sec">
   <h2>O dia mais <i>especial</i></h2>
-  <div class="timeline-item"><div class="time">11h30</div><div class="title">Chegada & Aperitivos</div><div class="desc">Recepção no jardim</div></div>
+  <div class="timeline-item"><div class="time">11h30</div><div class="title">Chegada & Aperitivos</div><div class="desc">Recepção com aperitivos de boas-vindas no jardim</div></div>
   <div class="timeline-item"><div class="time">12h30</div><div class="title">Cerimônia</div><div class="desc">Troca de votos</div></div>
-  <div class="timeline-item"><div class="time">13h30</div><div class="title">Almoço</div><div class="desc">Celebração</div></div>
-  <div class="timeline-item"><div class="time">14h30</div><div class="title">Pista de Dança</div><div class="desc">Open bar</div></div>
-  <div class="timeline-item"><div class="time">17h00</div><div class="title">Corte do Bolo</div><div class="desc">Festa continua</div></div>
+  <div class="timeline-item"><div class="time">13h30</div><div class="title">Almoço e Brindes de Celebração</div><div class="desc">Com brinde e muita alegria</div></div>
+  <div class="timeline-item"><div class="time">14h30</div><div class="title">Pista de Dança</div><div class="desc">DJ comanda a pista e open bar</div></div>
+  <div class="timeline-item"><div class="time">17h00</div><div class="title">Corte do Bolo</div><div class="desc">Momento mais doce da festa</div></div>
 </section>
 
+<!-- CARDÁPIO -->
 <section id="cardapio" class="sec">
   <h2>Sabores <i>do amor</i></h2>
-  <div class="menu-section"><h3>Aperitivos</h3><div class="menu-item"><div class="name">Pães artesanais</div><div class="desc">Beterraba, cenoura, brócolis e trigo com patês</div></div></div>
-  <div class="menu-section"><h3>Almoço</h3><div class="menu-item"><div class="name">Massas Caseiras</div><div class="desc">Talharim, raviolli e capeletti</div></div><div class="menu-item"><div class="name">Carnes</div><div class="desc">Fraudinha e frango grelhado</div></div></div>
-  <div class="menu-section"><h3>Bebidas</h3><div class="menu-item"><div class="name">Cervejas, Sangria, Caipirinha</div><div class="desc">Nacionais e internacionais</div></div></div>
-  <div class="menu-section"><h3>Sobremesa</h3><div class="menu-item"><div class="name">Bolo de Casamento</div><div class="desc">Chocolate e branco com nozes</div></div></div>
+  <div class="menu-section"><h3>Aperitivos</h3>
+    <div class="menu-item"><div class="name">Sanduíches de Pães Artesanais</div><div class="desc">Beterraba com patê de atum, cenoura e brócolis com patê de frango, trigo com queijo</div></div>
+    <div class="menu-item"><div class="name">Patês</div><div class="desc">Azeitona preta e frango com ervas</div></div>
+  </div>
+  <div class="menu-section"><h3>Almoço</h3>
+    <div class="menu-item"><div class="name">Saladas Especiais</div><div class="desc">Mix de folhas, tomate cereja, palmito</div></div>
+    <div class="menu-item"><div class="name">Salada Marroquina</div><div class="desc">Cebola, alho, currt, gengibre, vinagre, mel e azeite</div></div>
+    <div class="menu-item"><div class="name">Salada de Abobrinha</div><div class="desc">Abobrinha, tomate, limão, alho, salsinha, azeite e azeitonas</div></div>
+    <div class="menu-item"><div class="name">Massas Caseiras das Noivas</div><div class="desc">Talharim, raviolli de queijo, raviolli de ricota e capeletti com molhos ao sugo, bechamel ou bolonhesa</div></div>
+    <div class="menu-item"><div class="name">Carnes</div><div class="desc">Fraudinha e frango grelhado na churrasqueira</div></div>
+  </div>
+  <div class="menu-section"><h3>Bebidas</h3>
+    <div class="menu-item"><div class="name">Cervejas</div><div class="desc">Nacionais e internacionais (com e sem álcool)</div></div>
+    <div class="menu-item"><div class="name">Sangria & Caipirinha</div><div class="desc">Sangria de vinho branco com frutas e Caipirinha de cachaça com limão</div></div>
+    <div class="menu-item"><div class="name">Sucos & Refrigerantes</div><div class="desc">Laranja natural, uva, abacaxi, Coca-Cola, Guaraná, Fanta</div></div>
+  </div>
+  <div class="menu-section"><h3>Sobremesa</h3>
+    <div class="menu-item"><div class="name">Bolo de Casamento</div><div class="desc">Chocolate com recheio de ganache e branco com recheio de nozes</div></div>
+    <div class="menu-item"><div class="name">Mesa de Doces</div><div class="desc">Trufas, barquinha recheada, brigadeiros gourmet</div></div>
+    <div class="menu-item"><div class="name">Frutas</div><div class="desc">Frutas da estação</div></div>
+  </div>
 </section>
 
+<!-- ÁLBUM -->
 <section id="album" class="sec">
   <h2>Registre esse <i>momento</i></h2>
+  <p style="color: #806558; margin-bottom: 30px;">Cada foto sua é um pedacinho desta memória que vamos guardar para sempre.</p>
   
   <div class="upload-zone" id="dropZone">
     <i class="bi bi-cloud-arrow-up"></i>
-    <div>Clique ou arraste fotos aqui</div>
+    <div class="title">Clique ou arraste fotos aqui</div>
+    <div class="hint">JPG, PNG até 10MB</div>
     <input type="file" id="fileInput" multiple accept="image/*">
   </div>
   
-  <div id="previews"></div>
-  <input type="text" id="uploaderName" class="input-name" placeholder="Seu nome" style="display:none">
-  <button class="btn-primary" id="uploadBtn" style="display:none"><i class="bi bi-cloud-arrow-up"></i> Enviar Fotos</button>
+  <div id="previews" class="previews"></div>
+  <input type="text" id="uploaderName" class="input-name" placeholder="Seu nome" style="display: none;">
+  <button class="btn-primary" id="uploadBtn" style="display: none;"><i class="bi bi-cloud-arrow-up"></i> Enviar Fotos</button>
   <div class="progress-bar" id="progressBar"><div class="progress-fill" id="progressFill"></div></div>
   
-  <div id="galleryGrid" class="gallery-grid"><div class="empty-gallery">📸 Carregando fotos...</div></div>
+  <div class="gallery-header">
+    <h3>Galeria do Evento</h3>
+    <button class="gallery-refresh" id="refreshBtn" title="Atualizar"><i class="bi bi-arrow-clockwise"></i></button>
+  </div>
+  <div id="galleryGrid" class="gallery-grid"><div class="empty-gallery"><i class="bi bi-camera"></i><p>Carregando fotos...</p></div></div>
 </section>
 
+<!-- MENSAGENS -->
 <section id="mensagens" class="sec">
   <h2>Uma mensagem <i>especial</i></h2>
+  <p style="color: #806558; margin-bottom: 30px;">Deixe aqui suas palavras — o maior presente que poderíamos receber hoje.</p>
+  
   <input type="text" id="msgName" class="input-name" placeholder="Seu nome">
   <textarea id="msgText" class="input-name" rows="3" placeholder="Sua mensagem..."></textarea>
   <button class="btn-secondary" id="sendMsgBtn"><i class="bi bi-send"></i> Enviar Mensagem</button>
-  <div style="margin-top: 40px;"><div id="messagesList"></div></div>
+  
+  <div style="margin-top: 50px;">
+    <h3 style="font-family: 'Cormorant', serif; font-size: 24px; font-weight: 300; margin-bottom: 20px;">O que os convidados dizem</h3>
+    <div id="messagesList"></div>
+  </div>
 </section>
 
-<footer class="footer"><div class="monogram">L & C</div><div class="date">28 · 03 · 2026</div></footer>
+<footer class="footer">
+  <div class="monogram">L & C</div>
+  <div class="date">28 · 03 · 2026</div>
+</footer>
+
 <div class="toast" id="toast"></div>
 
 <script>
-// Firebase Config
+// ==================== FIREBASE CONFIG ====================
 const firebaseConfig = {
   apiKey: "AIzaSyAf7gNoR5FnjgkweX-uoWRtuxCl3XEOKoo",
   authDomain: "expert-marriage-day-32ee3.firebaseapp.com",
@@ -160,13 +210,15 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const storage = firebase.storage();
 
-// NOME DA COLEÇÃO PRINCIPAL
-const COLECAO = 'album123';
+// ESTRUTURA: /casamento/fotos e /casamento/mensagens
+const FOTOS_COLLECTION = db.collection('casamento').doc('fotos').collection('fotos');
+const MENSAGENS_COLLECTION = db.collection('casamento').doc('mensagens').collection('mensagens');
 
-console.log('🔥 Firebase conectado');
-console.log('📁 Coleção:', COLECAO);
+console.log('🔥 Firebase conectado!');
+console.log('📁 Fotos:', 'casamento/fotos/fotos');
+console.log('📁 Mensagens:', 'casamento/mensagens/mensagens');
 
-// Toast
+// ==================== FUNÇÕES AUXILIARES ====================
 function toast(msg, isError = false) {
   const el = document.getElementById('toast');
   el.textContent = msg;
@@ -184,7 +236,7 @@ function escapeHtml(str) {
   });
 }
 
-// Navegação
+// ==================== NAVEGAÇÃO ====================
 document.querySelectorAll('.nav button').forEach(btn => {
   btn.onclick = () => {
     document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
@@ -206,29 +258,42 @@ const progressBar = document.getElementById('progressBar');
 const progressFill = document.getElementById('progressFill');
 
 dropZone.onclick = () => fileInput.click();
-dropZone.ondragover = (e) => { e.preventDefault(); dropZone.style.background = '#f0e8dc'; };
-dropZone.ondragleave = () => { dropZone.style.background = 'transparent'; };
+
+dropZone.ondragover = (e) => {
+  e.preventDefault();
+  dropZone.classList.add('drag-over');
+};
+
+dropZone.ondragleave = () => {
+  dropZone.classList.remove('drag-over');
+};
+
 dropZone.ondrop = (e) => {
   e.preventDefault();
-  dropZone.style.background = 'transparent';
-  addFiles(Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/')));
+  dropZone.classList.remove('drag-over');
+  const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+  addFiles(files);
 };
+
 fileInput.onchange = (e) => addFiles(Array.from(e.target.files));
 
 function addFiles(files) {
   files.forEach(file => {
     if (file.size > 10 * 1024 * 1024) {
-      toast(`${file.name} é muito grande`, true);
+      toast(`${file.name} é muito grande (max 10MB)`, true);
       return;
     }
     selectedFiles.push(file);
+    
     const wrap = document.createElement('div');
     wrap.className = 'preview-item';
+    
     const img = document.createElement('img');
     img.src = URL.createObjectURL(file);
+    
     const remove = document.createElement('button');
     remove.className = 'preview-remove';
-    remove.innerHTML = '✕';
+    remove.innerHTML = '<i class="bi bi-x"></i>';
     remove.onclick = () => {
       selectedFiles = selectedFiles.filter(f => f !== file);
       wrap.remove();
@@ -237,78 +302,85 @@ function addFiles(files) {
         uploaderName.style.display = 'none';
       }
     };
+    
     wrap.appendChild(img);
     wrap.appendChild(remove);
     previewsDiv.appendChild(wrap);
   });
-  if (selectedFiles.length) {
+  
+  if (selectedFiles.length > 0) {
     uploadBtn.style.display = 'flex';
     uploaderName.style.display = 'block';
   }
 }
 
 uploadBtn.onclick = async () => {
-  if (!selectedFiles.length) return;
+  if (selectedFiles.length === 0) return;
+  
   const name = uploaderName.value.trim() || 'Convidado';
+  const totalFiles = selectedFiles.length;
+  let successCount = 0;
+  
   uploadBtn.disabled = true;
   uploadBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Enviando...';
   progressBar.style.display = 'block';
   progressFill.style.width = '0%';
   
-  let success = 0;
-  const total = selectedFiles.length;
-  
-  for (let i = 0; i < total; i++) {
+  for (let i = 0; i < totalFiles; i++) {
     const file = selectedFiles[i];
     const ext = file.name.split('.').pop().toLowerCase();
     const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+    const storageRef = storage.ref(`photos/${filename}`);
+    
     try {
-      const snapshot = await storage.ref(`photos/${filename}`).put(file);
+      const snapshot = await storageRef.put(file);
       const url = await snapshot.ref.getDownloadURL();
-      // Salvar na coleção album123 com tipo 'foto'
-      await db.collection(COLECAO).add({ 
-        tipo: 'foto',
-        url: url, 
-        nome: name, 
-        createdAt: firebase.firestore.FieldValue.serverTimestamp() 
+      
+      // Salvar na subcoleção /casamento/fotos/fotos
+      await FOTOS_COLLECTION.add({
+        url: url,
+        nome: name,
+        data: firebase.firestore.FieldValue.serverTimestamp()
       });
-      success++;
-      progressFill.style.width = `${((i+1)/total)*100}%`;
-    } catch(err) { 
-      console.error('Erro:', err); 
-      toast(`Erro: ${err.message}`, true); 
+      
+      successCount++;
+      progressFill.style.width = `${((i + 1) / totalFiles) * 100}%`;
+      
+    } catch (err) {
+      console.error('Erro no upload:', err);
+      toast(`Erro: ${err.message}`, true);
     }
   }
   
+  // Limpar tudo
   selectedFiles = [];
   previewsDiv.innerHTML = '';
   uploadBtn.style.display = 'none';
   uploaderName.style.display = 'none';
   uploaderName.value = '';
   progressBar.style.display = 'none';
+  progressFill.style.width = '0%';
   fileInput.value = '';
   uploadBtn.disabled = false;
   uploadBtn.innerHTML = '<i class="bi bi-cloud-arrow-up"></i> Enviar Fotos';
-  toast(`✅ ${success} de ${total} foto(s) enviada(s)!`);
-  loadGallery();
+  
+  toast(`✅ ${successCount} de ${totalFiles} foto(s) enviada(s)!`);
+  await loadGallery();
 };
 
 // ==================== GALERIA ====================
 async function loadGallery() {
   const grid = document.getElementById('galleryGrid');
-  grid.innerHTML = '<div class="empty-gallery">📸 Carregando fotos...</div>';
+  grid.innerHTML = '<div class="empty-gallery"><i class="bi bi-hourglass-split"></i><p>Carregando fotos...</p></div>';
+  
   try {
-    // Buscar apenas documentos com tipo 'foto'
-    const snap = await db.collection(COLECAO)
-      .where('tipo', '==', 'foto')
-      .orderBy('createdAt', 'desc')
-      .get();
+    const snap = await FOTOS_COLLECTION.orderBy('data', 'desc').get();
     
     console.log(`📸 Fotos encontradas: ${snap.size}`);
     
-    if (snap.empty) { 
-      grid.innerHTML = '<div class="empty-gallery">📸 Nenhuma foto ainda. Seja o primeiro!</div>'; 
-      return; 
+    if (snap.empty) {
+      grid.innerHTML = '<div class="empty-gallery"><i class="bi bi-camera"></i><p>Nenhuma foto ainda. Seja o primeiro a enviar!</p></div>';
+      return;
     }
     
     grid.innerHTML = '';
@@ -317,18 +389,24 @@ async function loadGallery() {
       const card = document.createElement('div');
       card.className = 'gallery-card';
       card.onclick = () => window.open(p.url, '_blank');
-      card.innerHTML = `<img src="${p.url}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect fill=%22%23EFE7D8%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23806558%22%3E❌%3C/text%3E%3C/svg%3E'"><div class="name">${escapeHtml(p.nome)}</div>`;
+      card.innerHTML = `
+        <img src="${p.url}" alt="Foto de ${escapeHtml(p.nome)}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect fill=%22%23EFE7D8%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23806558%22%3E❌%3C/text%3E%3C/svg%3E'">
+        <div class="name">${escapeHtml(p.nome)}</div>
+      `;
       grid.appendChild(card);
     });
-  } catch(e) { 
-    console.error('Erro ao carregar galeria:', e);
-    grid.innerHTML = `<div class="empty-gallery">❌ Erro: ${e.message}</div>`; 
+    
+  } catch (err) {
+    console.error('Erro ao carregar galeria:', err);
+    grid.innerHTML = `<div class="empty-gallery"><i class="bi bi-wifi-off"></i><p>Erro: ${err.message}</p></div>`;
   }
 }
 
-// ==================== SINCRONIZAR FOTOS ANTIGAS ====================
+document.getElementById('refreshBtn').onclick = () => loadGallery();
+
+// ==================== SINCRONIZAR FOTOS ANTIGAS DO STORAGE ====================
 async function sincronizarFotosAntigas() {
-  const sincronizado = localStorage.getItem('fotos_sincronizadas_album123_v2');
+  const sincronizado = localStorage.getItem('fotos_sincronizadas_v4');
   if (sincronizado) {
     console.log('✅ Fotos já sincronizadas anteriormente');
     return;
@@ -341,12 +419,12 @@ async function sincronizarFotosAntigas() {
     console.log(`📸 Encontradas ${result.items.length} fotos no Storage`);
     
     if (result.items.length === 0) {
-      localStorage.setItem('fotos_sincronizadas_album123_v2', 'true');
+      localStorage.setItem('fotos_sincronizadas_v4', 'true');
       return;
     }
     
-    // Buscar URLs já existentes no Firestore
-    const snapshot = await db.collection(COLECAO).where('tipo', '==', 'foto').get();
+    // Buscar URLs já existentes
+    const snapshot = await FOTOS_COLLECTION.get();
     const urlsExistentes = new Set();
     snapshot.forEach(doc => {
       urlsExistentes.add(doc.data().url);
@@ -359,11 +437,10 @@ async function sincronizarFotosAntigas() {
       const url = await item.getDownloadURL();
       
       if (!urlsExistentes.has(url)) {
-        await db.collection(COLECAO).add({
-          tipo: 'foto',
+        await FOTOS_COLLECTION.add({
           url: url,
           nome: "Convidado",
-          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          data: firebase.firestore.FieldValue.serverTimestamp()
         });
         console.log(`✅ Foto sincronizada: ${item.name}`);
         adicionadas++;
@@ -378,7 +455,7 @@ async function sincronizarFotosAntigas() {
       console.log('✨ Todas as fotos já estavam sincronizadas');
     }
     
-    localStorage.setItem('fotos_sincronizadas_album123_v2', 'true');
+    localStorage.setItem('fotos_sincronizadas_v4', 'true');
     
   } catch (err) {
     console.error('❌ Erro na sincronização:', err);
@@ -388,118 +465,81 @@ async function sincronizarFotosAntigas() {
 // ==================== MENSAGENS ====================
 async function sendMessage() {
   const name = document.getElementById('msgName').value.trim();
-  const msg = document.getElementById('msgText').value.trim();
+  const message = document.getElementById('msgText').value.trim();
+  
   if (!name) { toast('Digite seu nome', true); return; }
-  if (!msg) { toast('Digite sua mensagem', true); return; }
+  if (!message) { toast('Digite sua mensagem', true); return; }
+  
   const btn = document.getElementById('sendMsgBtn');
   btn.disabled = true;
   btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Enviando...';
+  
   try {
-    await db.collection(COLECAO).add({ 
-      tipo: 'mensagem',
-      nome: name, 
-      mensagem: msg, 
-      createdAt: firebase.firestore.FieldValue.serverTimestamp() 
+    await MENSAGENS_COLLECTION.add({
+      nome: name,
+      mensagem: message,
+      data: firebase.firestore.FieldValue.serverTimestamp()
     });
+    
     document.getElementById('msgName').value = '';
     document.getElementById('msgText').value = '';
-    toast('💌 Mensagem enviada!');
-    loadMessages();
-  } catch(e) { 
-    console.error('Erro:', e);
-    toast('Erro ao enviar', true); 
+    toast('💌 Mensagem enviada! Obrigado!');
+    await loadMessages();
+    
+  } catch (err) {
+    console.error('Erro:', err);
+    toast('Erro ao enviar mensagem', true);
   }
+  
   btn.disabled = false;
   btn.innerHTML = '<i class="bi bi-send"></i> Enviar Mensagem';
 }
 
 async function loadMessages() {
   const list = document.getElementById('messagesList');
-  list.innerHTML = '<div style="text-align:center; padding:20px">Carregando...</div>';
+  list.innerHTML = '<div style="text-align: center; padding: 20px; color: #806558;">Carregando mensagens...</div>';
+  
   try {
-    const snap = await db.collection(COLECAO)
-      .where('tipo', '==', 'mensagem')
-      .orderBy('createdAt', 'desc')
-      .limit(20)
-      .get();
+    const snap = await MENSAGENS_COLLECTION.orderBy('data', 'desc').limit(20).get();
     
     console.log(`📝 Mensagens encontradas: ${snap.size}`);
     
-    if (snap.empty) { 
-      list.innerHTML = '<div style="text-align:center; padding:20px">💬 Seja o primeiro a deixar uma mensagem!</div>'; 
-      return; 
+    if (snap.empty) {
+      list.innerHTML = '<div style="text-align: center; padding: 20px; color: #806558;">💬 Seja o primeiro a deixar uma mensagem!</div>';
+      return;
     }
+    
     list.innerHTML = '';
     snap.forEach(doc => {
       const m = doc.data();
-      const date = m.createdAt ? new Date(m.createdAt.toDate()).toLocaleString('pt-BR') : '';
-      list.innerHTML += `<div class="msg-card"><div class="name">${escapeHtml(m.nome)}</div><div class="message">${escapeHtml(m.mensagem)}</div><div class="date">${date}</div></div>`;
+      const date = m.data ? new Date(m.data.toDate()).toLocaleString('pt-BR') : '';
+      const div = document.createElement('div');
+      div.className = 'msg-card';
+      div.innerHTML = `
+        <div class="name">${escapeHtml(m.nome)}</div>
+        <div class="message">${escapeHtml(m.mensagem)}</div>
+        <div class="date">${date}</div>
+      `;
+      list.appendChild(div);
     });
-  } catch(e) { 
-    console.error('Erro ao carregar mensagens:', e);
-    list.innerHTML = '<div style="text-align:center; padding:20px">❌ Erro ao carregar</div>'; 
+    
+  } catch (err) {
+    console.error('Erro ao carregar mensagens:', err);
+    list.innerHTML = `<div style="text-align: center; padding: 20px; color: #7A2A38;">❌ Erro: ${err.message}</div>`;
   }
 }
 
 document.getElementById('sendMsgBtn').onclick = sendMessage;
 
-// ==================== MIGRAR DADOS EXISTENTES ====================
-async function migrarDadosExistentes() {
-  const migrado = localStorage.getItem('dados_migrados_album123');
-  if (migrado) return;
-  
-  console.log('🔄 Verificando dados antigos para migrar...');
-  
-  try {
-    // Tentar buscar fotos antigas que possam estar em outra estrutura
-    const fotosAntigas = await db.collection('photos').get();
-    if (!fotosAntigas.empty) {
-      console.log(`📸 Encontradas ${fotosAntigas.size} fotos na coleção antiga 'photos'`);
-      for (const doc of fotosAntigas.docs) {
-        const data = doc.data();
-        await db.collection(COLECAO).add({
-          tipo: 'foto',
-          url: data.url,
-          nome: data.name || 'Convidado',
-          createdAt: data.createdAt || firebase.firestore.FieldValue.serverTimestamp()
-        });
-        console.log(`✅ Foto migrada: ${data.url?.substring(0, 50)}`);
-      }
-    }
-    
-    const mensagensAntigas = await db.collection('messages').get();
-    if (!mensagensAntigas.empty) {
-      console.log(`📝 Encontradas ${mensagensAntigas.size} mensagens na coleção antiga 'messages'`);
-      for (const doc of mensagensAntigas.docs) {
-        const data = doc.data();
-        await db.collection(COLECAO).add({
-          tipo: 'mensagem',
-          nome: data.name,
-          mensagem: data.message,
-          createdAt: data.createdAt || firebase.firestore.FieldValue.serverTimestamp()
-        });
-        console.log(`✅ Mensagem migrada: ${data.name}`);
-      }
-    }
-    
-    localStorage.setItem('dados_migrados_album123', 'true');
-    console.log('🎉 Migração de dados antigos concluída!');
-    
-  } catch (err) {
-    console.log('ℹ️ Nenhum dado antigo para migrar ou erro:', err.message);
-  }
-}
-
 // ==================== INICIAR ====================
 async function iniciar() {
-  await migrarDadosExistentes();      // Migra dados das coleções antigas (photos, messages)
-  await sincronizarFotosAntigas();    // Sincroniza fotos do Storage
+  await sincronizarFotosAntigas();  // Sincroniza fotos antigas do Storage
   await loadGallery();
   await loadMessages();
 }
 
 iniciar();
-toast('🔥 Bem-vindos ao nosso casamento!');
+toast('🔥 Bem-vindos ao nosso casamento!', false);
 </script>
 </body>
 </html>
