@@ -1,0 +1,11 @@
+{
+  "firestore": {
+    "database": "album123",
+    "location": "southamerica-east1",
+    "rules": "y",
+    "indexes": "n"
+  },
+  "storage": {
+    "rules": "storage.rules "
+  }
+}

@@ -1282,45 +1282,72 @@ function uploadOneFile(file, uploaderName, fileIndex, totalFiles) {
   });
 }
 
-async function uploadPhotos() {
-  if (!selectedFiles.length) return;
-
-  const uploaderName = document.getElementById('uploader-name').value.trim() || 'Convidado';
-  btnUpload.disabled = true;
-  btnUpload.innerHTML = '<i class="bi bi-hourglass-split"></i> Enviando…';
-  progressEl.style.display = 'block';
-  progressBar.style.width = '0%';
-
-  let done = 0;
+uploadBtn.onclick = async () => {
+  if (selectedFiles.length === 0) {
+    showToast('Selecione uma foto primeiro', true);
+    return;
+  }
+  
+  const name = uploaderName.value.trim() || 'Convidado';
+  uploadBtn.disabled = true;
+  uploadBtn.textContent = '⏳ Enviando...';
+  progressBar.style.display = 'block';
+  progressFill.style.width = '0%';
+  
+  let successCount = 0;
+  
   for (let i = 0; i < selectedFiles.length; i++) {
+    const file = selectedFiles[i];
+    const ext = file.name.split('.').pop().toLowerCase();
+    const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+    const storageRef = storage.ref(`photos/${filename}`);
+    
     try {
-      await uploadOneFile(selectedFiles[i], uploaderName, i, selectedFiles.length);
-      done++;
+      console.log(`📤 Enviando ${filename}...`);
+      
+      // 1. Upload para o Storage
+      const snapshot = await storageRef.put(file);
+      const url = await snapshot.ref.getDownloadURL();
+      console.log(`✅ Upload Storage OK: ${url.substring(0, 60)}...`);
+      
+      // 2. Salvar no Firestore (CRUCIAL!)
+      const docRef = await db.collection('photos').add({
+        url: url,
+        name: name,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      console.log(`✅ Salvo no Firestore! ID: ${docRef.id}`);
+      
+      successCount++;
+      progressFill.style.width = `${((i + 1) / selectedFiles.length) * 100}%`;
+      
     } catch (err) {
-      console.error(err);
-      toast('Erro ao enviar ' + selectedFiles[i].name, true);
+      console.error('❌ Erro detalhado:', err);
+      showToast(`Erro: ${err.message}`, true);
     }
   }
-
-  progressBar.style.width = '100%';
-  setTimeout(() => {
-    progressEl.style.display = 'none';
-    progressBar.style.width = '0%';
-  }, 700);
-
-  toast(done + ' foto' + (done > 1 ? 's' : '') + ' enviada' + (done > 1 ? 's' : '') + '!');
-
+  
+  // Feedback final
+  if (successCount > 0) {
+    showToast(`✅ ${successCount} de ${selectedFiles.length} foto(s) enviada(s)!`);
+  } else {
+    showToast(`❌ Nenhuma foto foi enviada. Verifique o console.`, true);
+  }
+  
+  // Reset do formulário
   selectedFiles = [];
-  previewsEl.innerHTML = '';
-  btnUpload.style.display = 'none';
-  nameRow.style.display = 'none';
-  btnUpload.disabled = false;
-  btnUpload.innerHTML = '<i class="bi bi-cloud-arrow-up"></i> Enviar Fotos';
+  previewsDiv.innerHTML = '';
+  uploadBtn.style.display = 'none';
+  uploaderName.style.display = 'none';
+  uploaderName.value = '';
+  uploadBtn.disabled = false;
+  uploadBtn.textContent = '📤 Enviar Fotos';
+  progressBar.style.display = 'none';
   fileInput.value = '';
-  document.getElementById('uploader-name').value = '';
-
-  loadGallery(true);
-}
+  
+  // Recarregar a galeria
+  await loadGallery();
+};
 
 btnUpload.onclick = uploadPhotos;
 
@@ -1515,11 +1542,6 @@ function formatDate(ts) {
 loadGallery(true);
 loadMessages();
 </script>
-
-<!-- Botão de teste -->
-<button id="testBtn" style="position:fixed; bottom:10px; right:10px; background:#A14B38; color:white; border:none; padding:10px; border-radius:20px; font-size:12px; z-index:9999">
-  🧪 Testar Firebase
-</button>
 
 <script>
 // ========== TESTE DO FIREBASE ==========
