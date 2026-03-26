@@ -7,367 +7,970 @@
 <title>Lauane & Carolina · 28.03.2026</title>
 
 <link rel="icon" href="/favicon.ico" />
-<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Outfit:wght@200;300;400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
 
-:root{
-  --cream:#F8F4EE;
-  --parch:#EFE7D8;
-  --terra:#A14B38;
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+:root {
+  --cream: #F8F4EE;
+  --parch: #EFE7D8;
+  --terra: #A14B38;
   --deep: #7A2A38;
   --gold: #C9913A;
-  --ink:  #1E1510;
-  --muted:#806558;
-  --S:'Cormorant','Cormorant Garamond',Georgia,serif;
-  --B:'Outfit',system-ui,sans-serif;
+  --ink: #1E1510;
+  --muted: #806558;
+  --S: 'Cormorant', 'Cormorant Garamond', Georgia, serif;
+  --B: 'Outfit', system-ui, sans-serif;
 }
 
-body{background:var(--cream);color:var(--ink);font-family:var(--B);font-weight:300;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
-
-body::before{content:'';position:fixed;inset:0;z-index:8000;pointer-events:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='.032'/%3E%3C/svg%3E");}
-
-/* ── HERO ───────────────────────────────────────── */
-.hero{min-height:100dvh;position:relative;display:grid;place-items:center;overflow:hidden;background:var(--cream);}
-.hero__orbit{position:absolute;width:min(92vw,460px);height:min(92vw,460px);border-radius:50%;border:1px solid rgba(201,145,58,.14);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;}
-.hero__orbit-2{position:absolute;width:min(70vw,340px);height:min(70vw,340px);border-radius:50%;border:1px solid rgba(201,145,58,.08);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;}
-.hero__botanical{position:absolute;top:0;left:50%;transform:translateX(-50%);width:min(100vw,440px);pointer-events:none;opacity:0;animation:fadeUp 1.1s .2s cubic-bezier(.16,1,.3,1) forwards;}
-.hero__body{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 32px;}
-.hero__occasion{font-family:var(--B);font-size:8.5px;font-weight:400;letter-spacing:.38em;text-transform:uppercase;color:var(--terra);opacity:0;animation:fadeUp .7s .7s cubic-bezier(.16,1,.3,1) forwards;margin-bottom:32px;}
-.hero__names{font-family:var(--S);font-weight:300;font-size:clamp(54px,14vw,82px);line-height:.92;letter-spacing:-.01em;color:var(--ink);opacity:0;animation:fadeUp 1.1s .9s cubic-bezier(.16,1,.3,1) forwards;}
-.hero__connector{display:block;font-style:italic;font-size:.52em;color:var(--terra);line-height:2;letter-spacing:.06em;}
-.hero__line{width:1px;height:52px;background:linear-gradient(to bottom,transparent,var(--gold),transparent);margin:30px auto;opacity:0;animation:fadeUp .5s 1.4s forwards;}
-.hero__date{font-size:9.5px;font-weight:300;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);opacity:0;animation:fadeUp .6s 1.55s forwards;margin-bottom:14px;}
-.hero__poem{font-family:var(--S);font-style:italic;font-weight:300;font-size:16.5px;line-height:1.82;color:var(--muted);max-width:240px;opacity:0;animation:fadeUp .7s 1.7s forwards;}
-.hero__cue{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;opacity:0;animation:fadeUp .6s 2.2s forwards;-webkit-tap-highlight-color:transparent;}
-.hero__cue-label{font-size:8px;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);}
-.hero__cue-stem{width:1px;height:38px;background:linear-gradient(to bottom,var(--gold),transparent);animation:breathe 2.4s 2.8s ease-in-out infinite;}
-
-/* ── NAV ──────────────────────────────────────── */
-.nav{position:sticky;top:0;z-index:600;background:rgba(248,244,238,.88);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid rgba(161,75,56,.1);}
-.nav__row{display:flex;max-width:600px;margin:0 auto;}
-.nav__tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 6px 12px;background:none;border:none;font-family:var(--B);font-size:8.5px;font-weight:300;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);cursor:pointer;position:relative;transition:color .2s;-webkit-tap-highlight-color:transparent;white-space:nowrap;}
-.nav__tab i{font-size:18px;}
-.nav__tab::after{content:'';position:absolute;bottom:0;left:12%;right:12%;height:1.5px;background:var(--terra);transform:scaleX(0);transform-origin:left;transition:transform .3s cubic-bezier(.16,1,.3,1);}
-.nav__tab.is-active{color:var(--terra);}
-.nav__tab.is-active::after{transform:scaleX(1);}
-
-/* ── SECTION BASE ─────────────────────────────── */
-.sec{padding:72px 28px 80px;max-width:560px;margin:0 auto;position:relative;}
-.sec+.sec{border-top:1px solid rgba(161,75,56,.07);}
-.sec__tag{font-family:var(--B);font-size:8px;font-weight:300;letter-spacing:.36em;text-transform:uppercase;color:var(--terra);margin-bottom:20px;display:flex;align-items:center;gap:14px;}
-.sec__tag i{font-size:12px;}
-.sec__h{font-family:var(--S);font-weight:300;font-size:clamp(36px,9vw,48px);line-height:1.06;color:var(--ink);margin-bottom:36px;}
-.sec__h i{font-style:italic;color:var(--terra);}
-
-/* ── REVEAL ───────────────────────────────────── */
-.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1);}
-.reveal.visible{opacity:1;transform:none;}
-.reveal[data-d="1"]{transition-delay:.06s;}.reveal[data-d="2"]{transition-delay:.13s;}.reveal[data-d="3"]{transition-delay:.20s;}
-.reveal[data-d="4"]{transition-delay:.27s;}.reveal[data-d="5"]{transition-delay:.34s;}.reveal[data-d="6"]{transition-delay:.41s;}
-.reveal[data-d="7"]{transition-delay:.48s;}
-
-/* ── CRONOGRAMA ───────────────────────────────── */
-.sched__pull{font-family:var(--S);font-style:italic;font-weight:300;font-size:17px;line-height:1.75;color:var(--muted);border-left:2px solid var(--gold);padding-left:18px;margin-bottom:48px;}
-.timeline{position:relative;}
-.timeline::before{content:'';position:absolute;left:70px;top:10px;bottom:10px;width:1px;background:linear-gradient(to bottom,rgba(201,145,58,.5),rgba(201,145,58,.06));}
-.tl-item{display:grid;grid-template-columns:54px 32px 1fr;column-gap:0;padding-bottom:38px;position:relative;}
-.tl-item:last-child{padding-bottom:0;}
-.tl-time{font-family:var(--S);font-size:12px;color:var(--terra);text-align:right;padding-top:2px;line-height:1.3;}
-.tl-node{display:flex;flex-direction:column;align-items:center;padding-top:4px;}
-.tl-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);border:2px solid var(--cream);outline:1px solid var(--gold);position:relative;z-index:1;flex-shrink:0;}
-.tl-dot--accent{background:var(--deep);outline-color:var(--deep);}
-.tl-text{padding-top:0;padding-left:14px;}
-.tl-name{font-family:var(--S);font-size:20px;font-weight:400;line-height:1.18;color:var(--ink);margin-bottom:4px;}
-.tl-desc{font-size:13px;color:var(--muted);line-height:1.65;}
-.sched__note{margin-top:36px;padding:16px 20px;background:var(--parch);border-radius:12px;font-size:13px;color:var(--muted);line-height:1.65;display:flex;gap:12px;align-items:flex-start;}
-.sched__note i{font-size:16px;color:var(--gold);flex-shrink:0;margin-top:1px;}
-.map-anchor{display:inline-flex;align-items:center;gap:9px;margin-top:32px;padding:13px 24px;background:var(--deep);color:#fff;border:none;border-radius:100px;font-family:var(--B);font-size:11px;font-weight:300;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;cursor:pointer;box-shadow:0 6px 24px rgba(122,42,56,.22);transition:transform .15s,box-shadow .2s;-webkit-tap-highlight-color:transparent;}
-.map-anchor:active{transform:scale(.96);}
-.map-anchor i{font-size:14px;}
-
-/* ── CARDÁPIO ─────────────────────────────────── */
-.menu__intro{font-family:var(--S);font-style:italic;font-weight:300;font-size:17px;line-height:1.78;color:var(--muted);margin-bottom:48px;}
-.menu__chapter{margin-bottom:44px;}.menu__chapter:last-child{margin-bottom:0;}
-.menu__chapter-label{font-size:8px;font-weight:300;letter-spacing:.34em;text-transform:uppercase;color:var(--terra);margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid rgba(161,75,56,.12);}
-.menu__dish{padding:13px 0;border-bottom:1px solid rgba(30,21,16,.05);display:flex;flex-direction:column;gap:4px;}
-.menu__dish:last-child{border-bottom:none;}
-.menu__dish-name{font-family:var(--S);font-size:20px;font-weight:400;color:var(--ink);}
-.menu__dish-desc{font-size:12.5px;color:var(--muted);line-height:1.5;}
-
-/* ── ÁLBUM ────────────────────────────────────── */
-.album__statement{font-family:var(--S);font-style:italic;font-weight:300;font-size:clamp(26px,7vw,36px);line-height:1.2;color:var(--ink);margin-bottom:16px;}
-.album__statement span{color:var(--terra);}
-.album__body{font-size:14px;color:var(--muted);line-height:1.82;max-width:320px;margin-bottom:36px;}
-
-/* upload drop zone */
-.upload-zone{
-  border:1.5px dashed rgba(161,75,56,.3);
-  border-radius:16px;
-  padding:32px 20px;
-  text-align:center;
-  cursor:pointer;
-  transition:border-color .2s,background .2s;
-  position:relative;
-  margin-bottom:24px;
-  background:transparent;
-}
-.upload-zone.drag-over{border-color:var(--terra);background:rgba(161,75,56,.04);}
-.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
-.upload-zone__icon{font-size:32px;color:var(--terra);margin-bottom:12px;display:block;}
-.upload-zone__title{font-size:15px;color:var(--ink);margin-bottom:6px;}
-.upload-zone__hint{font-size:12px;color:var(--muted);}
-
-/* upload preview strip */
-.upload-previews{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;}
-.preview-thumb{
-  width:80px;height:80px;border-radius:10px;
-  object-fit:cover;
-  border:2px solid rgba(161,75,56,.15);
-  position:relative;
-}
-.preview-wrap{position:relative;display:inline-block;}
-.preview-remove{
-  position:absolute;top:-6px;right:-6px;
-  width:20px;height:20px;border-radius:50%;
-  background:var(--deep);color:#fff;
-  border:none;cursor:pointer;
-  font-size:11px;display:flex;align-items:center;justify-content:center;
-  line-height:1;
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--B);
+  font-weight: 300;
+  overflow-x: hidden;
 }
 
-.upload-name-row{margin-bottom:16px;}
-.upload-name-row label{display:block;font-size:9px;font-weight:300;letter-spacing:.24em;text-transform:uppercase;color:var(--terra);margin-bottom:9px;}
-.upload-name-row input{width:100%;background:var(--parch);border:1px solid rgba(161,75,56,.15);border-radius:12px;padding:14px 16px;font-family:var(--B);font-size:15px;font-weight:300;color:var(--ink);outline:none;-webkit-appearance:none;transition:border-color .2s;}
-.upload-name-row input:focus{border-color:var(--terra);box-shadow:0 0 0 3px rgba(161,75,56,.08);}
-
-/* progress bar */
-.upload-progress{height:3px;background:rgba(161,75,56,.12);border-radius:2px;margin-bottom:16px;overflow:hidden;display:none;}
-.upload-progress__bar{height:100%;background:var(--terra);border-radius:2px;width:0%;transition:width .3s ease;}
-
-.btn-primary{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:18px;background:var(--terra);color:#fff;border:none;border-radius:14px;font-family:var(--B);font-size:11.5px;font-weight:300;letter-spacing:.15em;text-transform:uppercase;text-decoration:none;cursor:pointer;transition:transform .14s,box-shadow .2s,opacity .2s;box-shadow:0 8px 30px rgba(161,75,56,.28);-webkit-tap-highlight-color:transparent;}
-.btn-primary:active{transform:scale(.97);}
-.btn-primary:disabled{opacity:.5;cursor:not-allowed;}
-.btn-primary i{font-size:16px;}
-
-.album__footnote{text-align:center;font-family:var(--S);font-style:italic;font-size:12.5px;color:var(--muted);margin-top:16px;}
-
-/* ── GALERIA ──────────────────────────────────── */
-.gallery__header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;}
-.gallery__count{font-size:12px;color:var(--muted);font-family:var(--S);font-style:italic;}
-.gallery__refresh{background:none;border:none;color:var(--terra);cursor:pointer;font-size:18px;padding:4px;-webkit-tap-highlight-color:transparent;transition:transform .3s;}
-.gallery__refresh.spinning{animation:spin .7s linear;}
-
-.gallery-grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:8px;
-  margin-bottom:12px;
-}
-.gallery-grid .gcard{
-  position:relative;
-  border-radius:12px;
-  overflow:hidden;
-  aspect-ratio:1;
-  background:var(--parch);
-  cursor:pointer;
-}
-.gallery-grid .gcard:first-child{grid-column:1/-1;aspect-ratio:16/9;}
-.gcard img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s ease;}
-.gcard:active img{transform:scale(1.03);}
-.gcard__name{
-  position:absolute;bottom:0;left:0;right:0;
-  padding:22px 12px 10px;
-  background:linear-gradient(to top,rgba(30,21,16,.55),transparent);
-  font-family:var(--S);font-style:italic;font-size:13px;color:#fff;
-}
-.gcard__skeleton{
-  width:100%;height:100%;
-  background:linear-gradient(90deg,var(--parch) 25%,rgba(239,231,216,.6) 50%,var(--parch) 75%);
-  background-size:200% 100%;
-  animation:shimmer 1.4s infinite;
+/* Hero Section */
+.hero {
+  min-height: 100dvh;
+  position: relative;
+  display: grid;
+  place-items: center;
+  background: var(--cream);
 }
 
-/* lightbox */
-.lightbox{
-  position:fixed;inset:0;z-index:9100;
-  background:rgba(20,12,8,.92);
-  display:flex;align-items:center;justify-content:center;
-  opacity:0;pointer-events:none;
-  transition:opacity .3s ease;
+.hero__body {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 0 32px;
 }
-.lightbox.open{opacity:1;pointer-events:all;}
-.lightbox img{max-width:95vw;max-height:88dvh;border-radius:8px;object-fit:contain;}
-.lightbox__close{position:absolute;top:20px;right:20px;background:none;border:none;color:#fff;font-size:28px;cursor:pointer;-webkit-tap-highlight-color:transparent;line-height:1;}
-.lightbox__caption{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);font-family:var(--S);font-style:italic;font-size:14px;color:rgba(255,255,255,.75);text-align:center;white-space:nowrap;}
 
-.gallery__empty{text-align:center;padding:48px 0;color:var(--muted);}
-.gallery__empty i{font-size:36px;margin-bottom:12px;display:block;opacity:.4;}
-.gallery__empty p{font-family:var(--S);font-style:italic;font-size:16px;}
-
-.load-more{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:16px;padding:14px;background:none;border:1px solid rgba(161,75,56,.2);border-radius:12px;font-family:var(--B);font-size:11px;font-weight:300;letter-spacing:.14em;text-transform:uppercase;color:var(--terra);cursor:pointer;transition:background .2s;-webkit-tap-highlight-color:transparent;}
-.load-more:active{background:rgba(161,75,56,.06);}
-
-/* ── MENSAGENS ────────────────────────────────── */
-.msg__lead{font-family:var(--S);font-style:italic;font-weight:300;font-size:17px;line-height:1.78;color:var(--muted);margin-bottom:40px;}
-.field{margin-bottom:20px;}
-.field__label{display:block;font-size:9px;font-weight:300;letter-spacing:.24em;text-transform:uppercase;color:var(--terra);margin-bottom:10px;}
-.field__input,.field__textarea{width:100%;background:var(--parch);border:1px solid rgba(161,75,56,.15);border-radius:12px;padding:16px 18px;font-family:var(--B);font-size:15px;font-weight:300;color:var(--ink);outline:none;transition:border-color .2s,box-shadow .2s;-webkit-appearance:none;resize:none;line-height:1.6;}
-.field__input::placeholder,.field__textarea::placeholder{color:rgba(128,101,88,.45);}
-.field__input:focus,.field__textarea:focus{border-color:var(--terra);box-shadow:0 0 0 3px rgba(161,75,56,.08);background:var(--cream);}
-.field__textarea{min-height:124px;}
-.btn-send{width:100%;padding:19px;background:var(--deep);color:#fff;border:none;border-radius:14px;font-family:var(--B);font-size:11.5px;font-weight:300;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:10px;transition:transform .14s,box-shadow .2s,opacity .2s;box-shadow:0 8px 28px rgba(122,42,56,.25);-webkit-tap-highlight-color:transparent;}
-.btn-send:active{transform:scale(.97);}
-.btn-send:disabled{opacity:.5;cursor:not-allowed;}
-.btn-send i{font-size:15px;}
-.msg__success{display:none;text-align:center;padding:52px 24px;opacity:0;transition:opacity .5s ease;}
-.msg__success.show{display:block;}
-.msg__success.fade{opacity:1;}
-.msg__success-icon{display:inline-flex;align-items:center;justify-content:center;width:58px;height:58px;border-radius:50%;background:rgba(161,75,56,.1);color:var(--terra);margin-bottom:24px;}
-.msg__success-icon i{font-size:26px;}
-.msg__success-h{font-family:var(--S);font-size:26px;font-weight:400;color:var(--ink);margin-bottom:12px;}
-.msg__success-p{font-family:var(--S);font-style:italic;font-size:15px;color:var(--muted);line-height:1.75;}
-
-/* messages wall */
-.msgs-wall{margin-top:48px;border-top:1px solid rgba(161,75,56,.08);padding-top:40px;}
-.msgs-wall__h{font-family:var(--S);font-size:22px;font-weight:400;color:var(--ink);margin-bottom:24px;}
-.msg-card{padding:20px 0;border-bottom:1px solid rgba(30,21,16,.06);}
-.msg-card:last-child{border-bottom:none;}
-.msg-card__name{font-size:11px;font-weight:400;letter-spacing:.12em;text-transform:uppercase;color:var(--terra);margin-bottom:8px;}
-.msg-card__text{font-family:var(--S);font-size:18px;font-weight:300;line-height:1.65;color:var(--ink);}
-.msg-card__time{font-size:11px;color:var(--muted);margin-top:6px;}
-.msgs-wall__empty{font-family:var(--S);font-style:italic;font-size:16px;color:var(--muted);text-align:center;padding:24px 0;}
-
-/* ── FOOTER ───────────────────────────────────── */
-.footer{text-align:center;padding:52px 24px 72px;border-top:1px solid rgba(161,75,56,.07);}
-.footer__mono{font-family:var(--S);font-style:italic;font-size:28px;font-weight:300;color:var(--gold);letter-spacing:.08em;margin-bottom:12px;}
-.footer__line{font-size:9px;font-weight:300;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);}
-
-/* ── CONFIG BANNER ────────────────────────────── */
-.config-banner{
-  position:fixed;bottom:0;left:0;right:0;z-index:9500;
-  background:var(--deep);color:#fff;
-  padding:12px 20px;
-  display:flex;align-items:center;justify-content:space-between;gap:12px;
-  font-size:12px;font-family:var(--B);font-weight:300;
+.hero__occasion {
+  font-family: var(--B);
+  font-size: 8.5px;
+  letter-spacing: 0.38em;
+  text-transform: uppercase;
+  color: var(--terra);
+  margin-bottom: 32px;
 }
-.config-banner.hidden{display:none;}
-.config-banner i{font-size:16px;flex-shrink:0;color:var(--gold);}
-.config-banner__text{flex:1;line-height:1.5;}
-.config-banner__link{color:var(--gold);text-decoration:underline;cursor:pointer;}
-.config-banner__close{background:none;border:none;color:rgba(255,255,255,.6);font-size:20px;cursor:pointer;-webkit-tap-highlight-color:transparent;flex-shrink:0;}
 
-/* ── TOAST ────────────────────────────────────── */
-.toast{
-  position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);
-  background:var(--ink);color:#fff;
-  padding:12px 20px;border-radius:100px;
-  font-size:13px;font-family:var(--B);font-weight:300;
-  white-space:nowrap;z-index:9600;
-  opacity:0;transition:opacity .3s,transform .3s;
-  pointer-events:none;
+.hero__names {
+  font-family: var(--S);
+  font-weight: 300;
+  font-size: clamp(54px, 14vw, 82px);
+  line-height: 0.92;
+  color: var(--ink);
 }
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-.toast.error{background:var(--deep);}
 
-/* ── ANIMATIONS ───────────────────────────────── */
-@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;}}
-@keyframes breathe{0%,100%{opacity:.35;}50%{opacity:1;}}
-@keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
-@keyframes spin{to{transform:rotate(360deg);}}
+.hero__connector {
+  display: block;
+  font-style: italic;
+  font-size: 0.52em;
+  color: var(--terra);
+}
 
-::-webkit-scrollbar{width:0;}
-::selection{background:rgba(201,145,58,.2);}
+.hero__line {
+  width: 1px;
+  height: 52px;
+  background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+  margin: 30px auto;
+}
+
+.hero__date {
+  font-size: 9.5px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 14px;
+}
+
+.hero__poem {
+  font-family: var(--S);
+  font-style: italic;
+  font-size: 16.5px;
+  color: var(--muted);
+}
+
+.hero__cue {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.hero__cue-label {
+  font-size: 8px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.hero__cue-stem {
+  width: 1px;
+  height: 38px;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+  animation: breathe 2.4s ease-in-out infinite;
+}
+
+/* Navigation */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 600;
+  background: rgba(248, 244, 238, 0.88);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(161, 75, 56, 0.1);
+}
+
+.nav__row {
+  display: flex;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.nav__tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 6px 12px;
+  background: none;
+  border: none;
+  font-family: var(--B);
+  font-size: 8.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  cursor: pointer;
+  position: relative;
+}
+
+.nav__tab i {
+  font-size: 18px;
+}
+
+.nav__tab::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 12%;
+  right: 12%;
+  height: 1.5px;
+  background: var(--terra);
+  transform: scaleX(0);
+  transition: transform 0.3s;
+}
+
+.nav__tab.is-active {
+  color: var(--terra);
+}
+
+.nav__tab.is-active::after {
+  transform: scaleX(1);
+}
+
+/* Sections */
+.sec {
+  padding: 72px 28px 80px;
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.sec+.sec {
+  border-top: 1px solid rgba(161, 75, 56, 0.07);
+}
+
+.sec__tag {
+  font-family: var(--B);
+  font-size: 8px;
+  letter-spacing: 0.36em;
+  text-transform: uppercase;
+  color: var(--terra);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.sec__tag i {
+  font-size: 12px;
+}
+
+.sec__h {
+  font-family: var(--S);
+  font-weight: 300;
+  font-size: clamp(36px, 9vw, 48px);
+  line-height: 1.06;
+  color: var(--ink);
+  margin-bottom: 36px;
+}
+
+.sec__h i {
+  font-style: italic;
+  color: var(--terra);
+}
+
+/* Reveal Animation */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Timeline */
+.sched__pull {
+  font-family: var(--S);
+  font-style: italic;
+  font-size: 17px;
+  color: var(--muted);
+  border-left: 2px solid var(--gold);
+  padding-left: 18px;
+  margin-bottom: 48px;
+}
+
+.timeline {
+  position: relative;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 70px;
+  top: 10px;
+  bottom: 10px;
+  width: 1px;
+  background: linear-gradient(to bottom, rgba(201, 145, 58, 0.5), rgba(201, 145, 58, 0.06));
+}
+
+.tl-item {
+  display: grid;
+  grid-template-columns: 54px 32px 1fr;
+  padding-bottom: 38px;
+  position: relative;
+}
+
+.tl-item:last-child {
+  padding-bottom: 0;
+}
+
+.tl-time {
+  font-family: var(--S);
+  font-size: 12px;
+  color: var(--terra);
+  text-align: right;
+  padding-top: 2px;
+}
+
+.tl-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 4px;
+}
+
+.tl-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: 2px solid var(--cream);
+  outline: 1px solid var(--gold);
+  z-index: 1;
+}
+
+.tl-dot--accent {
+  background: var(--deep);
+  outline-color: var(--deep);
+}
+
+.tl-text {
+  padding-left: 14px;
+}
+
+.tl-name {
+  font-family: var(--S);
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+.tl-desc {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* Menu */
+.menu__intro {
+  font-family: var(--S);
+  font-style: italic;
+  font-size: 17px;
+  color: var(--muted);
+  margin-bottom: 48px;
+}
+
+.menu__chapter {
+  margin-bottom: 44px;
+}
+
+.menu__chapter:last-child {
+  margin-bottom: 0;
+}
+
+.menu__chapter-label {
+  font-size: 8px;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--terra);
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(161, 75, 56, 0.12);
+}
+
+.menu__dish {
+  padding: 13px 0;
+  border-bottom: 1px solid rgba(30, 21, 16, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.menu__dish:last-child {
+  border-bottom: none;
+}
+
+.menu__dish-name {
+  font-family: var(--S);
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--ink);
+}
+
+.menu__dish-desc {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+/* Album */
+.album__statement {
+  font-family: var(--S);
+  font-style: italic;
+  font-size: clamp(26px, 7vw, 36px);
+  line-height: 1.2;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+
+.album__statement span {
+  color: var(--terra);
+}
+
+.album__body {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.82;
+  max-width: 320px;
+  margin-bottom: 36px;
+}
+
+/* Upload Zone */
+.upload-zone {
+  border: 1.5px dashed rgba(161, 75, 56, 0.3);
+  border-radius: 16px;
+  padding: 32px 20px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  margin-bottom: 24px;
+  transition: all 0.2s;
+}
+
+.upload-zone.drag-over {
+  border-color: var(--terra);
+  background: rgba(161, 75, 56, 0.04);
+}
+
+.upload-zone input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+.upload-zone__icon {
+  font-size: 32px;
+  color: var(--terra);
+  margin-bottom: 12px;
+  display: block;
+}
+
+.upload-zone__title {
+  font-size: 15px;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.upload-zone__hint {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.upload-previews {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.preview-thumb {
+  width: 80px;
+  height: 80px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 2px solid rgba(161, 75, 56, 0.15);
+}
+
+.preview-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.preview-remove {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--deep);
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.upload-name-row {
+  margin-bottom: 16px;
+}
+
+.upload-name-row label {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--terra);
+  margin-bottom: 9px;
+}
+
+.upload-name-row input {
+  width: 100%;
+  background: var(--parch);
+  border: 1px solid rgba(161, 75, 56, 0.15);
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-family: var(--B);
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--ink);
+  outline: none;
+}
+
+.upload-progress {
+  height: 3px;
+  background: rgba(161, 75, 56, 0.12);
+  border-radius: 2px;
+  margin-bottom: 16px;
+  overflow: hidden;
+  display: none;
+}
+
+.upload-progress__bar {
+  height: 100%;
+  background: var(--terra);
+  border-radius: 2px;
+  width: 0%;
+  transition: width 0.3s;
+}
+
+.btn-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 18px;
+  background: var(--terra);
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-family: var(--B);
+  font-size: 11.5px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.14s;
+  box-shadow: 0 8px 30px rgba(161, 75, 56, 0.28);
+}
+
+.btn-primary:active {
+  transform: scale(0.97);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.album__footnote {
+  text-align: center;
+  font-family: var(--S);
+  font-style: italic;
+  font-size: 12.5px;
+  color: var(--muted);
+  margin-top: 16px;
+}
+
+/* Gallery */
+.gallery__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.gallery__count {
+  font-size: 12px;
+  color: var(--muted);
+  font-family: var(--S);
+  font-style: italic;
+}
+
+.gallery__refresh {
+  background: none;
+  border: none;
+  color: var(--terra);
+  cursor: pointer;
+  font-size: 18px;
+  padding: 4px;
+}
+
+.gallery__refresh.spinning {
+  animation: spin 0.7s linear;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.gallery-grid .gcard {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  aspect-ratio: 1;
+  background: var(--parch);
+  cursor: pointer;
+}
+
+.gallery-grid .gcard:first-child {
+  grid-column: 1 / -1;
+  aspect-ratio: 16 / 9;
+}
+
+.gcard img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.gcard__name {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 22px 12px 10px;
+  background: linear-gradient(to top, rgba(30, 21, 16, 0.55), transparent);
+  font-family: var(--S);
+  font-style: italic;
+  font-size: 13px;
+  color: white;
+}
+
+.gcard__skeleton {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--parch) 25%, rgba(239, 231, 216, 0.6) 50%, var(--parch) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+.gallery__empty {
+  text-align: center;
+  padding: 48px 0;
+  color: var(--muted);
+}
+
+.gallery__empty i {
+  font-size: 36px;
+  margin-bottom: 12px;
+  display: block;
+  opacity: 0.4;
+}
+
+.gallery__empty p {
+  font-family: var(--S);
+  font-style: italic;
+  font-size: 16px;
+}
+
+.load-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin-top: 16px;
+  padding: 14px;
+  background: none;
+  border: 1px solid rgba(161, 75, 56, 0.2);
+  border-radius: 12px;
+  font-family: var(--B);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--terra);
+  cursor: pointer;
+}
+
+/* Lightbox */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 9100;
+  background: rgba(20, 12, 8, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+.lightbox.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.lightbox img {
+  max-width: 95vw;
+  max-height: 88dvh;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+.lightbox__close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+.lightbox__caption {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--S);
+  font-style: italic;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* Messages */
+.msg__lead {
+  font-family: var(--S);
+  font-style: italic;
+  font-size: 17px;
+  color: var(--muted);
+  margin-bottom: 40px;
+}
+
+.field {
+  margin-bottom: 20px;
+}
+
+.field__label {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--terra);
+  margin-bottom: 10px;
+}
+
+.field__input,
+.field__textarea {
+  width: 100%;
+  background: var(--parch);
+  border: 1px solid rgba(161, 75, 56, 0.15);
+  border-radius: 12px;
+  padding: 16px 18px;
+  font-family: var(--B);
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--ink);
+  outline: none;
+  resize: none;
+}
+
+.field__textarea {
+  min-height: 124px;
+}
+
+.btn-send {
+  width: 100%;
+  padding: 19px;
+  background: var(--deep);
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-family: var(--B);
+  font-size: 11.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: transform 0.14s;
+  box-shadow: 0 8px 28px rgba(122, 42, 56, 0.25);
+}
+
+.btn-send:active {
+  transform: scale(0.97);
+}
+
+.btn-send:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.msg__success {
+  display: none;
+  text-align: center;
+  padding: 52px 24px;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.msg__success.show {
+  display: block;
+}
+
+.msg__success.fade {
+  opacity: 1;
+}
+
+.msg__success-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: rgba(161, 75, 56, 0.1);
+  color: var(--terra);
+  margin-bottom: 24px;
+}
+
+.msg__success-icon i {
+  font-size: 26px;
+}
+
+.msg__success-h {
+  font-family: var(--S);
+  font-size: 26px;
+  font-weight: 400;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+
+.msg__success-p {
+  font-family: var(--S);
+  font-style: italic;
+  font-size: 15px;
+  color: var(--muted);
+}
+
+/* Messages Wall */
+.msgs-wall {
+  margin-top: 48px;
+  border-top: 1px solid rgba(161, 75, 56, 0.08);
+  padding-top: 40px;
+}
+
+.msgs-wall__h {
+  font-family: var(--S);
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--ink);
+  margin-bottom: 24px;
+}
+
+.msg-card {
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(30, 21, 16, 0.06);
+}
+
+.msg-card:last-child {
+  border-bottom: none;
+}
+
+.msg-card__name {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--terra);
+  margin-bottom: 8px;
+}
+
+.msg-card__text {
+  font-family: var(--S);
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1.65;
+  color: var(--ink);
+}
+
+.msg-card__time {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+.msgs-wall__empty {
+  font-family: var(--S);
+  font-style: italic;
+  font-size: 16px;
+  color: var(--muted);
+  text-align: center;
+  padding: 24px 0;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 52px 24px 72px;
+  border-top: 1px solid rgba(161, 75, 56, 0.07);
+}
+
+.footer__mono {
+  font-family: var(--S);
+  font-style: italic;
+  font-size: 28px;
+  font-weight: 300;
+  color: var(--gold);
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+}
+
+.footer__line {
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--ink);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-family: var(--B);
+  white-space: nowrap;
+  z-index: 9600;
+  opacity: 0;
+  transition: opacity 0.3s, transform 0.3s;
+  pointer-events: none;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.toast.error {
+  background: var(--deep);
+}
+
+/* Animations */
+@keyframes breathe {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
 </style>
 </head>
 <body>
 
-<!-- ════════ HERO ════════════════════════════ -->
 <div class="hero">
-  <div class="hero__orbit"></div>
-  <div class="hero__orbit-2"></div>
-
-  <svg class="hero__botanical" viewBox="0 0 440 300" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M165 298 C159 254 148 218 124 193 C102 171 74 153 44 138 C32 132 18 125 8 116" stroke="#A14B38" stroke-width="1.15" fill="none" stroke-linecap="round"/>
-    <path d="M124 193 C108 185 86 172 64 158" stroke="#A14B38" stroke-width=".85" fill="none" stroke-linecap="round"/>
-    <path d="M144 244 C126 235 104 220 86 205" stroke="#A14B38" stroke-width=".75" fill="none" stroke-linecap="round"/>
-    <ellipse cx="78" cy="163" rx="16" ry="5.5" transform="rotate(-40 78 163)" fill="#5C2A18" opacity=".20"/>
-    <ellipse cx="56" cy="150" rx="13" ry="4.5" transform="rotate(-55 56 150)" fill="#5C2A18" opacity=".17"/>
-    <ellipse cx="100" cy="183" rx="17" ry="5.2" transform="rotate(-26 100 183)" fill="#5C2A18" opacity=".19"/>
-    <ellipse cx="82" cy="207" rx="14" ry="4.8" transform="rotate(12 82 207)" fill="#5C2A18" opacity=".15"/>
-    <g transform="translate(44,138)">
-      <path d="M0-7.5 C4.5-4 4.5 4 0 0" fill="rgba(201,145,58,.2)" stroke="#C9913A" stroke-width=".5" stroke-linecap="round"/>
-      <path d="M0 7.5 C-4.5 4-4.5-4 0 0" fill="rgba(201,145,58,.2)" stroke="#C9913A" stroke-width=".5" stroke-linecap="round"/>
-      <path d="M-7.5 0 C-4 4.5 4 4.5 0 0" fill="rgba(201,145,58,.16)" stroke="#C9913A" stroke-width=".5" stroke-linecap="round"/>
-      <path d="M7.5 0 C4-4.5-4-4.5 0 0" fill="rgba(201,145,58,.16)" stroke="#C9913A" stroke-width=".5" stroke-linecap="round"/>
-      <circle cx="0" cy="0" r="2.8" fill="#A14B38" opacity=".88"/>
-    </g>
-    <g transform="translate(64,158)">
-      <circle cx="0" cy="0" r="6" fill="#7A2A38" opacity=".28"/>
-      <circle cx="0" cy="0" r="2.5" fill="#A14B38" opacity=".7"/>
-    </g>
-    <g transform="translate(86,205)">
-      <path d="M0-5.5 C3-3 3 3 0 0" fill="rgba(201,145,58,.18)" stroke="#C9913A" stroke-width=".5" stroke-linecap="round"/>
-      <path d="M0 5.5 C-3 3-3-3 0 0" fill="rgba(201,145,58,.18)" stroke="#C9913A" stroke-width=".5" stroke-linecap="round"/>
-      <path d="M-5.5 0 C-3 3 3 3 0 0" fill="rgba(201,145,58,.14)" stroke="#C9913A" stroke-width=".5" stroke-linecap="round"/>
-      <path d="M5.5 0 C3-3-3-3 0 0" fill="rgba(201,145,58,.14)" stroke="#C9913A" stroke-width=".5" stroke-linecap="round"/>
-      <circle cx="0" cy="0" r="2" fill="#A14B38" opacity=".8"/>
-    </g>
-    <path d="M220 298 C220 252 220 206 220 158 C220 110 220 68 220 26" stroke="#A14B38" stroke-width="1.15" fill="none" stroke-linecap="round"/>
-    <path d="M220 162 C204 150 192 136 186 118" stroke="#A14B38" stroke-width=".8" fill="none" stroke-linecap="round"/>
-    <path d="M220 122 C236 110 246 96 250 78" stroke="#A14B38" stroke-width=".8" fill="none" stroke-linecap="round"/>
-    <ellipse cx="202" cy="102" rx="14" ry="5" transform="rotate(-34 202 102)" fill="#5C2A18" opacity=".17"/>
-    <ellipse cx="238" cy="90" rx="14" ry="4.8" transform="rotate(32 238 90)" fill="#5C2A18" opacity=".17"/>
-    <g transform="translate(220,26)">
-      <path d="M0-9 C5.5-5 5.5 5 0 0" fill="rgba(201,145,58,.24)" stroke="#C9913A" stroke-width=".55" stroke-linecap="round"/>
-      <path d="M0 9 C-5.5 5-5.5-5 0 0" fill="rgba(201,145,58,.24)" stroke="#C9913A" stroke-width=".55" stroke-linecap="round"/>
-      <path d="M-9 0 C-5 5.5 5 5.5 0 0" fill="rgba(201,145,58,.2)" stroke="#C9913A" stroke-width=".55" stroke-linecap="round"/>
-      <path d="M9 0 C5-5.5-5-5.5 0 0" fill="rgba(201,145,58,.2)" stroke="#C9913A" stroke-width=".55" stroke-linecap="round"/>
-      <circle cx="0" cy="0" r="3.5" fill="#A14B38" opacity=".9"/>
-    </g>
-    <g transform="translate(186,118)">
-      <path d="M0-6 C3.5-3.5 3.5 3.5 0 0" fill="rgba(201,145,58,.2)" stroke="#C9913A" stroke-width=".5" stroke-linecap="round"/>
-      <path d="M0 6 C-3.5 3.5-3.5-3.5 0 0" fill="rgba(201,145,58,.2)" stroke="#C9913A" stroke-width=".5" stroke-linecap="round"/>
-      <path d="M-6 0 C-3.5 3.5 3.5 3.5 0 0" fill="rgba(201,145,58,.16)" stroke="#C9913A" stroke-width=".5" stroke-linecap="round"/>
-      <path d="M6 0 C3.5-3.5-3.5-3.5 0 0" fill="rgba(201,145,58,.16)" stroke="#C9913A" stroke-width=".5" stroke-linecap="round"/>
-      <circle cx="0" cy="0" r="2.3" fill="#A14B38" opacity=".85"/>
-    </g>
-    <circle cx="220" cy="58" r="4.5" fill="#7A2A38" opacity=".3"/>
-    <path d="M275 298 C281 254 292 218 316 193 C338 171 366 153 396 138 C408 132 422 125 432 116" stroke="#A14B38" stroke-width="1.15" fill="none" stroke-linecap="round"/>
-    <path d="M316 193 C332 185 354 172 376 158" stroke="#A14B38" stroke-width=".85" fill="none" stroke-linecap="round"/>
-    <path d="M296 244 C314 235 336 220 354 205" stroke="#A14B38" stroke-width=".75" fill="none" stroke-linecap="round"/>
-    <ellipse cx="362" cy="163" rx="16" ry="5.5" transform="rotate(40 362 163)" fill="#5C2A18" opacity=".20"/>
-    <ellipse cx="384" cy="150" rx="13" ry="4.5" transform="rotate(55 384 150)" fill="#5C2A18" opacity=".17"/>
-    <ellipse cx="340" cy="183" rx="17" ry="5.2" transform="rotate(26 340 183)" fill="#5C2A18" opacity=".19"/>
-    <ellipse cx="358" cy="207" rx="14" ry="4.8" transform="rotate(-12 358 207)" fill="#5C2A18" opacity=".15"/>
-    <g transform="translate(396,138)">
-      <path d="M0-7.5 C4.5-4 4.5 4 0 0" fill="rgba(201,145,58,.2)" stroke="#C9913A" stroke-width=".5" stroke-linecap="round"/>
-      <path d="M0 7.5 C-4.5 4-4.5-4 0 0" fill="rgba(201,145,58,.2)" stroke="#C9913A" stroke-width=".5" stroke-linecap="round"/>
-      <path d="M-7.5 0 C-4 4.5 4 4.5 0 0" fill="rgba(201,145,58,.16)" stroke="#C9913A" stroke-width=".5" stroke-linecap="round"/>
-      <path d="M7.5 0 C4-4.5-4-4.5 0 0" fill="rgba(201,145,58,.16)" stroke="#C9913A" stroke-width=".5" stroke-linecap="round"/>
-      <circle cx="0" cy="0" r="2.8" fill="#A14B38" opacity=".88"/>
-    </g>
-    <g transform="translate(376,158)">
-      <circle cx="0" cy="0" r="6" fill="#7A2A38" opacity=".28"/>
-      <circle cx="0" cy="0" r="2.5" fill="#A14B38" opacity=".7"/>
-    </g>
-    <g transform="translate(354,205)">
-      <path d="M0-5.5 C3-3 3 3 0 0" fill="rgba(201,145,58,.18)" stroke="#C9913A" stroke-width=".5" stroke-linecap="round"/>
-      <path d="M0 5.5 C-3 3-3-3 0 0" fill="rgba(201,145,58,.18)" stroke="#C9913A" stroke-width=".5" stroke-linecap="round"/>
-      <path d="M-5.5 0 C-3 3 3 3 0 0" fill="rgba(201,145,58,.14)" stroke="#C9913A" stroke-width=".5" stroke-linecap="round"/>
-      <path d="M5.5 0 C3-3-3-3 0 0" fill="rgba(201,145,58,.14)" stroke="#C9913A" stroke-width=".5" stroke-linecap="round"/>
-      <circle cx="0" cy="0" r="2" fill="#A14B38" opacity=".8"/>
-    </g>
-    <circle cx="220" cy="60" r="4.5" fill="#7A2A38" opacity=".3"/>
-  </svg>
-
   <div class="hero__body">
     <p class="hero__occasion">Celebração de Casamento</p>
     <h1 class="hero__names">Carolina<span class="hero__connector">&amp;</span>Lauane</h1>
@@ -381,7 +984,6 @@ body::before{content:'';position:fixed;inset:0;z-index:8000;pointer-events:none;
   </div>
 </div>
 
-<!-- ════════ NAV ══════════════════════════════ -->
 <nav class="nav" id="main-nav">
   <div class="nav__row">
     <button class="nav__tab is-active" data-sec="cronograma" onclick="navTo(this)"><i class="bi bi-hourglass-split"></i>Cronograma</button>
@@ -391,127 +993,114 @@ body::before{content:'';position:fixed;inset:0;z-index:8000;pointer-events:none;
   </div>
 </nav>
 
-<!-- ════════ CRONOGRAMA ═══════════════════════ -->
 <section class="sec" id="cronograma">
-  <p class="sec__tag reveal" data-d="0"><i class="bi bi-calendar3"></i>Programação do dia</p>
-  <h2 class="sec__h reveal" data-d="1">O dia mais<br><i>especial</i></h2>
-  <blockquote class="sched__pull reveal" data-d="2">Cada momento foi pensado para que vocês vivam isso conosco de perto.</blockquote>
+  <p class="sec__tag reveal"><i class="bi bi-calendar3"></i>Programação do dia</p>
+  <h2 class="sec__h reveal">O dia mais<br><i>especial</i></h2>
+  <blockquote class="sched__pull reveal">Cada momento foi pensado para que vocês vivam isso conosco de perto.</blockquote>
   <div class="timeline">
-    <div class="tl-item reveal" data-d="2"><div class="tl-time">11h30</div><div class="tl-node"><div class="tl-dot"></div></div><div class="tl-text"><div class="tl-name">Chegada &amp; Aperitivos</div><div class="tl-desc">Recepção com drinks de boas-vindas no jardim</div></div></div>
-    <div class="tl-item reveal" data-d="3"><div class="tl-time">12h30</div><div class="tl-node"><div class="tl-dot"></div></div><div class="tl-text"><div class="tl-name">Cerimônia</div><div class="tl-desc">União civil e troca de votos no espaço principal</div></div></div>
-    <div class="tl-item reveal" data-d="3"><div class="tl-time">13h30</div><div class="tl-node"><div class="tl-dot"></div></div><div class="tl-text"><div class="tl-name">Recepção para almoço</div><div class="tl-desc">Com família e amigos próximos</div></div></div>
-    <div class="tl-item reveal" data-d="4"><div class="tl-time">13h35</div><div class="tl-node"><div class="tl-dot"></div></div><div class="tl-text"><div class="tl-name">Almoço festivo</div><div class="tl-desc">Almoço com vinhos selecionados e muita alegria</div></div></div>
-    <div class="tl-item reveal" data-d="4"><div class="tl-time">14h30</div><div class="tl-node"><div class="tl-dot"></div></div><div class="tl-text"><div class="tl-name">Písta de dança aberta</div><div class="tl-desc">O momento mais doce da noite</div></div></div>
-    <div class="tl-item reveal" data-d="5"><div class="tl-time">17h00</div><div class="tl-node"><div class="tl-dot tl-dot--accent"></div></div><div class="tl-text"><div class="tl-name">Corte do Bolo &amp; Sobremesas</div><div class="tl-desc">Pista aberta — até o amanhecer</div></div></div>
+    <div class="tl-item reveal"><div class="tl-time">11h30</div><div class="tl-node"><div class="tl-dot"></div></div><div class="tl-text"><div class="tl-name">Chegada &amp; Aperitivos</div><div class="tl-desc">Recepção com drinks de boas-vindas no jardim</div></div></div>
+    <div class="tl-item reveal"><div class="tl-time">12h30</div><div class="tl-node"><div class="tl-dot"></div></div><div class="tl-text"><div class="tl-name">Cerimônia</div><div class="tl-desc">União civil e troca de votos no espaço principal</div></div></div>
+    <div class="tl-item reveal"><div class="tl-time">13h30</div><div class="tl-node"><div class="tl-dot"></div></div><div class="tl-text"><div class="tl-name">Recepção para almoço</div><div class="tl-desc">Com família e amigos próximos</div></div></div>
+    <div class="tl-item reveal"><div class="tl-time">13h35</div><div class="tl-node"><div class="tl-dot"></div></div><div class="tl-text"><div class="tl-name">Almoço festivo</div><div class="tl-desc">Almoço com vinhos selecionados e muita alegria</div></div></div>
+    <div class="tl-item reveal"><div class="tl-time">14h30</div><div class="tl-node"><div class="tl-dot"></div></div><div class="tl-text"><div class="tl-name">Pista de dança aberta</div><div class="tl-desc">Música ao vivo e open bar</div></div></div>
+    <div class="tl-item reveal"><div class="tl-time">17h00</div><div class="tl-node"><div class="tl-dot tl-dot--accent"></div></div><div class="tl-text"><div class="tl-name">Corte do Bolo &amp; Sobremesas</div><div class="tl-desc">Festa continua — até o amanhecer</div></div></div>
   </div>
 </section>
 
-<!-- ════════ CARDÁPIO ═════════════════════════ -->
 <section class="sec" id="cardapio">
-  <p class="sec__tag reveal" data-d="0"><i class="bi bi-cup-hot"></i>Mesa posta</p>
-  <h2 class="sec__h reveal" data-d="1">Sabores<br><i>do amor</i></h2>
-  <p class="menu__intro reveal" data-d="2">Uma refeição pensada com cuidado, para celebrar com quem amamos.</p>
-  <div class="menu__chapter reveal" data-d="3">
+  <p class="sec__tag reveal"><i class="bi bi-cup-hot"></i>Mesa posta</p>
+  <h2 class="sec__h reveal">Sabores<br><i>do amor</i></h2>
+  <p class="menu__intro reveal">Uma refeição pensada com cuidado, para celebrar com quem amamos.</p>
+  
+  <div class="menu__chapter reveal">
     <div class="menu__chapter-label">Aperitivos</div>
-    <div class="menu__dish"><div class="menu__dish-name">Pão de beterraba com pate</div><div class="menu__dish-desc">Pão artesanal de beterraba, com pate de </div></div>
-    <div class="menu__dish"><div class="menu__dish-name">Pão de cenoura com pate</div><div class="menu__dish-desc">Pão artesanal de beterraba, com pate de</div></div>
-    <div class="menu__dish"><div class="menu__dish-name">Pão de Brocolis com </div><div class="menu__dish-desc">Pão artesanal de beterraba, com pate de</div></div>
-    <div class="menu__dish"><div class="menu__dish-name">Pão de trigo com </div><div class="menu__dish-desc">Pão artesanal de beterraba, com pate de</div></div>
-    <div class="menu__dish"><div class="menu__dish-name">Pate de azeitona </div><div class="menu__dish-desc">Azeitona, </div></div>
-    <div class="menu__dish"><div class="menu__dish-name">Pate de frango </div><div class="menu__dish-desc">Peito de frango desfiado </div></div>
+    <div class="menu__dish"><div class="menu__dish-name">Pão de beterraba com patê</div><div class="menu__dish-desc">Pão artesanal com patê de ricota e ervas</div></div>
+    <div class="menu__dish"><div class="menu__dish-name">Pão de cenoura com patê</div><div class="menu__dish-desc">Pão artesanal com patê de azeitonas</div></div>
+    <div class="menu__dish"><div class="menu__dish-name">Patê de azeitona preta</div><div class="menu__dish-desc">Azeitona preta, alho, azeite e ervas finas</div></div>
+    <div class="menu__dish"><div class="menu__dish-name">Patê de frango com ervas</div><div class="menu__dish-desc">Frango desfiado, cream cheese, cebolinha</div></div>
   </div>
-  <div class="menu__chapter reveal" data-d="4">
+  
+  <div class="menu__chapter reveal">
     <div class="menu__chapter-label">Almoço</div>
-    <div class="menu__dish"><div class="menu__dish-name">Saladas</div><div class="menu__dish-desc">Alface Crepos, tomate ...</div></div>
-    <div class="menu__dish"><div class="menu__dish-name">Talharim de Massa caseira das Noivas</div><div class="menu__dish-desc"> Massa artesanal acompanha molho (Al sugo, Branco ou Bolonhesa)</div></div>
-    <div class="menu__dish"><div class="menu__dish-name">Raviolli de Massa caseira das Noivas</div><div class="menu__dish-desc">Massa artesanal, queijo, ervas finas, paprica, azeite, acompanha molho (Al sugo, Branco ou Bolonhesa)</div></div>
-    <div class="menu__dish"><div class="menu__dish-name">Raviolli de Massa caseira das Noivas</div><div class="menu__dish-desc">Massa artesanal, ricota, azeite, ervas finas, oregano, ovo, acompanha molho (Al sugo, Branco ou Bolonhesa)</div></div>
-    <div class="menu__dish"><div class="menu__dish-name">Capelette de massa fresca</div><div class="menu__dish-desc">recheado com carne bovina, acompanha molho (Al sugo, Branco ou Bolonhesa)</div></div>
+    <div class="menu__dish"><div class="menu__dish-name">Saladas Especiais</div><div class="menu__dish-desc">Mix de folhas, tomate cereja, palmito, molho especial</div></div>
+    <div class="menu__dish"><div class="menu__dish-name">Massas Caseiras das Noivas</div><div class="menu__dish-desc">Talharim, raviolli e capeletti com molhos ao sugo, branco ou bolonhesa</div></div>
     <div class="menu__dish"><div class="menu__dish-name">Contra-filé</div><div class="menu__dish-desc">Carne bovina assada na churrasqueira</div></div>
-    <div class="menu__dish"><div class="menu__dish-name">Frango Grelhado</div><div class="menu__dish-desc">Peito de frango grelhado na churrasqueira</div></div>
+    <div class="menu__dish"><div class="menu__dish-name">Frango Grelhado</div><div class="menu__dish-desc">Peito de frango grelhado com molho de ervas</div></div>
   </div>
-  <div class="menu__chapter reveal" data-d="5">
+  
+  <div class="menu__chapter reveal">
     <div class="menu__chapter-label">Bebidas</div>
-    <div class="menu__dish"><div class="menu__dish-name">Cerveja</div><div class="menu__dish-desc">Variadas nacionais e internacionais(alcoolicas e não alcoolicas)</div></div>
-    <div class="menu__dish"><div class="menu__dish-name">Sangria</div><div class="menu__dish-desc">Vinho branco, suco de limão, uva, maça, abacaxi e mel</div></div>
-    <div class="menu__dish"><div class="menu__dish-name">Caipirinha de limão</div><div class="menu__dish-desc"> Cachaça, açucar, limão</div></div>
-    <div class="menu__dish"><div class="menu__dish-name">Sucos</div><div class="menu__dish-desc">Limonada siciliana, água com gás e sucos naturais</div></div>
-    <div class="menu__dish"><div class="menu__dish-name">Refrigerante</div><div class="menu__dish-desc">Coca, coca zero, </div></div>
-    <div class="menu__dish"><div class="menu__dish-name">Agua</div><div class="menu__dish-desc">gás e naturais</div></div>
+    <div class="menu__dish"><div class="menu__dish-name">Cervejas</div><div class="menu__dish-desc">Nacionais e internacionais (com e sem álcool)</div></div>
+    <div class="menu__dish"><div class="menu__dish-name">Sangria</div><div class="menu__dish-desc">Vinho branco, frutas e mel</div></div>
+    <div class="menu__dish"><div class="menu__dish-name">Caipirinha</div><div class="menu__dish-desc">Limão siciliano, cachaça, açúcar</div></div>
+    <div class="menu__dish"><div class="menu__dish-name">Sucos e Refrigerantes</div><div class="menu__dish-desc">Limonada, sucos naturais, Coca-Cola, Guaraná</div></div>
   </div>
-  <div class="menu__chapter reveal" data-d="6">
+  
+  <div class="menu__chapter reveal">
     <div class="menu__chapter-label">Sobremesa</div>
     <div class="menu__dish"><div class="menu__dish-name">Bolo de Casamento</div><div class="menu__dish-desc">Naked cake de limão siciliano com creme de mascarpone</div></div>
     <div class="menu__dish"><div class="menu__dish-name">Mesa de Doces</div><div class="menu__dish-desc">Trufas, macarons, brigadeiros gourmet e frutas frescas</div></div>
   </div>
 </section>
 
-<!-- ════════ ÁLBUM ════════════════════════════ -->
 <section class="sec" id="album">
-  <p class="sec__tag reveal" data-d="0"><i class="bi bi-images"></i>Memórias coletivas</p>
+  <p class="sec__tag reveal"><i class="bi bi-images"></i>Memórias coletivas</p>
+  <h2 class="album__statement reveal">Registre esse momento<br><span>com a gente</span></h2>
+  <p class="album__body reveal">Cada foto sua é um pedacinho desta memória que vamos guardar para sempre. Envie seus melhores cliques abaixo.</p>
 
-  <h2 class="album__statement reveal" data-d="1">Registre esse momento<br><span>com a gente</span></h2>
-  <p class="album__body reveal" data-d="2">Cada foto sua é um pedacinho desta memória que vamos guardar para sempre. Envie seus melhores cliques abaixo.</p>
-
-  <!-- UPLOAD -->
-  <div class="reveal" data-d="3">
+  <div class="reveal">
     <div class="upload-zone" id="drop-zone">
       <input type="file" id="file-input" accept="image/*" multiple>
       <i class="bi bi-cloud-arrow-up upload-zone__icon"></i>
       <div class="upload-zone__title">Toque para escolher fotos</div>
-      <div class="upload-zone__hint">JPG, PNG, HEIC — até 10 MB por foto</div>
+      <div class="upload-zone__hint">JPG, PNG — até 10 MB por foto</div>
     </div>
 
     <div class="upload-previews" id="previews"></div>
 
     <div class="upload-name-row" id="uploader-name-row" style="display:none">
       <label for="uploader-name">Seu nome (para identificar as fotos)</label>
-      <input type="text" id="uploader-name" placeholder="Como você se chama?" autocomplete="name">
+      <input type="text" id="uploader-name" placeholder="Como você se chama?">
     </div>
 
     <div class="upload-progress" id="upload-progress">
       <div class="upload-progress__bar" id="progress-bar"></div>
     </div>
 
-    <button class="btn-primary" id="btn-upload" style="display:none" onclick="uploadPhotos()">
+    <button class="btn-primary" id="btn-upload" style="display:none">
       <i class="bi bi-cloud-arrow-up"></i>
       Enviar Fotos
     </button>
   </div>
 
-  <p class="album__footnote reveal" data-d="4">As fotos ficam visíveis para todos os convidados</p>
+  <p class="album__footnote reveal">As fotos ficam visíveis para todos os convidados</p>
 
-  <!-- GALLERY -->
-  <div class="reveal" data-d="5" style="margin-top:52px;">
+  <div class="reveal" style="margin-top:52px;">
     <div class="gallery__header">
       <p class="sec__tag" style="margin:0"><i class="bi bi-grid-3x3-gap"></i>Galeria do evento</p>
       <div style="display:flex;align-items:center;gap:12px;">
         <span class="gallery__count" id="gallery-count"></span>
-        <button class="gallery__refresh" id="btn-refresh" onclick="loadGallery(true)" title="Atualizar"><i class="bi bi-arrow-clockwise"></i></button>
+        <button class="gallery__refresh" id="btn-refresh" title="Atualizar"><i class="bi bi-arrow-clockwise"></i></button>
       </div>
     </div>
     <div class="gallery-grid" id="gallery-grid">
-      <!-- skeletons -->
       <div class="gcard" style="grid-column:1/-1;aspect-ratio:16/9"><div class="gcard__skeleton"></div></div>
       <div class="gcard"><div class="gcard__skeleton"></div></div>
       <div class="gcard"><div class="gcard__skeleton"></div></div>
     </div>
-    <button class="load-more" id="btn-load-more" style="display:none" onclick="loadMore()">
-      <i class="bi bi-plus"></i> Ver mais fotos
-    </button>
+    <button class="load-more" id="btn-load-more" style="display:none">Ver mais fotos</button>
   </div>
 </section>
 
-<!-- ════════ MENSAGENS ════════════════════════ -->
 <section class="sec" id="mensagens">
-  <p class="sec__tag reveal" data-d="0"><i class="bi bi-heart"></i>Para as noivas</p>
-  <h2 class="sec__h reveal" data-d="1">Uma mensagem<br><i>especial</i></h2>
-  <p class="msg__lead reveal" data-d="2">Deixe aqui suas palavras — o maior presente que poderíamos receber hoje.</p>
+  <p class="sec__tag reveal"><i class="bi bi-heart"></i>Para as noivas</p>
+  <h2 class="sec__h reveal">Uma mensagem<br><i>especial</i></h2>
+  <p class="msg__lead reveal">Deixe aqui suas palavras — o maior presente que poderíamos receber hoje.</p>
 
-  <div id="msg-form" class="reveal" data-d="3">
-    <div class="field"><label class="field__label" for="inp-name">Seu nome</label><input class="field__input" id="inp-name" type="text" placeholder="Como você se chama?" autocomplete="name"></div>
-    <div class="field"><label class="field__label" for="inp-msg">Sua mensagem</label><textarea class="field__textarea" id="inp-msg" placeholder="Escreva aqui com todo carinho…"></textarea></div>
-    <button class="btn-send" id="btn-send" type="button" onclick="submitMsg()"><i class="bi bi-send"></i>Enviar Mensagem</button>
+  <div id="msg-form" class="reveal">
+    <div class="field"><label class="field__label">Seu nome</label><input class="field__input" id="inp-name" type="text" placeholder="Como você se chama?"></div>
+    <div class="field"><label class="field__label">Sua mensagem</label><textarea class="field__textarea" id="inp-msg" placeholder="Escreva aqui com todo carinho…"></textarea></div>
+    <button class="btn-send" id="btn-send" type="button"><i class="bi bi-send"></i>Enviar Mensagem</button>
   </div>
 
   <div class="msg__success" id="msg-success">
@@ -520,68 +1109,42 @@ body::before{content:'';position:fixed;inset:0;z-index:8000;pointer-events:none;
     <p class="msg__success-p">Obrigada por fazer parte<br>deste dia tão especial para nós.</p>
   </div>
 
-  <!-- messages wall -->
-  <div class="msgs-wall reveal" data-d="4">
+  <div class="msgs-wall reveal">
     <h3 class="msgs-wall__h">O que os convidados dizem</h3>
     <div id="msgs-list"><p class="msgs-wall__empty">Carregando mensagens…</p></div>
   </div>
 </section>
 
-<!-- ════════ FOOTER ═══════════════════════════ -->
 <footer class="footer">
   <div class="footer__mono">C &amp; L</div>
   <p class="footer__line">28 · 03 · 2026</p>
 </footer>
 
-<!-- lightbox -->
 <div class="lightbox" id="lightbox" onclick="closeLightbox()">
   <button class="lightbox__close" onclick="closeLightbox()"><i class="bi bi-x"></i></button>
   <img src="" id="lightbox-img" alt="">
   <div class="lightbox__caption" id="lightbox-cap"></div>
 </div>
 
-<!-- toast -->
 <div class="toast" id="toast"></div>
 
-<!-- config banner // Firebase connected -->
-<div class="config-banner" id="config-banner">
-  <i class="bi bi-exclamation-triangle"></i>
-  <div class="config-banner__text">
-    Para ativar o álbum e mensagens, <span class="config-banner__link" onclick="showSetupGuide()">conecte ao Firebase</span> com suas credenciais.
-  </div>
-  <button class="config-banner__close" onclick="document.getElementById('config-banner').classList.add('hidden')"><i class="bi bi-x"></i></button>
-</div>
-
-<script type="module">
-/* ══════════════════════════════════════════════════════════════
-   🔥 FIREBASE — Firestore (banco) + Storage (fotos)
-   ══════════════════════════════════════════════════════════════ */
-import { initializeApp }              from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-import { getFirestore, collection, addDoc, getDocs,
-         query, orderBy, limit, serverTimestamp }
-                                       from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-import { getStorage, ref, uploadBytesResumable, getDownloadURL }
-                                       from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js';
-
+<script>
+// ========== FIREBASE CONFIG ==========
 const firebaseConfig = {
-  apiKey:            "AIzaSyAf7gNoR5FnjgkweX-uoWRtuxCl3XEOKoo",
-  authDomain:        "expert-marriage-day-32ee3.firebaseapp.com",
-  projectId:         "expert-marriage-day-32ee3",
-  storageBucket:     "expert-marriage-day-32ee3.firebasestorage.app",
+  apiKey: "AIzaSyAf7gNoR5FnjgkweX-uoWRtuxCl3XEOKoo",
+  authDomain: "expert-marriage-day-32ee3.firebaseapp.com",
+  projectId: "expert-marriage-day-32ee3",
+  storageBucket: "expert-marriage-day-32ee3.firebasestorage.app",
   messagingSenderId: "998030581285",
-  appId:             "1:998030581285:web:11b03d4ac042998b92a9cc"
+  appId: "1:998030581285:web:11b03d4ac042998b92a9cc"
 };
 
-const app     = initializeApp(firebaseConfig);
-const db      = getFirestore(app);
-const storage = getStorage(app);
+// Inicializar Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const storage = firebase.storage();
 
-/* oculta banner — Firebase está sempre configurado */
-document.getElementById('config-banner').classList.add('hidden');
-
-/* ══════════════════════════════════════════════
-   NAV
-══════════════════════════════════════════════ */
+// ========== NAVEGAÇÃO ==========
 function navTo(btn) {
   document.querySelectorAll('.nav__tab').forEach(t => t.classList.remove('is-active'));
   btn.classList.add('is-active');
@@ -590,46 +1153,51 @@ function navTo(btn) {
   const navH = document.getElementById('main-nav').offsetHeight + 16;
   window.scrollTo({ top: sec.getBoundingClientRect().top + window.scrollY - navH, behavior: 'smooth' });
 }
+
 window.navTo = navTo;
 
-const NAV = document.getElementById('main-nav');
+// Scroll spy
+const nav = document.getElementById('main-nav');
 const spy = new IntersectionObserver(entries => {
   entries.forEach(e => {
-    if (e.isIntersecting)
-      document.querySelectorAll('.nav__tab').forEach(t =>
-        t.classList.toggle('is-active', t.dataset.sec === e.target.id));
+    if (e.isIntersecting) {
+      document.querySelectorAll('.nav__tab').forEach(t => {
+        t.classList.toggle('is-active', t.dataset.sec === e.target.id);
+      });
+    }
   });
-}, { rootMargin: `-${NAV.offsetHeight + 24}px 0px -58% 0px` });
-['cronograma','cardapio','album','mensagens'].forEach(id => {
-  const el = document.getElementById(id); if (el) spy.observe(el);
+}, { rootMargin: `-${nav.offsetHeight + 24}px 0px -58% 0px` });
+
+['cronograma', 'cardapio', 'album', 'mensagens'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) spy.observe(el);
 });
 
-/* ══ REVEAL ══════════════════════════════════ */
+// ========== REVEAL ANIMATION ==========
 const revObs = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
 }, { threshold: 0.06 });
+
 document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
 
-/* ══ TOAST ═══════════════════════════════════ */
+// ========== TOAST ==========
 function toast(msg, isError = false) {
   const el = document.getElementById('toast');
   el.textContent = msg;
   el.className = 'toast show' + (isError ? ' error' : '');
   setTimeout(() => el.className = 'toast', 3500);
 }
+
 window.toast = toast;
 
-/* ══════════════════════════════════════════════
-   UPLOAD DE FOTOS  →  Firebase Storage + Firestore
-══════════════════════════════════════════════ */
+// ========== UPLOAD DE FOTOS ==========
 let selectedFiles = [];
-
-const fileInput   = document.getElementById('file-input');
-const dropZone    = document.getElementById('drop-zone');
-const previewsEl  = document.getElementById('previews');
-const btnUpload   = document.getElementById('btn-upload');
-const nameRow     = document.getElementById('uploader-name-row');
-const progressEl  = document.getElementById('upload-progress');
+const fileInput = document.getElementById('file-input');
+const dropZone = document.getElementById('drop-zone');
+const previewsEl = document.getElementById('previews');
+const btnUpload = document.getElementById('btn-upload');
+const nameRow = document.getElementById('uploader-name-row');
+const progressEl = document.getElementById('upload-progress');
 const progressBar = document.getElementById('progress-bar');
 
 fileInput.addEventListener('change', e => addFiles(Array.from(e.target.files)));
@@ -637,66 +1205,69 @@ fileInput.addEventListener('change', e => addFiles(Array.from(e.target.files)));
 dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
 dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
 dropZone.addEventListener('drop', e => {
-  e.preventDefault(); dropZone.classList.remove('drag-over');
+  e.preventDefault();
+  dropZone.classList.remove('drag-over');
   addFiles(Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/')));
 });
 
 function addFiles(files) {
   files.forEach(f => {
-    if (f.size > 10 * 1024 * 1024) { toast(`${f.name} é muito grande (máx 10 MB)`, true); return; }
+    if (f.size > 10 * 1024 * 1024) {
+      toast(f.name + ' é muito grande (máx 10 MB)', true);
+      return;
+    }
     selectedFiles.push(f);
 
     const wrap = document.createElement('div');
     wrap.className = 'preview-wrap';
-
     const img = document.createElement('img');
     img.className = 'preview-thumb';
     img.src = URL.createObjectURL(f);
-
     const rm = document.createElement('button');
     rm.className = 'preview-remove';
     rm.innerHTML = '<i class="bi bi-x"></i>';
-    const idx = selectedFiles.indexOf(f);
+    const captured = f;
     rm.onclick = () => {
-      selectedFiles = selectedFiles.filter(x => x !== f);
+      selectedFiles = selectedFiles.filter(x => x !== captured);
       wrap.remove();
-      if (!selectedFiles.length) { btnUpload.style.display = 'none'; nameRow.style.display = 'none'; }
+      if (!selectedFiles.length) {
+        btnUpload.style.display = 'none';
+        nameRow.style.display = 'none';
+      }
     };
-
     wrap.append(img, rm);
     previewsEl.appendChild(wrap);
   });
 
-  if (selectedFiles.length) { btnUpload.style.display = 'flex'; nameRow.style.display = 'block'; }
+  if (selectedFiles.length) {
+    btnUpload.style.display = 'flex';
+    nameRow.style.display = 'block';
+  }
 }
 
-/* ── sobe um arquivo com barra de progresso ── */
 function uploadOneFile(file, uploaderName, fileIndex, totalFiles) {
   return new Promise((resolve, reject) => {
-    const ext      = file.name.split('.').pop().toLowerCase();
-    const safeName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-    const storageRef = ref(storage, `photos/${safeName}`);
-    const task       = uploadBytesResumable(storageRef, file);
+    const ext = file.name.split('.').pop().toLowerCase();
+    const filename = Date.now() + '-' + Math.random().toString(36).slice(2) + '.' + ext;
+    const storageRef = storage.ref('photos/' + filename);
+    const uploadTask = storageRef.put(file);
 
-    task.on('state_changed',
-      snap => {
-        const fileProgress = snap.bytesTransferred / snap.totalBytes;
-        const overall      = (fileIndex + fileProgress) / totalFiles;
+    uploadTask.on('state_changed',
+      (snapshot) => {
+        const fileProgress = snapshot.bytesTransferred / snapshot.totalBytes;
+        const overall = (fileIndex + fileProgress) / totalFiles;
         progressBar.style.width = Math.round(overall * 100) + '%';
       },
-      err => reject(err),
-      async () => {
-        try {
-          const url = await getDownloadURL(task.snapshot.ref);
-          /* salva metadados no Firestore */
-          await addDoc(collection(db, 'photos'), {
-            url,
-            path:      `photos/${safeName}`,
-            name:      uploaderName,
-            createdAt: serverTimestamp(),
+      (error) => reject(error),
+      () => {
+        uploadTask.snapshot.ref.getDownloadURL().then((url) => {
+          return db.collection('photos').add({
+            url: url,
+            path: 'photos/' + filename,
+            name: uploaderName,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
           });
-          resolve(url);
-        } catch(e) { reject(e); }
+        }).then(() => resolve()).catch(reject);
       }
     );
   });
@@ -705,134 +1276,123 @@ function uploadOneFile(file, uploaderName, fileIndex, totalFiles) {
 async function uploadPhotos() {
   if (!selectedFiles.length) return;
 
-  const uploaderName = (document.getElementById('uploader-name').value.trim()) || 'Convidado';
-  const btn = document.getElementById('btn-upload');
-  btn.disabled = true;
-  btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Enviando…';
+  const uploaderName = document.getElementById('uploader-name').value.trim() || 'Convidado';
+  btnUpload.disabled = true;
+  btnUpload.innerHTML = '<i class="bi bi-hourglass-split"></i> Enviando…';
   progressEl.style.display = 'block';
+  progressBar.style.width = '0%';
 
   let done = 0;
   for (let i = 0; i < selectedFiles.length; i++) {
     try {
       await uploadOneFile(selectedFiles[i], uploaderName, i, selectedFiles.length);
       done++;
-    } catch(err) {
+    } catch (err) {
       console.error(err);
-      toast(`Erro ao enviar ${selectedFiles[i].name}`, true);
+      toast('Erro ao enviar ' + selectedFiles[i].name, true);
     }
   }
 
   progressBar.style.width = '100%';
-  setTimeout(() => { progressEl.style.display = 'none'; progressBar.style.width = '0%'; }, 700);
+  setTimeout(() => {
+    progressEl.style.display = 'none';
+    progressBar.style.width = '0%';
+  }, 700);
 
-  toast(`${done} foto${done > 1 ? 's' : ''} enviada${done > 1 ? 's' : ''}!`);
+  toast(done + ' foto' + (done > 1 ? 's' : '') + ' enviada' + (done > 1 ? 's' : '') + '!');
 
-  /* reset estado */
   selectedFiles = [];
   previewsEl.innerHTML = '';
-  btn.style.display = 'none';
+  btnUpload.style.display = 'none';
   nameRow.style.display = 'none';
-  btn.disabled = false;
-  btn.innerHTML = '<i class="bi bi-cloud-arrow-up"></i> Enviar Fotos';
+  btnUpload.disabled = false;
+  btnUpload.innerHTML = '<i class="bi bi-cloud-arrow-up"></i> Enviar Fotos';
   fileInput.value = '';
   document.getElementById('uploader-name').value = '';
 
   loadGallery(true);
 }
-window.uploadPhotos = uploadPhotos;
 
-/* ══════════════════════════════════════════════
-   GALERIA  →  lê do Firestore, exibe em grid
-══════════════════════════════════════════════ */
-let galleryPage  = 0;
-const PAGE_SIZE  = 12;
-let allPhotos    = [];   /* cache local */
+btnUpload.onclick = uploadPhotos;
 
-async function loadGallery(reset = false) {
+// ========== GALERIA ==========
+let allPhotos = [];
+let galleryPage = 0;
+const PAGE_SIZE = 12;
+
+async function loadGallery(reset) {
   if (reset) { galleryPage = 0; allPhotos = []; }
 
   const refreshBtn = document.getElementById('btn-refresh');
   refreshBtn.classList.add('spinning');
-
   const grid = document.getElementById('gallery-grid');
 
   if (reset) {
     grid.innerHTML = `
       <div class="gcard" style="grid-column:1/-1;aspect-ratio:16/9"><div class="gcard__skeleton"></div></div>
       <div class="gcard"><div class="gcard__skeleton"></div></div>
-      <div class="gcard"><div class="gcard__skeleton"></div></div>`;
+      <div class="gcard"><div class="gcard__skeleton"></div></div>
+    `;
   }
 
   try {
-    const q    = query(collection(db, 'photos'), orderBy('createdAt', 'desc'));
-    const snap = await getDocs(q);
-    allPhotos  = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    const snapshot = await db.collection('photos').orderBy('createdAt', 'desc').get();
+    allPhotos = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
     if (reset) grid.innerHTML = '';
 
-    const from  = galleryPage * PAGE_SIZE;
-    const slice = allPhotos.slice(from, from + PAGE_SIZE);
+    const slice = allPhotos.slice(galleryPage * PAGE_SIZE, (galleryPage + 1) * PAGE_SIZE);
 
-    if (!allPhotos.length) {
-      grid.innerHTML = `<div class="gallery__empty" style="grid-column:1/-1"><i class="bi bi-camera"></i><p>Ainda não há fotos. Seja o primeiro!</p></div>`;
+    if (allPhotos.length === 0) {
+      grid.innerHTML = '<div class="gallery__empty" style="grid-column:1/-1"><i class="bi bi-camera"></i><p>Ainda não há fotos. Seja o primeiro!</p></div>';
     } else {
       slice.forEach((photo, i) => {
         const card = document.createElement('div');
         card.className = 'gcard';
         if (reset && i === 0) card.style.cssText = 'grid-column:1/-1;aspect-ratio:16/9';
-
-        const safeName = escHtml(photo.name || 'Convidado');
-        const safeUrl  = photo.url || '';
-
+        const safeName = escapeHtml(photo.name || 'Convidado');
         card.innerHTML = `
-          <img src="${safeUrl}" alt="Foto de ${safeName}" loading="lazy"
-               onclick="openLightbox('${safeUrl}','${safeName}')">
-          <div class="gcard__name">${safeName}</div>`;
+          <img src="${photo.url}" alt="Foto de ${safeName}" loading="lazy" onclick="openLightbox('${photo.url}','${safeName}')">
+          <div class="gcard__name">${safeName}</div>
+        `;
         grid.appendChild(card);
       });
-
       galleryPage++;
-      document.getElementById('btn-load-more').style.display =
-        allPhotos.length > galleryPage * PAGE_SIZE ? 'flex' : 'none';
+      document.getElementById('btn-load-more').style.display = allPhotos.length > galleryPage * PAGE_SIZE ? 'flex' : 'none';
     }
 
     const total = allPhotos.length;
-    document.getElementById('gallery-count').textContent =
-      total ? `${total} foto${total > 1 ? 's' : ''}` : '';
+    document.getElementById('gallery-count').textContent = total ? `${total} foto${total > 1 ? 's' : ''}` : '';
 
-  } catch(err) {
-    console.error('Erro ao carregar galeria:', err);
-    if (reset) grid.innerHTML = `<div class="gallery__empty" style="grid-column:1/-1"><i class="bi bi-wifi-off"></i><p>Não foi possível carregar as fotos</p></div>`;
+  } catch (err) {
+    console.error('Erro:', err);
+    if (reset) grid.innerHTML = '<div class="gallery__empty" style="grid-column:1/-1"><i class="bi bi-wifi-off"></i><p>Erro ao carregar fotos</p></div>';
   }
 
   setTimeout(() => refreshBtn.classList.remove('spinning'), 700);
 }
-window.loadGallery = loadGallery;
 
 function loadMore() {
-  const grid  = document.getElementById('gallery-grid');
-  const from  = galleryPage * PAGE_SIZE;
-  const slice = allPhotos.slice(from, from + PAGE_SIZE);
-
-  slice.forEach((photo, i) => {
-    const card      = document.createElement('div');
-    card.className  = 'gcard';
-    const safeName  = escHtml(photo.name || 'Convidado');
-    const safeUrl   = photo.url || '';
-    card.innerHTML  = `
-      <img src="${safeUrl}" alt="Foto de ${safeName}" loading="lazy"
-           onclick="openLightbox('${safeUrl}','${safeName}')">
-      <div class="gcard__name">${safeName}</div>`;
+  const grid = document.getElementById('gallery-grid');
+  const slice = allPhotos.slice(galleryPage * PAGE_SIZE, (galleryPage + 1) * PAGE_SIZE);
+  slice.forEach(photo => {
+    const card = document.createElement('div');
+    card.className = 'gcard';
+    const safeName = escapeHtml(photo.name || 'Convidado');
+    card.innerHTML = `
+      <img src="${photo.url}" alt="Foto de ${safeName}" loading="lazy" onclick="openLightbox('${photo.url}','${safeName}')">
+      <div class="gcard__name">${safeName}</div>
+    `;
     grid.appendChild(card);
   });
-
   galleryPage++;
-  document.getElementById('btn-load-more').style.display =
-    allPhotos.length > galleryPage * PAGE_SIZE ? 'flex' : 'none';
+  document.getElementById('btn-load-more').style.display = allPhotos.length > galleryPage * PAGE_SIZE ? 'flex' : 'none';
 }
-window.loadMore = loadMore;
 
-/* ══ LIGHTBOX ════════════════════════════════ */
+document.getElementById('btn-load-more').onclick = loadMore;
+document.getElementById('btn-refresh').onclick = () => loadGallery(true);
+
+// ========== LIGHTBOX ==========
 function openLightbox(src, name) {
   const lb = document.getElementById('lightbox');
   document.getElementById('lightbox-img').src = src;
@@ -840,54 +1400,53 @@ function openLightbox(src, name) {
   lb.classList.add('open');
   document.body.style.overflow = 'hidden';
 }
+
 function closeLightbox() {
   document.getElementById('lightbox').classList.remove('open');
   document.body.style.overflow = '';
 }
-window.openLightbox  = openLightbox;
+
+window.openLightbox = openLightbox;
 window.closeLightbox = closeLightbox;
 
-/* ══════════════════════════════════════════════
-   MENSAGENS  →  Firestore
-══════════════════════════════════════════════ */
+// ========== MENSAGENS ==========
 async function submitMsg() {
   const nameVal = document.getElementById('inp-name').value.trim();
-  const msgVal  = document.getElementById('inp-msg').value.trim();
+  const msgVal = document.getElementById('inp-msg').value.trim();
 
-  const pulse = id => {
+  function pulse(id) {
     const el = document.getElementById(id);
     el.style.borderColor = 'var(--terra)';
-    el.style.boxShadow   = '0 0 0 3px rgba(161,75,56,.1)';
+    el.style.boxShadow = '0 0 0 3px rgba(161,75,56,.1)';
     el.focus();
     setTimeout(() => { el.style.borderColor = ''; el.style.boxShadow = ''; }, 2200);
-  };
+  }
 
   if (!nameVal) { pulse('inp-name'); return; }
-  if (!msgVal)  { pulse('inp-msg');  return; }
+  if (!msgVal) { pulse('inp-msg'); return; }
 
   const btn = document.getElementById('btn-send');
   btn.disabled = true;
   btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Enviando…';
 
   try {
-    await addDoc(collection(db, 'messages'), {
-      name:      nameVal,
-      message:   msgVal,
-      createdAt: serverTimestamp(),
+    await db.collection('messages').add({
+      name: nameVal,
+      message: msgVal,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
-  } catch(err) {
-    console.error('Erro ao enviar mensagem:', err);
+  } catch (err) {
+    console.error(err);
     btn.disabled = false;
     btn.innerHTML = '<i class="bi bi-send"></i> Enviar Mensagem';
     toast('Erro ao enviar. Tente novamente.', true);
     return;
   }
 
-  /* anima saída do form e entrada do sucesso */
   const form = document.getElementById('msg-form');
   const succ = document.getElementById('msg-success');
-  form.style.opacity    = '0';
-  form.style.transition = 'opacity .35s ease';
+  form.style.opacity = '0';
+  form.style.transition = 'opacity .35s';
   setTimeout(() => {
     form.style.display = 'none';
     succ.classList.add('show');
@@ -896,64 +1455,107 @@ async function submitMsg() {
 
   loadMessages();
 }
-window.submitMsg = submitMsg;
 
 async function loadMessages() {
   const list = document.getElementById('msgs-list');
   list.innerHTML = '<p class="msgs-wall__empty">Carregando mensagens…</p>';
 
   try {
-    const q    = query(collection(db, 'messages'), orderBy('createdAt', 'desc'), limit(20));
-    const snap = await getDocs(q);
+    const snapshot = await db.collection('messages').orderBy('createdAt', 'desc').limit(20).get();
 
-    if (snap.empty) {
+    if (snapshot.empty) {
       list.innerHTML = '<p class="msgs-wall__empty">Seja o primeiro a deixar uma mensagem</p>';
       return;
     }
 
-    list.innerHTML = snap.docs.map(d => {
-      const m = d.data();
+    list.innerHTML = snapshot.docs.map(doc => {
+      const m = doc.data();
       return `
         <div class="msg-card">
-          <div class="msg-card__name">${escHtml(m.name)}</div>
-          <div class="msg-card__text">${escHtml(m.message)}</div>
-          <div class="msg-card__time">${fmtDate(m.createdAt)}</div>
-        </div>`;
+          <div class="msg-card__name">${escapeHtml(m.name)}</div>
+          <div class="msg-card__text">${escapeHtml(m.message)}</div>
+          <div class="msg-card__time">${formatDate(m.createdAt)}</div>
+        </div>
+      `;
     }).join('');
-
-  } catch(err) {
-    console.error('Erro ao carregar mensagens:', err);
-    list.innerHTML = '<p class="msgs-wall__empty">Não foi possível carregar as mensagens</p>';
+  } catch (err) {
+    console.error(err);
+    list.innerHTML = '<p class="msgs-wall__empty">Erro ao carregar mensagens</p>';
   }
 }
 
-/* ══ UTILS ═══════════════════════════════════ */
-function escHtml(s) {
-  return String(s)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
+document.getElementById('btn-send').onclick = submitMsg;
 
-function fmtDate(ts) {
-  if (!ts) return '';
-  const d = ts.toDate ? ts.toDate() : new Date(ts);
-  return d.toLocaleDateString('pt-BR', {
-    day: '2-digit', month: 'short',
-    hour: '2-digit', minute: '2-digit'
+// ========== UTILS ==========
+function escapeHtml(s) {
+  return String(s).replace(/[&<>]/g, function(m) {
+    if (m === '&') return '&amp;';
+    if (m === '<') return '&lt;';
+    if (m === '>') return '&gt;';
+    return m;
   });
 }
 
-/* ══ HAPTIC ══════════════════════════════════ */
-document.querySelectorAll('button, a').forEach(el => {
-  el.addEventListener('touchstart', () => { try { navigator.vibrate(6); } catch(_) {} }, { passive: true });
-});
+function formatDate(ts) {
+  if (!ts) return '';
+  const d = ts.toDate ? ts.toDate() : new Date(ts);
+  return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+}
 
-/* ══ INIT ════════════════════════════════════ */
+// ========== INICIAR ==========
 loadGallery(true);
 loadMessages();
 </script>
+
+<!-- Botão de teste -->
+<button id="testBtn" style="position:fixed; bottom:10px; right:10px; background:#A14B38; color:white; border:none; padding:10px; border-radius:20px; font-size:12px; z-index:9999">
+  🧪 Testar Firebase
+</button>
+
+<script>
+// ========== TESTE DO FIREBASE ==========
+document.getElementById('testBtn').onclick = async () => {
+  console.log('=== TESTE FIREBASE ===');
+  
+  // Teste 1: Firestore
+  try {
+    const testDoc = await db.collection('test').add({
+      message: 'Teste em ' + new Date().toISOString(),
+      source: 'browser'
+    });
+    console.log('✅ Firestore OK! Documento criado:', testDoc.id);
+    toast('Firestore OK!', false);
+  } catch (err) {
+    console.error('❌ Firestore ERRO:', err);
+    toast('Firestore ERRO: ' + err.message, true);
+  }
+  
+  // Teste 2: Storage (cria um arquivo de teste)
+  try {
+    const testBlob = new Blob(['Teste de upload ' + new Date().toISOString()], { type: 'text/plain' });
+    const testFileName = 'test-' + Date.now() + '.txt';
+    const storageRef = storage.ref('test/' + testFileName);
+    await storageRef.put(testBlob);
+    const url = await storageRef.getDownloadURL();
+    console.log('✅ Storage OK! Arquivo criado:', testFileName, 'URL:', url);
+    toast('Storage OK!', false);
+  } catch (err) {
+    console.error('❌ Storage ERRO:', err);
+    toast('Storage ERRO: ' + err.message, true);
+  }
+  
+  // Teste 3: Listar fotos existentes
+  try {
+    const photos = await db.collection('photos').get();
+    console.log(`📸 Fotos existentes: ${photos.size}`);
+    photos.forEach(doc => {
+      console.log('  -', doc.id, doc.data());
+    });
+  } catch (err) {
+    console.error('❌ Erro ao listar fotos:', err);
+  }
+};
+</script>
+
 </body>
 </html>
