@@ -2,460 +2,83 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#F8F4EE">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lauane & Carolina · 28.03.2026</title>
 
 <!-- Fonts -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Outfit:wght@200;300;400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-<!-- Firebase SDKs -->
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
 
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #F8F4EE; font-family: 'Outfit', sans-serif; color: #1E1510; }
 
-body {
-  background: #F8F4EE;
-  font-family: 'Outfit', system-ui, sans-serif;
-  color: #1E1510;
-  font-weight: 300;
-}
+.hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; background: linear-gradient(135deg, #F8F4EE, #EFE7D8); }
+.hero h1 { font-family: 'Cormorant', serif; font-size: clamp(48px, 12vw, 82px); font-weight: 300; color: #1E1510; line-height: 0.95; }
+.hero h1 span { display: block; font-style: italic; font-size: 0.5em; color: #A14B38; }
+.hero .date { color: #806558; letter-spacing: 4px; font-size: 12px; margin-top: 20px; }
 
-.hero {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  background: linear-gradient(135deg, #F8F4EE, #EFE7D8);
-  padding: 20px;
-}
+.nav { position: sticky; top: 0; background: rgba(248,244,238,0.95); backdrop-filter: blur(10px); display: flex; justify-content: center; gap: 20px; padding: 12px; border-bottom: 1px solid rgba(161,75,56,0.2); }
+.nav button { background: none; border: none; padding: 8px 16px; cursor: pointer; font-size: 12px; letter-spacing: 2px; color: #806558; }
+.nav button.active { color: #A14B38; border-bottom: 2px solid #A14B38; }
 
-.hero h1 {
-  font-family: 'Cormorant', Georgia, serif;
-  font-size: clamp(48px, 12vw, 82px);
-  font-weight: 300;
-  color: #1E1510;
-  line-height: 0.95;
-  margin-bottom: 20px;
-}
+.sec { max-width: 600px; margin: 0 auto; padding: 60px 24px; }
+.sec h2 { font-family: 'Cormorant', serif; font-size: 36px; font-weight: 300; margin-bottom: 30px; }
+.sec h2 i { font-style: italic; color: #A14B38; }
 
-.hero h1 span {
-  display: block;
-  font-style: italic;
-  font-size: 0.5em;
-  color: #A14B38;
-}
+.timeline-item { margin-bottom: 30px; padding-left: 30px; border-left: 1px solid rgba(161,75,56,0.2); position: relative; }
+.timeline-item .time { font-size: 12px; color: #A14B38; }
+.timeline-item .title { font-family: 'Cormorant', serif; font-size: 20px; font-weight: 400; }
+.timeline-item .desc { font-size: 14px; color: #806558; }
+.timeline-item::before { content: ''; position: absolute; left: -5px; top: 0; width: 9px; height: 9px; border-radius: 50%; background: #C9913A; }
 
-.hero .date {
-  color: #806558;
-  letter-spacing: 4px;
-  font-size: 12px;
-  margin-top: 20px;
-}
+.menu-section { margin-bottom: 40px; }
+.menu-section h3 { font-size: 12px; letter-spacing: 3px; color: #A14B38; border-bottom: 1px solid rgba(161,75,56,0.2); padding-bottom: 8px; margin-bottom: 20px; }
+.menu-item { margin-bottom: 20px; }
+.menu-item .name { font-family: 'Cormorant', serif; font-size: 18px; font-weight: 400; }
+.menu-item .desc { font-size: 13px; color: #806558; }
 
-.nav {
-  position: sticky;
-  top: 0;
-  background: rgba(248, 244, 238, 0.95);
-  backdrop-filter: blur(10px);
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  padding: 12px 20px;
-  border-bottom: 1px solid rgba(161, 75, 56, 0.2);
-  z-index: 100;
-  flex-wrap: wrap;
-}
+.upload-zone { border: 2px dashed rgba(161,75,56,0.3); border-radius: 20px; padding: 40px; text-align: center; cursor: pointer; margin-bottom: 20px; }
+.upload-zone i { font-size: 48px; color: #A14B38; }
+.upload-zone input { display: none; }
 
-.nav button {
-  background: none;
-  border: none;
-  padding: 8px 16px;
-  cursor: pointer;
-  font-family: 'Outfit', sans-serif;
-  font-size: 12px;
-  font-weight: 300;
-  letter-spacing: 2px;
-  color: #806558;
-  transition: all 0.3s;
-}
+.previews { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+.preview-item { position: relative; width: 80px; height: 80px; }
+.preview-item img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
+.preview-remove { position: absolute; top: -6px; right: -6px; width: 22px; height: 22px; border-radius: 50%; background: #7A2A38; color: white; border: none; cursor: pointer; }
 
-.nav button i {
-  font-size: 16px;
-  margin-right: 6px;
-  vertical-align: middle;
-}
+.input-name { width: 100%; padding: 14px; background: #EFE7D8; border: 1px solid rgba(161,75,56,0.2); border-radius: 12px; margin-bottom: 16px; }
 
-.nav button.active {
-  color: #A14B38;
-  border-bottom: 2px solid #A14B38;
-}
+.btn-primary { width: 100%; padding: 14px; background: #A14B38; color: white; border: none; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.btn-primary:disabled { opacity: 0.5; }
+.btn-secondary { width: 100%; padding: 12px; background: #7A2A38; color: white; border: none; border-radius: 12px; cursor: pointer; }
 
-.sec {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 60px 24px;
-}
+.progress-bar { height: 3px; background: #EFE7D8; margin: 15px 0; display: none; }
+.progress-fill { height: 100%; background: #A14B38; width: 0%; }
 
-.sec h2 {
-  font-family: 'Cormorant', Georgia, serif;
-  font-size: 36px;
-  font-weight: 300;
-  margin-bottom: 30px;
-  color: #1E1510;
-}
+.gallery-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 20px; }
+.gallery-card { position: relative; aspect-ratio: 1; background: #EFE7D8; border-radius: 16px; overflow: hidden; cursor: pointer; }
+.gallery-card img { width: 100%; height: 100%; object-fit: cover; }
+.gallery-card .name { position: absolute; bottom: 0; left: 0; right: 0; padding: 12px; background: linear-gradient(transparent, rgba(0,0,0,0.6)); color: white; font-size: 11px; }
 
-.sec h2 i {
-  font-style: italic;
-  color: #A14B38;
-}
+.empty-gallery { text-align: center; padding: 60px; color: #806558; }
 
-.timeline-item {
-  margin-bottom: 30px;
-  padding-left: 30px;
-  border-left: 1px solid rgba(161, 75, 56, 0.2);
-  position: relative;
-}
+.msg-card { border-bottom: 1px solid #EFE7D8; padding: 16px 0; }
+.msg-card .name { font-size: 11px; color: #A14B38; text-transform: uppercase; }
+.msg-card .message { font-family: 'Cormorant', serif; font-size: 18px; margin: 8px 0; }
+.msg-card .date { font-size: 11px; color: #806558; }
 
-.timeline-item .time {
-  font-size: 12px;
-  color: #A14B38;
-  letter-spacing: 1px;
-  margin-bottom: 5px;
-}
-
-.timeline-item .title {
-  font-family: 'Cormorant', Georgia, serif;
-  font-size: 20px;
-  font-weight: 400;
-  margin-bottom: 5px;
-}
-
-.timeline-item .desc {
-  font-size: 14px;
-  color: #806558;
-}
-
-.timeline-item::before {
-  content: '';
-  position: absolute;
-  left: -5px;
-  top: 0;
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: #C9913A;
-  border: 2px solid #F8F4EE;
-}
-
-.menu-section {
-  margin-bottom: 40px;
-}
-
-.menu-section h3 {
-  font-size: 12px;
-  letter-spacing: 3px;
-  color: #A14B38;
-  margin-bottom: 20px;
-  text-transform: uppercase;
-  border-bottom: 1px solid rgba(161, 75, 56, 0.2);
-  padding-bottom: 8px;
-}
-
-.menu-item {
-  margin-bottom: 20px;
-}
-
-.menu-item .name {
-  font-family: 'Cormorant', Georgia, serif;
-  font-size: 18px;
-  font-weight: 400;
-  margin-bottom: 4px;
-}
-
-.menu-item .desc {
-  font-size: 13px;
-  color: #806558;
-}
-
-.upload-zone {
-  border: 2px dashed rgba(161, 75, 56, 0.3);
-  border-radius: 20px;
-  padding: 40px 20px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s;
-  margin-bottom: 20px;
-}
-
-.upload-zone.drag-over {
-  border-color: #A14B38;
-  background: rgba(161, 75, 56, 0.05);
-}
-
-.upload-zone i {
-  font-size: 48px;
-  color: #A14B38;
-  margin-bottom: 12px;
-  display: block;
-}
-
-.upload-zone .title {
-  font-size: 16px;
-  margin-bottom: 6px;
-}
-
-.upload-zone .hint {
-  font-size: 12px;
-  color: #806558;
-}
-
-.upload-zone input {
-  display: none;
-}
-
-.previews {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.preview-item {
-  position: relative;
-  width: 80px;
-  height: 80px;
-}
-
-.preview-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 12px;
-}
-
-.preview-remove {
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: #7A2A38;
-  color: white;
-  border: none;
-  cursor: pointer;
-  font-size: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.input-name {
-  width: 100%;
-  padding: 14px;
-  background: #EFE7D8;
-  border: 1px solid rgba(161, 75, 56, 0.2);
-  border-radius: 12px;
-  font-family: inherit;
-  font-size: 14px;
-  margin-bottom: 16px;
-}
-
-.btn-primary {
-  width: 100%;
-  padding: 14px;
-  background: #A14B38;
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-family: 'Outfit', sans-serif;
-  font-size: 14px;
-  letter-spacing: 1px;
-  cursor: pointer;
-  transition: transform 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.btn-primary:active { transform: scale(0.98); }
-.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-
-.btn-secondary {
-  width: 100%;
-  padding: 12px;
-  background: #7A2A38;
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-family: 'Outfit', sans-serif;
-  font-size: 14px;
-  letter-spacing: 1px;
-  cursor: pointer;
-}
-
-.progress-bar {
-  height: 3px;
-  background: #EFE7D8;
-  border-radius: 3px;
-  margin: 15px 0;
-  overflow: hidden;
-  display: none;
-}
-
-.progress-fill {
-  height: 100%;
-  background: #A14B38;
-  width: 0%;
-  transition: width 0.3s;
-}
-
-.gallery-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 30px 0 20px;
-}
-
-.gallery-header h3 {
-  font-family: 'Cormorant', Georgia, serif;
-  font-size: 24px;
-  font-weight: 300;
-}
-
-.gallery-refresh {
-  background: none;
-  border: none;
-  font-size: 18px;
-  cursor: pointer;
-  color: #A14B38;
-}
-
-.gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-}
-
-.gallery-card {
-  position: relative;
-  aspect-ratio: 1;
-  background: #EFE7D8;
-  border-radius: 16px;
-  overflow: hidden;
-  cursor: pointer;
-}
-
-.gallery-card img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.gallery-card .name {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 12px 8px 8px;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.6));
-  color: white;
-  font-size: 11px;
-  font-family: 'Cormorant', Georgia, serif;
-  font-style: italic;
-}
-
-.empty-gallery {
-  text-align: center;
-  padding: 60px 20px;
-  color: #806558;
-  grid-column: 1 / -1;
-}
-
-.empty-gallery i {
-  font-size: 48px;
-  margin-bottom: 16px;
-  display: block;
-  opacity: 0.5;
-}
-
-.msg-card {
-  border-bottom: 1px solid #EFE7D8;
-  padding: 16px 0;
-}
-
-.msg-card .name {
-  font-size: 11px;
-  letter-spacing: 1px;
-  color: #A14B38;
-  margin-bottom: 6px;
-  text-transform: uppercase;
-}
-
-.msg-card .message {
-  font-family: 'Cormorant', Georgia, serif;
-  font-size: 18px;
-  line-height: 1.4;
-  margin-bottom: 6px;
-}
-
-.msg-card .date {
-  font-size: 11px;
-  color: #806558;
-}
-
-.toast {
-  position: fixed;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #1E1510;
-  color: white;
-  padding: 12px 24px;
-  border-radius: 50px;
-  font-size: 13px;
-  opacity: 0;
-  transition: opacity 0.3s;
-  z-index: 10000;
-  pointer-events: none;
-  white-space: nowrap;
-}
-
+.toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1E1510; color: white; padding: 12px 24px; border-radius: 50px; font-size: 13px; opacity: 0; transition: opacity 0.3s; z-index: 10000; }
 .toast.show { opacity: 1; }
 .toast.error { background: #7A2A38; }
 
-.footer {
-  text-align: center;
-  padding: 60px 24px 40px;
-  border-top: 1px solid rgba(161, 75, 56, 0.1);
-}
-
-.footer .monogram {
-  font-family: 'Cormorant', Georgia, serif;
-  font-size: 28px;
-  font-style: italic;
-  color: #C9913A;
-  margin-bottom: 12px;
-}
-
-.footer .date {
-  font-size: 10px;
-  letter-spacing: 3px;
-  color: #806558;
-}
+.footer { text-align: center; padding: 60px 24px; border-top: 1px solid rgba(161,75,56,0.1); }
+.footer .monogram { font-family: 'Cormorant', serif; font-size: 28px; font-style: italic; color: #C9913A; }
 </style>
 </head>
 <body>
@@ -467,72 +90,53 @@ body {
   </div>
 </div>
 
-<nav class="nav" id="nav">
-  <button data-sec="cronograma" class="active"><i class="bi bi-calendar3"></i> Cronograma</button>
-  <button data-sec="cardapio"><i class="bi bi-cup-hot"></i> Cardápio</button>
-  <button data-sec="album"><i class="bi bi-camera"></i> Álbum</button>
-  <button data-sec="mensagens"><i class="bi bi-envelope-heart"></i> Mensagens</button>
+<nav class="nav">
+  <button data-sec="cronograma" class="active">Cronograma</button>
+  <button data-sec="cardapio">Cardápio</button>
+  <button data-sec="album">Álbum</button>
+  <button data-sec="mensagens">Mensagens</button>
 </nav>
 
 <section id="cronograma" class="sec">
   <h2>O dia mais <i>especial</i></h2>
-  <div class="timeline-item"><div class="time">11h30</div><div class="title">Chegada & Aperitivos</div><div class="desc">Recepção com aperitivos de boas-vindas no jardim</div></div>
+  <div class="timeline-item"><div class="time">11h30</div><div class="title">Chegada & Aperitivos</div><div class="desc">Recepção no jardim</div></div>
   <div class="timeline-item"><div class="time">12h30</div><div class="title">Cerimônia</div><div class="desc">Troca de votos</div></div>
-  <div class="timeline-item"><div class="time">13h30</div><div class="title">Almoço e Brindes de Celebração</div><div class="desc">Com brinde e muita alegria</div></div>
-  <div class="timeline-item"><div class="time">14h30</div><div class="title">Pista de Dança</div><div class="desc">Dj comanda a pista e open bar</div></div>
-  <div class="timeline-item"><div class="time">17h00</div><div class="title">Corte do Bolo</div><div class="desc">Momento mais doce da festa</div></div>
+  <div class="timeline-item"><div class="time">13h30</div><div class="title">Almoço</div><div class="desc">Celebração</div></div>
+  <div class="timeline-item"><div class="time">14h30</div><div class="title">Pista de Dança</div><div class="desc">Open bar</div></div>
+  <div class="timeline-item"><div class="time">17h00</div><div class="title">Corte do Bolo</div><div class="desc">Festa continua</div></div>
 </section>
 
 <section id="cardapio" class="sec">
   <h2>Sabores <i>do amor</i></h2>
-  <div class="menu-section"><h3>Aperitivos</h3>
-    <div class="menu-item"><div class="name">Sanduiches de Pães artesanais</div><div class="desc">Beterraba, cenoura, brócolis e trigo com patês especiais</div></div>
-  </div>
-  <div class="menu-section"><h3>Almoço</h3>
-    <div class="menu-item"><div class="name">Massas Caseiras das Noivas</div><div class="desc">Talharim, raviolli e capeletti com molhos ao sugo, branco ou bolonhesa</div></div>
-    <div class="menu-item"><div class="name">Carnes</div><div class="desc">Fraudinha e frango grelhado na churrasqueira</div></div>
-  </div>
-  <div class="menu-section"><h3>Bebidas</h3>
-    <div class="menu-item"><div class="name">Cervejas</div><div class="desc">Nacionais e internacionais</div></div>
-    <div class="menu-item"><div class="name">Sangria & Caipirinha</div><div class="desc">Vinho branco com frutas e cachaça com limão</div></div>
-  </div>
-  <div class="menu-section"><h3>Sobremesa</h3>
-    <div class="menu-item"><div class="name">Bolo de Casamento</div><div class="desc">Chocolate com ganache e branco com nozes</div></div>
-  </div>
+  <div class="menu-section"><h3>Aperitivos</h3><div class="menu-item"><div class="name">Pães artesanais</div><div class="desc">Beterraba, cenoura, brócolis e trigo com patês</div></div></div>
+  <div class="menu-section"><h3>Almoço</h3><div class="menu-item"><div class="name">Massas Caseiras</div><div class="desc">Talharim, raviolli e capeletti</div></div><div class="menu-item"><div class="name">Carnes</div><div class="desc">Fraudinha e frango grelhado</div></div></div>
+  <div class="menu-section"><h3>Bebidas</h3><div class="menu-item"><div class="name">Cervejas, Sangria, Caipirinha</div><div class="desc">Nacionais e internacionais</div></div></div>
+  <div class="menu-section"><h3>Sobremesa</h3><div class="menu-item"><div class="name">Bolo de Casamento</div><div class="desc">Chocolate e branco com nozes</div></div></div>
 </section>
 
 <section id="album" class="sec">
   <h2>Registre esse <i>momento</i></h2>
-  <p style="color: #806558; margin-bottom: 30px;">Cada foto sua é um pedacinho desta memória.</p>
   
   <div class="upload-zone" id="dropZone">
     <i class="bi bi-cloud-arrow-up"></i>
-    <div class="title">Clique ou arraste fotos aqui</div>
-    <div class="hint">JPG, PNG até 10MB</div>
+    <div>Clique ou arraste fotos aqui</div>
     <input type="file" id="fileInput" multiple accept="image/*">
   </div>
   
-  <div class="previews" id="previews"></div>
-  <input type="text" id="uploaderName" class="input-name" placeholder="Seu nome" style="display: none;">
-  <button class="btn-primary" id="uploadBtn" style="display: none;"><i class="bi bi-cloud-arrow-up"></i> Enviar Fotos</button>
+  <div id="previews"></div>
+  <input type="text" id="uploaderName" class="input-name" placeholder="Seu nome" style="display:none">
+  <button class="btn-primary" id="uploadBtn" style="display:none"><i class="bi bi-cloud-arrow-up"></i> Enviar Fotos</button>
   <div class="progress-bar" id="progressBar"><div class="progress-fill" id="progressFill"></div></div>
   
-  <div class="gallery-header"><h3>Galeria do Evento</h3><button class="gallery-refresh" id="refreshBtn"><i class="bi bi-arrow-clockwise"></i></button></div>
-  <div class="gallery-grid" id="galleryGrid"><div class="empty-gallery"><i class="bi bi-camera"></i><p>Carregando fotos...</p></div></div>
+  <div id="galleryGrid" class="gallery-grid"><div class="empty-gallery">📸 Carregando fotos...</div></div>
 </section>
 
 <section id="mensagens" class="sec">
   <h2>Uma mensagem <i>especial</i></h2>
-  <p style="color: #806558; margin-bottom: 30px;">Deixe aqui suas palavras.</p>
-  
   <input type="text" id="msgName" class="input-name" placeholder="Seu nome">
   <textarea id="msgText" class="input-name" rows="3" placeholder="Sua mensagem..."></textarea>
   <button class="btn-secondary" id="sendMsgBtn"><i class="bi bi-send"></i> Enviar Mensagem</button>
-  
-  <div style="margin-top: 50px;">
-    <h3 style="font-family: 'Cormorant', serif; font-size: 24px; font-weight: 300; margin-bottom: 20px;">Mensagens dos Convidados</h3>
-    <div id="messagesList"></div>
-  </div>
+  <div style="margin-top: 40px;"><div id="messagesList"></div></div>
 </section>
 
 <footer class="footer"><div class="monogram">L & C</div><div class="date">28 · 03 · 2026</div></footer>
@@ -553,23 +157,14 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const storage = firebase.storage();
 
-console.log('🔥 Firebase conectado!');
+console.log('🔥 Firebase conectado');
 
-function showToast(msg, isError = false) {
-  const toast = document.getElementById('toast');
-  toast.textContent = msg;
-  toast.className = 'toast show' + (isError ? ' error' : '');
-  setTimeout(() => toast.className = 'toast', 3000);
-}
-
-function escapeHtml(str) {
-  if (!str) return '';
-  return String(str).replace(/[&<>]/g, function(m) {
-    if (m === '&') return '&amp;';
-    if (m === '<') return '&lt;';
-    if (m === '>') return '&gt;';
-    return m;
-  });
+// Toast
+function toast(msg, isError = false) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show' + (isError ? ' error' : '');
+  setTimeout(() => el.className = 'toast', 3000);
 }
 
 // Navegação
@@ -582,7 +177,7 @@ document.querySelectorAll('.nav button').forEach(btn => {
   };
 });
 
-// UPLOAD
+// Upload
 let selectedFiles = [];
 const dropZone = document.getElementById('dropZone');
 const fileInput = document.getElementById('fileInput');
@@ -593,11 +188,11 @@ const progressBar = document.getElementById('progressBar');
 const progressFill = document.getElementById('progressFill');
 
 dropZone.onclick = () => fileInput.click();
-dropZone.ondragover = (e) => { e.preventDefault(); dropZone.classList.add('drag-over'); };
-dropZone.ondragleave = () => dropZone.classList.remove('drag-over');
+dropZone.ondragover = (e) => { e.preventDefault(); dropZone.style.background = '#f0e8dc'; };
+dropZone.ondragleave = () => { dropZone.style.background = 'transparent'; };
 dropZone.ondrop = (e) => {
   e.preventDefault();
-  dropZone.classList.remove('drag-over');
+  dropZone.style.background = 'transparent';
   addFiles(Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/')));
 };
 fileInput.onchange = (e) => addFiles(Array.from(e.target.files));
@@ -605,7 +200,7 @@ fileInput.onchange = (e) => addFiles(Array.from(e.target.files));
 function addFiles(files) {
   files.forEach(file => {
     if (file.size > 10 * 1024 * 1024) {
-      showToast(`${file.name} é muito grande`, true);
+      toast(`${file.name} é muito grande`, true);
       return;
     }
     selectedFiles.push(file);
@@ -615,7 +210,7 @@ function addFiles(files) {
     img.src = URL.createObjectURL(file);
     const remove = document.createElement('button');
     remove.className = 'preview-remove';
-    remove.innerHTML = '<i class="bi bi-x"></i>';
+    remove.innerHTML = '✕';
     remove.onclick = () => {
       selectedFiles = selectedFiles.filter(f => f !== file);
       wrap.remove();
@@ -628,46 +223,31 @@ function addFiles(files) {
     wrap.appendChild(remove);
     previewsDiv.appendChild(wrap);
   });
-  if (selectedFiles.length > 0) {
+  if (selectedFiles.length) {
     uploadBtn.style.display = 'flex';
     uploaderName.style.display = 'block';
   }
 }
 
 uploadBtn.onclick = async () => {
-  if (selectedFiles.length === 0) return;
-  
+  if (!selectedFiles.length) return;
   const name = uploaderName.value.trim() || 'Convidado';
-  const totalFiles = selectedFiles.length;
-  let successCount = 0;
-  
   uploadBtn.disabled = true;
   uploadBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Enviando...';
   progressBar.style.display = 'block';
   progressFill.style.width = '0%';
   
-  for (let i = 0; i < totalFiles; i++) {
+  let success = 0;
+  for (let i = 0; i < selectedFiles.length; i++) {
     const file = selectedFiles[i];
-    const ext = file.name.split('.').pop().toLowerCase();
-    const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-    const storageRef = storage.ref(`photos/${filename}`);
-    
+    const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${file.name.split('.').pop()}`;
     try {
-      const snapshot = await storageRef.put(file);
+      const snapshot = await storage.ref(`photos/${filename}`).put(file);
       const url = await snapshot.ref.getDownloadURL();
-      
-      await db.collection('photos').add({
-        url: url,
-        name: name,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
-      
-      successCount++;
-      progressFill.style.width = `${((i + 1) / totalFiles) * 100}%`;
-    } catch (err) {
-      console.error('Erro:', err);
-      showToast(`Erro: ${err.message}`, true);
-    }
+      await db.collection('photos').add({ url, name, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+      success++;
+      progressFill.style.width = `${((i+1)/selectedFiles.length)*100}%`;
+    } catch(err) { console.error(err); toast(`Erro: ${err.message}`, true); }
   }
   
   selectedFiles = [];
@@ -676,117 +256,82 @@ uploadBtn.onclick = async () => {
   uploaderName.style.display = 'none';
   uploaderName.value = '';
   progressBar.style.display = 'none';
-  progressFill.style.width = '0%';
   fileInput.value = '';
   uploadBtn.disabled = false;
   uploadBtn.innerHTML = '<i class="bi bi-cloud-arrow-up"></i> Enviar Fotos';
-  
-  showToast(`✅ ${successCount} de ${totalFiles} foto(s) enviada(s)!`);
+  toast(`✅ ${success} de ${selectedFiles.length} foto(s) enviada(s)!`);
   loadGallery();
 };
 
-// GALERIA
+// Galeria
 async function loadGallery() {
   const grid = document.getElementById('galleryGrid');
-  grid.innerHTML = '<div class="empty-gallery"><i class="bi bi-hourglass-split"></i><p>Carregando fotos...</p></div>';
-  
+  grid.innerHTML = '<div class="empty-gallery">📸 Carregando...</div>';
   try {
-    const snapshot = await db.collection('photos').orderBy('createdAt', 'desc').get();
-    
-    if (snapshot.empty) {
-      grid.innerHTML = '<div class="empty-gallery"><i class="bi bi-camera"></i><p>Nenhuma foto ainda. Seja o primeiro!</p></div>';
-      return;
-    }
-    
+    const snap = await db.collection('photos').orderBy('createdAt', 'desc').get();
+    if (snap.empty) { grid.innerHTML = '<div class="empty-gallery">📸 Nenhuma foto ainda</div>'; return; }
     grid.innerHTML = '';
-    snapshot.forEach(doc => {
-      const photo = doc.data();
+    snap.forEach(doc => {
+      const p = doc.data();
       const card = document.createElement('div');
       card.className = 'gallery-card';
-      card.onclick = () => window.open(photo.url, '_blank');
-      card.innerHTML = `
-        <img src="${photo.url}" alt="Foto de ${escapeHtml(photo.name)}">
-        <div class="name">${escapeHtml(photo.name)}</div>
-      `;
+      card.onclick = () => window.open(p.url, '_blank');
+      card.innerHTML = `<img src="${p.url}"><div class="name">${escapeHtml(p.name)}</div>`;
       grid.appendChild(card);
     });
-  } catch (err) {
-    console.error('Erro:', err);
-    grid.innerHTML = `<div class="empty-gallery"><i class="bi bi-wifi-off"></i><p>Erro: ${err.message}</p></div>`;
-  }
+  } catch(e) { grid.innerHTML = '<div class="empty-gallery">❌ Erro ao carregar</div>'; }
 }
 
-document.getElementById('refreshBtn').onclick = () => loadGallery();
-
-// MENSAGENS
+// Mensagens
 async function sendMessage() {
   const name = document.getElementById('msgName').value.trim();
-  const message = document.getElementById('msgText').value.trim();
-  
-  if (!name) { showToast('Digite seu nome', true); return; }
-  if (!message) { showToast('Digite sua mensagem', true); return; }
-  
+  const msg = document.getElementById('msgText').value.trim();
+  if (!name) { toast('Digite seu nome', true); return; }
+  if (!msg) { toast('Digite sua mensagem', true); return; }
   const btn = document.getElementById('sendMsgBtn');
   btn.disabled = true;
   btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Enviando...';
-  
   try {
-    await db.collection('messages').add({
-      name: name,
-      message: message,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
-    
+    await db.collection('messages').add({ name, message: msg, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
     document.getElementById('msgName').value = '';
     document.getElementById('msgText').value = '';
-    showToast('💌 Mensagem enviada! Obrigado!');
+    toast('💌 Mensagem enviada!');
     loadMessages();
-  } catch (err) {
-    console.error('Erro:', err);
-    showToast('Erro ao enviar mensagem', true);
-  }
-  
+  } catch(e) { toast('Erro ao enviar', true); }
   btn.disabled = false;
   btn.innerHTML = '<i class="bi bi-send"></i> Enviar Mensagem';
 }
 
 async function loadMessages() {
   const list = document.getElementById('messagesList');
-  list.innerHTML = '<div style="text-align: center; padding: 20px;">Carregando...</div>';
-  
+  list.innerHTML = '<div style="text-align:center; padding:20px">Carregando...</div>';
   try {
-    const snapshot = await db.collection('messages').orderBy('createdAt', 'desc').limit(20).get();
-    
-    if (snapshot.empty) {
-      list.innerHTML = '<div style="text-align: center; padding: 20px;">💬 Seja o primeiro a deixar uma mensagem!</div>';
-      return;
-    }
-    
+    const snap = await db.collection('messages').orderBy('createdAt', 'desc').limit(20).get();
+    if (snap.empty) { list.innerHTML = '<div style="text-align:center; padding:20px">💬 Seja o primeiro!</div>'; return; }
     list.innerHTML = '';
-    snapshot.forEach(doc => {
-      const msg = doc.data();
-      const date = msg.createdAt ? new Date(msg.createdAt.toDate()).toLocaleString('pt-BR') : '';
-      const div = document.createElement('div');
-      div.className = 'msg-card';
-      div.innerHTML = `
-        <div class="name">${escapeHtml(msg.name)}</div>
-        <div class="message">${escapeHtml(msg.message)}</div>
-        <div class="date">${date}</div>
-      `;
-      list.appendChild(div);
+    snap.forEach(doc => {
+      const m = doc.data();
+      const date = m.createdAt ? new Date(m.createdAt.toDate()).toLocaleString('pt-BR') : '';
+      list.innerHTML += `<div class="msg-card"><div class="name">${escapeHtml(m.name)}</div><div class="message">${escapeHtml(m.message)}</div><div class="date">${date}</div></div>`;
     });
-  } catch (err) {
-    console.error('Erro:', err);
-    list.innerHTML = `<div style="text-align: center; padding: 20px; color: #7A2A38;">❌ Erro: ${err.message}</div>`;
-  }
+  } catch(e) { list.innerHTML = '<div style="text-align:center; padding:20px">❌ Erro</div>'; }
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/[&<>]/g, function(m) {
+    if (m === '&') return '&amp;';
+    if (m === '<') return '&lt;';
+    if (m === '>') return '&gt;';
+    return m;
+  });
 }
 
 document.getElementById('sendMsgBtn').onclick = sendMessage;
 
-// INICIAR
+// Iniciar
 loadGallery();
 loadMessages();
-showToast('🔥 Bem-vindos ao nosso casamento!', false);
+toast('🔥 Bem-vindos ao nosso casamento!');
 </script>
 </body>
 </html>
