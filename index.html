@@ -18,470 +18,93 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
 
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  background: #F8F4EE;
-  font-family: 'Outfit', system-ui, sans-serif;
-  color: #1E1510;
-  font-weight: 300;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #F8F4EE; font-family: 'Outfit', system-ui, sans-serif; color: #1E1510; font-weight: 300; }
 
 /* Hero */
-.hero {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  background: linear-gradient(135deg, #F8F4EE, #EFE7D8);
-  padding: 20px;
-  position: relative;
-}
-
-.hero h1 {
-  font-family: 'Cormorant', Georgia, serif;
-  font-size: clamp(48px, 12vw, 82px);
-  font-weight: 300;
-  color: #1E1510;
-  line-height: 0.95;
-  margin-bottom: 20px;
-}
-
-.hero h1 span {
-  display: block;
-  font-style: italic;
-  font-size: 0.5em;
-  color: #A14B38;
-}
-
-.hero .date {
-  color: #806558;
-  letter-spacing: 4px;
-  font-size: 12px;
-  margin-top: 20px;
-}
+.hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; background: linear-gradient(135deg, #F8F4EE, #EFE7D8); padding: 20px; }
+.hero h1 { font-family: 'Cormorant', Georgia, serif; font-size: clamp(48px, 12vw, 82px); font-weight: 300; color: #1E1510; line-height: 0.95; margin-bottom: 20px; }
+.hero h1 span { display: block; font-style: italic; font-size: 0.5em; color: #A14B38; }
+.hero .date { color: #806558; letter-spacing: 4px; font-size: 12px; margin-top: 20px; }
 
 /* Navegação */
-.nav {
-  position: sticky;
-  top: 0;
-  background: rgba(248, 244, 238, 0.95);
-  backdrop-filter: blur(10px);
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  padding: 12px 20px;
-  border-bottom: 1px solid rgba(161, 75, 56, 0.2);
-  z-index: 100;
-  flex-wrap: wrap;
-}
-
-.nav button {
-  background: none;
-  border: none;
-  padding: 8px 16px;
-  cursor: pointer;
-  font-family: 'Outfit', sans-serif;
-  font-size: 12px;
-  font-weight: 300;
-  letter-spacing: 2px;
-  color: #806558;
-  transition: all 0.3s;
-}
-
-.nav button i {
-  font-size: 16px;
-  margin-right: 6px;
-  vertical-align: middle;
-}
-
-.nav button.active {
-  color: #A14B38;
-  border-bottom: 2px solid #A14B38;
-}
+.nav { position: sticky; top: 0; background: rgba(248, 244, 238, 0.95); backdrop-filter: blur(10px); display: flex; justify-content: center; gap: 20px; padding: 12px 20px; border-bottom: 1px solid rgba(161, 75, 56, 0.2); z-index: 100; flex-wrap: wrap; }
+.nav button { background: none; border: none; padding: 8px 16px; cursor: pointer; font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 300; letter-spacing: 2px; color: #806558; transition: all 0.3s; }
+.nav button i { font-size: 16px; margin-right: 6px; vertical-align: middle; }
+.nav button.active { color: #A14B38; border-bottom: 2px solid #A14B38; }
 
 /* Seções */
-.sec {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 60px 24px;
-}
-
-.sec h2 {
-  font-family: 'Cormorant', Georgia, serif;
-  font-size: 36px;
-  font-weight: 300;
-  margin-bottom: 30px;
-  color: #1E1510;
-}
-
-.sec h2 i {
-  font-style: italic;
-  color: #A14B38;
-}
+.sec { max-width: 600px; margin: 0 auto; padding: 60px 24px; }
+.sec h2 { font-family: 'Cormorant', Georgia, serif; font-size: 36px; font-weight: 300; margin-bottom: 30px; color: #1E1510; }
+.sec h2 i { font-style: italic; color: #A14B38; }
 
 /* Timeline */
-.timeline-item {
-  margin-bottom: 30px;
-  padding-left: 30px;
-  border-left: 1px solid rgba(161, 75, 56, 0.2);
-  position: relative;
-}
-
-.timeline-item .time {
-  font-size: 12px;
-  color: #A14B38;
-  letter-spacing: 1px;
-  margin-bottom: 5px;
-}
-
-.timeline-item .title {
-  font-family: 'Cormorant', Georgia, serif;
-  font-size: 20px;
-  font-weight: 400;
-  margin-bottom: 5px;
-}
-
-.timeline-item .desc {
-  font-size: 14px;
-  color: #806558;
-}
-
-.timeline-item::before {
-  content: '';
-  position: absolute;
-  left: -5px;
-  top: 0;
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: #C9913A;
-  border: 2px solid #F8F4EE;
-}
+.timeline-item { margin-bottom: 30px; padding-left: 30px; border-left: 1px solid rgba(161, 75, 56, 0.2); position: relative; }
+.timeline-item .time { font-size: 12px; color: #A14B38; letter-spacing: 1px; margin-bottom: 5px; }
+.timeline-item .title { font-family: 'Cormorant', Georgia, serif; font-size: 20px; font-weight: 400; margin-bottom: 5px; }
+.timeline-item .desc { font-size: 14px; color: #806558; }
+.timeline-item::before { content: ''; position: absolute; left: -5px; top: 0; width: 9px; height: 9px; border-radius: 50%; background: #C9913A; border: 2px solid #F8F4EE; }
 
 /* Menu */
-.menu-section {
-  margin-bottom: 40px;
-}
-
-.menu-section h3 {
-  font-size: 12px;
-  letter-spacing: 3px;
-  color: #A14B38;
-  margin-bottom: 20px;
-  text-transform: uppercase;
-  border-bottom: 1px solid rgba(161, 75, 56, 0.2);
-  padding-bottom: 8px;
-}
-
-.menu-item {
-  margin-bottom: 20px;
-}
-
-.menu-item .name {
-  font-family: 'Cormorant', Georgia, serif;
-  font-size: 18px;
-  font-weight: 400;
-  margin-bottom: 4px;
-}
-
-.menu-item .desc {
-  font-size: 13px;
-  color: #806558;
-}
+.menu-section { margin-bottom: 40px; }
+.menu-section h3 { font-size: 12px; letter-spacing: 3px; color: #A14B38; margin-bottom: 20px; text-transform: uppercase; border-bottom: 1px solid rgba(161, 75, 56, 0.2); padding-bottom: 8px; }
+.menu-item { margin-bottom: 20px; }
+.menu-item .name { font-family: 'Cormorant', Georgia, serif; font-size: 18px; font-weight: 400; margin-bottom: 4px; }
+.menu-item .desc { font-size: 13px; color: #806558; }
 
 /* Upload Zone */
-.upload-zone {
-  border: 2px dashed rgba(161, 75, 56, 0.3);
-  border-radius: 20px;
-  padding: 40px 20px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s;
-  margin-bottom: 20px;
-}
-
-.upload-zone.drag-over {
-  border-color: #A14B38;
-  background: rgba(161, 75, 56, 0.05);
-}
-
-.upload-zone i {
-  font-size: 48px;
-  color: #A14B38;
-  margin-bottom: 12px;
-  display: block;
-}
-
-.upload-zone .title {
-  font-size: 16px;
-  margin-bottom: 6px;
-}
-
-.upload-zone .hint {
-  font-size: 12px;
-  color: #806558;
-}
-
-.upload-zone input {
-  display: none;
-}
+.upload-zone { border: 2px dashed rgba(161, 75, 56, 0.3); border-radius: 20px; padding: 40px 20px; text-align: center; cursor: pointer; transition: all 0.3s; margin-bottom: 20px; }
+.upload-zone.drag-over { border-color: #A14B38; background: rgba(161, 75, 56, 0.05); }
+.upload-zone i { font-size: 48px; color: #A14B38; margin-bottom: 12px; display: block; }
+.upload-zone .title { font-size: 16px; margin-bottom: 6px; }
+.upload-zone .hint { font-size: 12px; color: #806558; }
+.upload-zone input { display: none; }
 
 /* Preview */
-.previews {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.preview-item {
-  position: relative;
-  width: 80px;
-  height: 80px;
-}
-
-.preview-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 12px;
-}
-
-.preview-remove {
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: #7A2A38;
-  color: white;
-  border: none;
-  cursor: pointer;
-  font-size: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+.previews { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+.preview-item { position: relative; width: 80px; height: 80px; }
+.preview-item img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
+.preview-remove { position: absolute; top: -6px; right: -6px; width: 22px; height: 22px; border-radius: 50%; background: #7A2A38; color: white; border: none; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; }
 
 /* Inputs */
-.input-name {
-  width: 100%;
-  padding: 14px;
-  background: #EFE7D8;
-  border: 1px solid rgba(161, 75, 56, 0.2);
-  border-radius: 12px;
-  font-family: inherit;
-  font-size: 14px;
-  margin-bottom: 16px;
-}
+.input-name { width: 100%; padding: 14px; background: #EFE7D8; border: 1px solid rgba(161, 75, 56, 0.2); border-radius: 12px; font-family: inherit; font-size: 14px; margin-bottom: 16px; }
 
 /* Botões */
-.btn-primary {
-  width: 100%;
-  padding: 14px;
-  background: #A14B38;
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-family: 'Outfit', sans-serif;
-  font-size: 14px;
-  letter-spacing: 1px;
-  cursor: pointer;
-  transition: transform 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.btn-primary:active {
-  transform: scale(0.98);
-}
-
-.btn-primary:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.btn-secondary {
-  width: 100%;
-  padding: 12px;
-  background: #7A2A38;
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-family: 'Outfit', sans-serif;
-  font-size: 14px;
-  letter-spacing: 1px;
-  cursor: pointer;
-}
+.btn-primary { width: 100%; padding: 14px; background: #A14B38; color: white; border: none; border-radius: 12px; font-family: 'Outfit', sans-serif; font-size: 14px; letter-spacing: 1px; cursor: pointer; transition: transform 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.btn-primary:active { transform: scale(0.98); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-secondary { width: 100%; padding: 12px; background: #7A2A38; color: white; border: none; border-radius: 12px; font-family: 'Outfit', sans-serif; font-size: 14px; letter-spacing: 1px; cursor: pointer; }
 
 /* Progress Bar */
-.progress-bar {
-  height: 3px;
-  background: #EFE7D8;
-  border-radius: 3px;
-  margin: 15px 0;
-  overflow: hidden;
-  display: none;
-}
-
-.progress-fill {
-  height: 100%;
-  background: #A14B38;
-  width: 0%;
-  transition: width 0.3s;
-}
+.progress-bar { height: 3px; background: #EFE7D8; border-radius: 3px; margin: 15px 0; overflow: hidden; display: none; }
+.progress-fill { height: 100%; background: #A14B38; width: 0%; transition: width 0.3s; }
 
 /* Galeria */
-.gallery-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 30px 0 20px;
-}
-
-.gallery-header h3 {
-  font-family: 'Cormorant', Georgia, serif;
-  font-size: 24px;
-  font-weight: 300;
-}
-
-.gallery-refresh {
-  background: none;
-  border: none;
-  font-size: 18px;
-  cursor: pointer;
-  color: #A14B38;
-}
-
-.gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-}
-
-.gallery-card {
-  position: relative;
-  aspect-ratio: 1;
-  background: #EFE7D8;
-  border-radius: 16px;
-  overflow: hidden;
-  cursor: pointer;
-}
-
-.gallery-card img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.gallery-card .name {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 12px 8px 8px;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.6));
-  color: white;
-  font-size: 11px;
-  font-family: 'Cormorant', Georgia, serif;
-  font-style: italic;
-}
-
-.empty-gallery {
-  text-align: center;
-  padding: 60px 20px;
-  color: #806558;
-  grid-column: 1 / -1;
-}
-
-.empty-gallery i {
-  font-size: 48px;
-  margin-bottom: 16px;
-  display: block;
-  opacity: 0.5;
-}
+.gallery-header { display: flex; justify-content: space-between; align-items: center; margin: 30px 0 20px; }
+.gallery-header h3 { font-family: 'Cormorant', Georgia, serif; font-size: 24px; font-weight: 300; }
+.gallery-refresh { background: none; border: none; font-size: 18px; cursor: pointer; color: #A14B38; }
+.gallery-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.gallery-card { position: relative; aspect-ratio: 1; background: #EFE7D8; border-radius: 16px; overflow: hidden; cursor: pointer; }
+.gallery-card img { width: 100%; height: 100%; object-fit: cover; }
+.gallery-card .name { position: absolute; bottom: 0; left: 0; right: 0; padding: 12px 8px 8px; background: linear-gradient(transparent, rgba(0, 0, 0, 0.6)); color: white; font-size: 11px; font-family: 'Cormorant', Georgia, serif; font-style: italic; }
+.empty-gallery { text-align: center; padding: 60px 20px; color: #806558; grid-column: 1 / -1; }
+.empty-gallery i { font-size: 48px; margin-bottom: 16px; display: block; opacity: 0.5; }
 
 /* Mensagens */
-.msg-card {
-  border-bottom: 1px solid #EFE7D8;
-  padding: 16px 0;
-}
-
-.msg-card .name {
-  font-size: 11px;
-  letter-spacing: 1px;
-  color: #A14B38;
-  margin-bottom: 6px;
-  text-transform: uppercase;
-}
-
-.msg-card .message {
-  font-family: 'Cormorant', Georgia, serif;
-  font-size: 18px;
-  line-height: 1.4;
-  margin-bottom: 6px;
-}
-
-.msg-card .date {
-  font-size: 11px;
-  color: #806558;
-}
+.msg-card { border-bottom: 1px solid #EFE7D8; padding: 16px 0; }
+.msg-card .name { font-size: 11px; letter-spacing: 1px; color: #A14B38; margin-bottom: 6px; text-transform: uppercase; }
+.msg-card .message { font-family: 'Cormorant', Georgia, serif; font-size: 18px; line-height: 1.4; margin-bottom: 6px; }
+.msg-card .date { font-size: 11px; color: #806558; }
 
 /* Toast */
-.toast {
-  position: fixed;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #1E1510;
-  color: white;
-  padding: 12px 24px;
-  border-radius: 50px;
-  font-size: 13px;
-  opacity: 0;
-  transition: opacity 0.3s;
-  z-index: 10000;
-  pointer-events: none;
-  white-space: nowrap;
-}
-
-.toast.show {
-  opacity: 1;
-}
-
-.toast.error {
-  background: #7A2A38;
-}
+.toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1E1510; color: white; padding: 12px 24px; border-radius: 50px; font-size: 13px; opacity: 0; transition: opacity 0.3s; z-index: 10000; pointer-events: none; white-space: nowrap; }
+.toast.show { opacity: 1; }
+.toast.error { background: #7A2A38; }
 
 /* Footer */
-.footer {
-  text-align: center;
-  padding: 60px 24px 40px;
-  border-top: 1px solid rgba(161, 75, 56, 0.1);
-}
-
-.footer .monogram {
-  font-family: 'Cormorant', Georgia, serif;
-  font-size: 28px;
-  font-style: italic;
-  color: #C9913A;
-  margin-bottom: 12px;
-}
-
-.footer .date {
-  font-size: 10px;
-  letter-spacing: 3px;
-  color: #806558;
-}
+.footer { text-align: center; padding: 60px 24px 40px; border-top: 1px solid rgba(161, 75, 56, 0.1); }
+.footer .monogram { font-family: 'Cormorant', Georgia, serif; font-size: 28px; font-style: italic; color: #C9913A; margin-bottom: 12px; }
+.footer .date { font-size: 10px; letter-spacing: 3px; color: #806558; }
 </style>
 </head>
 <body>
@@ -505,52 +128,23 @@ body {
 <!-- CRONOGRAMA -->
 <section id="cronograma" class="sec">
   <h2>O dia mais <i>especial</i></h2>
-  
-  <div class="timeline-item">
-    <div class="time">11h30</div>
-    <div class="title">Chegada & Aperitivos</div>
-    <div class="desc">Recepção com aperitivos de boas-vindas no jardim</div>
-  </div>
-  
-  <div class="timeline-item">
-    <div class="time">12h30</div>
-    <div class="title">Cerimônia</div>
-    <div class="desc">Troca de votos</div>
-  </div>
-  
-  <div class="timeline-item">
-    <div class="time">13h30</div>
-    <div class="title">Almoço e Brindes de Celebração</div>
-    <div class="desc">Com brinde e muita alegria</div>
-  </div>
-  
-  <div class="timeline-item">
-    <div class="time">14h30</div>
-    <div class="title">Pista de Dança</div>
-    <div class="desc">Dj comanda a pista e open bar</div>
-  </div>
-  
-  <div class="timeline-item">
-    <div class="time">17h00</div>
-    <div class="title">Corte do Bolo</div>
-    <div class="desc">Momento mais doce da festa e a festa rola até o anoitecer</div>
-  </div>
+  <div class="timeline-item"><div class="time">11h30</div><div class="title">Chegada & Aperitivos</div><div class="desc">Recepção com aperitivos de boas-vindas no jardim</div></div>
+  <div class="timeline-item"><div class="time">12h30</div><div class="title">Cerimônia</div><div class="desc">Troca de votos</div></div>
+  <div class="timeline-item"><div class="time">13h30</div><div class="title">Almoço e Brindes de Celebração</div><div class="desc">Com brinde e muita alegria</div></div>
+  <div class="timeline-item"><div class="time">14h30</div><div class="title">Pista de Dança</div><div class="desc">Dj comanda a pista e open bar</div></div>
+  <div class="timeline-item"><div class="time">17h00</div><div class="title">Corte do Bolo</div><div class="desc">Momento mais doce da festa e a festa rola até o anoitecer</div></div>
 </section>
 
 <!-- CARDÁPIO -->
 <section id="cardapio" class="sec">
   <h2>Sabores <i>do amor</i></h2>
-  
-  <div class="menu-section">
-    <h3>Aperitivos</h3>
+  <div class="menu-section"><h3>Aperitivos</h3>
     <div class="menu-item"><div class="name">Sanduiches de Pães artesanais</div><div class="desc">Beterraba com paté de atum, cenoura e brócolis com paté de frango e trigo com queijo alface e tomante</div></div>
     <div class="menu-item"><div class="name">Patês</div><div class="desc">Azeitona preta e frango com ervas</div></div>
   </div>
-  
-  <div class="menu-section">
-    <h3>Almoço</h3>
+  <div class="menu-section"><h3>Almoço</h3>
     <div class="menu-item"><div class="name">Saladas Especiais</div><div class="desc">Mix de folhas, tomate cereja, palmito</div></div>
-    <div class="menu-item"><div class="name">Salada Marroquina</div><div class="desc">Cebola, alho , currt, gengibre, vinagre, mel e azeite  </div></div>
+    <div class="menu-item"><div class="name">Salada Marroquina</div><div class="desc">Cebola, alho , currt, gengibre, vinagre, mel e azeite</div></div>
     <div class="menu-item"><div class="name">Saladas Abobrinha</div><div class="desc">Abobrinha, tomate, limão, alho. salsinha, azeite e azeitonas</div></div>
     <div class="menu-item"><div class="name">Talharim de Massas Caseiras das Noivas</div><div class="desc">Talharim de massa caseira com molhos ao sugo, bechamel ou bolonhesa</div></div>
     <div class="menu-item"><div class="name">Raviolli de Queijo Massas Caseiras das Noivas</div><div class="desc">Raviolli de queijo com molhos ao sugo, bechamel ou bolonhesa</div></div>
@@ -558,17 +152,13 @@ body {
     <div class="menu-item"><div class="name">Capeletti de Massas Fresca</div><div class="desc">Capeletti com molhos ao sugo, bechamel ou bolonhesa</div></div>
     <div class="menu-item"><div class="name">Carnes</div><div class="desc">Fraudinha e frango grelhado na churrasqueira</div></div>
   </div>
-  
-  <div class="menu-section">
-    <h3>Bebidas</h3>
+  <div class="menu-section"><h3>Bebidas</h3>
     <div class="menu-item"><div class="name">Cervejas</div><div class="desc">Nacionais e internacionais (com e sem álcool)</div></div>
-    <div class="menu-item"><div class="name">Sangria & Caipirinha</div><div class="desc">Sagria de vinho branco com frutas e Caipinha de cachaça com limão </div></div>
-    <div class="menu-item"><div class="name">Sucos & Refrigerantes</div><div class="desc">Suco de Larnaja Natural, sucos uva e abacaxi, Coca-Cola, Guaraná, Fanta</div></div>
+    <div class="menu-item"><div class="name">Sangria & Caipirinha</div><div class="desc">Sagria de vinho branco com frutas e Caipinha de cachaça com limão</div></div>
+    <div class="menu-item"><div class="name">Sucos & Refrigerantes</div><div class="desc">Suco de Laranja Natural, sucos uva e abacaxi, Coca-Cola, Guaraná, Fanta</div></div>
   </div>
-  
-  <div class="menu-section">
-    <h3>Sobremesa</h3>
-    <div class="menu-item"><div class="name">Bolo de Casamento</div><div class="desc">Bolo de chocolate com recheio de ganache e bolo de brnaco com recheio de nozes.</div></div>
+  <div class="menu-section"><h3>Sobremesa</h3>
+    <div class="menu-item"><div class="name">Bolo de Casamento</div><div class="desc">Bolo de chocolate com recheio de ganache e bolo de branco com recheio de nozes.</div></div>
     <div class="menu-item"><div class="name">Mesa de Doces</div><div class="desc">Trufas, barquinha recheada, brigadeiros gourmet.</div></div>
     <div class="menu-item"><div class="name">Frutas</div><div class="desc">Frutas da estação.</div></div>
   </div>
@@ -579,7 +169,6 @@ body {
   <h2>Registre esse <i>momento</i></h2>
   <p style="color: #806558; margin-bottom: 30px;">Cada foto sua é um pedacinho desta memória que vamos guardar para sempre.</p>
   
-  <!-- Área de upload -->
   <div class="upload-zone" id="dropZone">
     <i class="bi bi-cloud-arrow-up"></i>
     <div class="title">Clique ou arraste fotos aqui</div>
@@ -588,25 +177,12 @@ body {
   </div>
   
   <div class="previews" id="previews"></div>
-  
   <input type="text" id="uploaderName" class="input-name" placeholder="Seu nome" style="display: none;">
+  <button class="btn-primary" id="uploadBtn" style="display: none;"><i class="bi bi-cloud-arrow-up"></i> Enviar Fotos</button>
+  <div class="progress-bar" id="progressBar"><div class="progress-fill" id="progressFill"></div></div>
   
-  <button class="btn-primary" id="uploadBtn" style="display: none;">
-    <i class="bi bi-cloud-arrow-up"></i> Enviar Fotos
-  </button>
-  
-  <div class="progress-bar" id="progressBar">
-    <div class="progress-fill" id="progressFill"></div>
-  </div>
-  
-  <!-- Galeria -->
-  <div class="gallery-header">
-    <h3>Galeria do Evento</h3>
-    <button class="gallery-refresh" id="refreshBtn" title="Atualizar"><i class="bi bi-arrow-clockwise"></i></button>
-  </div>
-  <div class="gallery-grid" id="galleryGrid">
-    <div class="empty-gallery"><i class="bi bi-camera"></i><p>Carregando fotos...</p></div>
-  </div>
+  <div class="gallery-header"><h3>Galeria do Evento</h3><button class="gallery-refresh" id="refreshBtn" title="Atualizar"><i class="bi bi-arrow-clockwise"></i></button></div>
+  <div class="gallery-grid" id="galleryGrid"><div class="empty-gallery"><i class="bi bi-camera"></i><p>Carregando fotos...</p></div></div>
 </section>
 
 <!-- MENSAGENS -->
@@ -616,10 +192,7 @@ body {
   
   <input type="text" id="msgName" class="input-name" placeholder="Seu nome">
   <textarea id="msgText" class="input-name" rows="3" placeholder="Sua mensagem..." style="resize: vertical;"></textarea>
-  
-  <button class="btn-secondary" id="sendMsgBtn">
-    <i class="bi bi-send"></i> Enviar Mensagem
-  </button>
+  <button class="btn-secondary" id="sendMsgBtn"><i class="bi bi-send"></i> Enviar Mensagem</button>
   
   <div style="margin-top: 50px;">
     <h3 style="font-family: 'Cormorant', serif; font-size: 24px; font-weight: 300; margin-bottom: 20px;">O que os convidados dizem</h3>
@@ -627,12 +200,7 @@ body {
   </div>
 </section>
 
-<!-- FOOTER -->
-<footer class="footer">
-  <div class="monogram">L & C</div>
-  <div class="date">28 · 03 · 2026</div>
-</footer>
-
+<footer class="footer"><div class="monogram">L & C</div><div class="date">28 · 03 · 2026</div></footer>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -646,13 +214,11 @@ const firebaseConfig = {
   appId: "1:998030581285:web:11b03d4ac042998b92a9cc"
 };
 
-// Inicializar Firebase
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const storage = firebase.storage();
 
 console.log('🔥 Firebase conectado!');
-console.log('📦 Storage bucket:', storage.ref().bucket);
 
 // ==================== FUNÇÕES AUXILIARES ====================
 function showToast(msg, isError = false) {
@@ -694,23 +260,13 @@ const progressBar = document.getElementById('progressBar');
 const progressFill = document.getElementById('progressFill');
 
 dropZone.onclick = () => fileInput.click();
-
-dropZone.ondragover = (e) => {
-  e.preventDefault();
-  dropZone.classList.add('drag-over');
-};
-
-dropZone.ondragleave = () => {
-  dropZone.classList.remove('drag-over');
-};
-
+dropZone.ondragover = (e) => { e.preventDefault(); dropZone.classList.add('drag-over'); };
+dropZone.ondragleave = () => dropZone.classList.remove('drag-over');
 dropZone.ondrop = (e) => {
   e.preventDefault();
   dropZone.classList.remove('drag-over');
-  const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
-  addFiles(files);
+  addFiles(Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/')));
 };
-
 fileInput.onchange = (e) => addFiles(Array.from(e.target.files));
 
 function addFiles(files) {
@@ -720,13 +276,10 @@ function addFiles(files) {
       return;
     }
     selectedFiles.push(file);
-    
     const wrap = document.createElement('div');
     wrap.className = 'preview-item';
-    
     const img = document.createElement('img');
     img.src = URL.createObjectURL(file);
-    
     const remove = document.createElement('button');
     remove.className = 'preview-remove';
     remove.innerHTML = '<i class="bi bi-x"></i>';
@@ -738,19 +291,17 @@ function addFiles(files) {
         uploaderName.style.display = 'none';
       }
     };
-    
     wrap.appendChild(img);
     wrap.appendChild(remove);
     previewsDiv.appendChild(wrap);
   });
-  
   if (selectedFiles.length > 0) {
     uploadBtn.style.display = 'flex';
     uploaderName.style.display = 'block';
   }
 }
 
-// ========== FUNÇÃO DE UPLOAD CORRIGIDA COM LIMPEZA IMEDIATA ==========
+// 🔥 FLUXO DE UPLOAD: Storage + Firestore
 uploadBtn.onclick = async () => {
   if (selectedFiles.length === 0) return;
   
@@ -758,7 +309,6 @@ uploadBtn.onclick = async () => {
   const totalFiles = selectedFiles.length;
   let successCount = 0;
   
-  // Desabilitar botão e mostrar progresso
   uploadBtn.disabled = true;
   uploadBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Enviando...';
   progressBar.style.display = 'block';
@@ -771,11 +321,11 @@ uploadBtn.onclick = async () => {
     const storageRef = storage.ref(`photos/${filename}`);
     
     try {
-      // Upload para o Storage
+      // 1. Upload para o Storage
       const snapshot = await storageRef.put(file);
       const url = await snapshot.ref.getDownloadURL();
       
-      // Salvar no Firestore
+      // 2. Salvar no Firestore (CRIA O REGISTRO PERMANENTE)
       await db.collection('photos').add({
         url: url,
         name: name,
@@ -784,6 +334,7 @@ uploadBtn.onclick = async () => {
       
       successCount++;
       progressFill.style.width = `${((i + 1) / totalFiles) * 100}%`;
+      console.log(`✅ Foto enviada: ${filename}`);
       
     } catch (err) {
       console.error('Erro no upload:', err);
@@ -791,34 +342,20 @@ uploadBtn.onclick = async () => {
     }
   }
   
-  // ========== LIMPEZA IMEDIATA APÓS UPLOAD ==========
-  // Limpar todas as pré-visualizações
+  // Limpar tudo
   selectedFiles = [];
   previewsDiv.innerHTML = '';
-  
-  // Esconder botão e campo de nome
   uploadBtn.style.display = 'none';
   uploaderName.style.display = 'none';
   uploaderName.value = '';
-  
-  // Resetar barra de progresso
   progressBar.style.display = 'none';
   progressFill.style.width = '0%';
-  
-  // Resetar input file
   fileInput.value = '';
-  
-  // Reativar botão
   uploadBtn.disabled = false;
   uploadBtn.innerHTML = '<i class="bi bi-cloud-arrow-up"></i> Enviar Fotos';
   
-  // Mensagem de sucesso
   showToast(`✅ ${successCount} de ${totalFiles} foto(s) enviada(s)!`);
-  
-  // Recarregar galeria para mostrar a nova foto
   await loadGallery();
-  
-  console.log('✨ Upload finalizado e formulário limpo!');
 };
 
 // ==================== GALERIA ====================
@@ -835,7 +372,6 @@ async function loadGallery() {
     }
     
     grid.innerHTML = '';
-    
     snapshot.forEach(doc => {
       const photo = doc.data();
       const card = document.createElement('div');
@@ -847,7 +383,6 @@ async function loadGallery() {
       `;
       grid.appendChild(card);
     });
-    
   } catch (err) {
     console.error('Erro ao carregar galeria:', err);
     grid.innerHTML = `<div class="empty-gallery"><i class="bi bi-wifi-off"></i><p>Erro ao carregar fotos: ${err.message}</p></div>`;
@@ -861,20 +396,15 @@ async function sendMessage() {
   const name = document.getElementById('msgName').value.trim();
   const message = document.getElementById('msgText').value.trim();
   
-  if (!name) {
-    showToast('Digite seu nome', true);
-    return;
-  }
-  if (!message) {
-    showToast('Digite sua mensagem', true);
-    return;
-  }
+  if (!name) { showToast('Digite seu nome', true); return; }
+  if (!message) { showToast('Digite sua mensagem', true); return; }
   
   const btn = document.getElementById('sendMsgBtn');
   btn.disabled = true;
   btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Enviando...';
   
   try {
+    // 🔥 FLUXO DE MENSAGEM: Salva diretamente no Firestore
     await db.collection('messages').add({
       name: name,
       message: message,
@@ -885,7 +415,6 @@ async function sendMessage() {
     document.getElementById('msgText').value = '';
     showToast('💌 Mensagem enviada! Obrigado!');
     loadMessages();
-    
   } catch (err) {
     console.error('Erro:', err);
     showToast('Erro ao enviar mensagem', true);
@@ -908,7 +437,6 @@ async function loadMessages() {
     }
     
     list.innerHTML = '';
-    
     snapshot.forEach(doc => {
       const msg = doc.data();
       const date = msg.createdAt ? new Date(msg.createdAt.toDate()).toLocaleString('pt-BR') : '';
@@ -921,7 +449,6 @@ async function loadMessages() {
       `;
       list.appendChild(div);
     });
-    
   } catch (err) {
     console.error('Erro:', err);
     list.innerHTML = `<div style="text-align: center; padding: 20px; color: #7A2A38;">❌ Erro ao carregar mensagens: ${err.message}</div>`;
@@ -931,9 +458,12 @@ async function loadMessages() {
 document.getElementById('sendMsgBtn').onclick = sendMessage;
 
 // ==================== INICIAR ====================
-loadGallery();
-loadMessages();
+async function iniciar() {
+  await loadGallery();
+  await loadMessages();
+}
 
+iniciar();
 showToast('🔥 Bem-vindos ao nosso casamento!', false);
 </script>
 </body>
