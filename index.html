@@ -18,98 +18,448 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
 
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: #F8F4EE; font-family: 'Outfit', system-ui, sans-serif; color: #1E1510; font-weight: 300; }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-/* Hero */
-.hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; background: linear-gradient(135deg, #F8F4EE, #EFE7D8); padding: 20px; }
-.hero h1 { font-family: 'Cormorant', Georgia, serif; font-size: clamp(48px, 12vw, 82px); font-weight: 300; color: #1E1510; line-height: 0.95; margin-bottom: 20px; }
-.hero h1 span { display: block; font-style: italic; font-size: 0.5em; color: #A14B38; }
-.hero .date { color: #806558; letter-spacing: 4px; font-size: 12px; margin-top: 20px; }
+body {
+  background: #F8F4EE;
+  font-family: 'Outfit', system-ui, sans-serif;
+  color: #1E1510;
+  font-weight: 300;
+}
 
-/* Navegação */
-.nav { position: sticky; top: 0; background: rgba(248, 244, 238, 0.95); backdrop-filter: blur(10px); display: flex; justify-content: center; gap: 20px; padding: 12px 20px; border-bottom: 1px solid rgba(161, 75, 56, 0.2); z-index: 100; flex-wrap: wrap; }
-.nav button { background: none; border: none; padding: 8px 16px; cursor: pointer; font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 300; letter-spacing: 2px; color: #806558; transition: all 0.3s; }
-.nav button i { font-size: 16px; margin-right: 6px; vertical-align: middle; }
-.nav button.active { color: #A14B38; border-bottom: 2px solid #A14B38; }
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: linear-gradient(135deg, #F8F4EE, #EFE7D8);
+  padding: 20px;
+}
 
-/* Seções */
-.sec { max-width: 600px; margin: 0 auto; padding: 60px 24px; }
-.sec h2 { font-family: 'Cormorant', Georgia, serif; font-size: 36px; font-weight: 300; margin-bottom: 30px; color: #1E1510; }
-.sec h2 i { font-style: italic; color: #A14B38; }
+.hero h1 {
+  font-family: 'Cormorant', Georgia, serif;
+  font-size: clamp(48px, 12vw, 82px);
+  font-weight: 300;
+  color: #1E1510;
+  line-height: 0.95;
+  margin-bottom: 20px;
+}
 
-/* Timeline */
-.timeline-item { margin-bottom: 30px; padding-left: 30px; border-left: 1px solid rgba(161, 75, 56, 0.2); position: relative; }
-.timeline-item .time { font-size: 12px; color: #A14B38; letter-spacing: 1px; margin-bottom: 5px; }
-.timeline-item .title { font-family: 'Cormorant', Georgia, serif; font-size: 20px; font-weight: 400; margin-bottom: 5px; }
-.timeline-item .desc { font-size: 14px; color: #806558; }
-.timeline-item::before { content: ''; position: absolute; left: -5px; top: 0; width: 9px; height: 9px; border-radius: 50%; background: #C9913A; border: 2px solid #F8F4EE; }
+.hero h1 span {
+  display: block;
+  font-style: italic;
+  font-size: 0.5em;
+  color: #A14B38;
+}
 
-/* Menu */
-.menu-section { margin-bottom: 40px; }
-.menu-section h3 { font-size: 12px; letter-spacing: 3px; color: #A14B38; margin-bottom: 20px; text-transform: uppercase; border-bottom: 1px solid rgba(161, 75, 56, 0.2); padding-bottom: 8px; }
-.menu-item { margin-bottom: 20px; }
-.menu-item .name { font-family: 'Cormorant', Georgia, serif; font-size: 18px; font-weight: 400; margin-bottom: 4px; }
-.menu-item .desc { font-size: 13px; color: #806558; }
+.hero .date {
+  color: #806558;
+  letter-spacing: 4px;
+  font-size: 12px;
+  margin-top: 20px;
+}
 
-/* Upload Zone */
-.upload-zone { border: 2px dashed rgba(161, 75, 56, 0.3); border-radius: 20px; padding: 40px 20px; text-align: center; cursor: pointer; transition: all 0.3s; margin-bottom: 20px; }
-.upload-zone.drag-over { border-color: #A14B38; background: rgba(161, 75, 56, 0.05); }
-.upload-zone i { font-size: 48px; color: #A14B38; margin-bottom: 12px; display: block; }
-.upload-zone .title { font-size: 16px; margin-bottom: 6px; }
-.upload-zone .hint { font-size: 12px; color: #806558; }
-.upload-zone input { display: none; }
+.nav {
+  position: sticky;
+  top: 0;
+  background: rgba(248, 244, 238, 0.95);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 12px 20px;
+  border-bottom: 1px solid rgba(161, 75, 56, 0.2);
+  z-index: 100;
+  flex-wrap: wrap;
+}
 
-/* Preview */
-.previews { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
-.preview-item { position: relative; width: 80px; height: 80px; }
-.preview-item img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
-.preview-remove { position: absolute; top: -6px; right: -6px; width: 22px; height: 22px; border-radius: 50%; background: #7A2A38; color: white; border: none; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; }
+.nav button {
+  background: none;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: 2px;
+  color: #806558;
+  transition: all 0.3s;
+}
 
-/* Inputs */
-.input-name { width: 100%; padding: 14px; background: #EFE7D8; border: 1px solid rgba(161, 75, 56, 0.2); border-radius: 12px; font-family: inherit; font-size: 14px; margin-bottom: 16px; }
+.nav button i {
+  font-size: 16px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
 
-/* Botões */
-.btn-primary { width: 100%; padding: 14px; background: #A14B38; color: white; border: none; border-radius: 12px; font-family: 'Outfit', sans-serif; font-size: 14px; letter-spacing: 1px; cursor: pointer; transition: transform 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.nav button.active {
+  color: #A14B38;
+  border-bottom: 2px solid #A14B38;
+}
+
+.sec {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 60px 24px;
+}
+
+.sec h2 {
+  font-family: 'Cormorant', Georgia, serif;
+  font-size: 36px;
+  font-weight: 300;
+  margin-bottom: 30px;
+  color: #1E1510;
+}
+
+.sec h2 i {
+  font-style: italic;
+  color: #A14B38;
+}
+
+.timeline-item {
+  margin-bottom: 30px;
+  padding-left: 30px;
+  border-left: 1px solid rgba(161, 75, 56, 0.2);
+  position: relative;
+}
+
+.timeline-item .time {
+  font-size: 12px;
+  color: #A14B38;
+  letter-spacing: 1px;
+  margin-bottom: 5px;
+}
+
+.timeline-item .title {
+  font-family: 'Cormorant', Georgia, serif;
+  font-size: 20px;
+  font-weight: 400;
+  margin-bottom: 5px;
+}
+
+.timeline-item .desc {
+  font-size: 14px;
+  color: #806558;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -5px;
+  top: 0;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #C9913A;
+  border: 2px solid #F8F4EE;
+}
+
+.menu-section {
+  margin-bottom: 40px;
+}
+
+.menu-section h3 {
+  font-size: 12px;
+  letter-spacing: 3px;
+  color: #A14B38;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(161, 75, 56, 0.2);
+  padding-bottom: 8px;
+}
+
+.menu-item {
+  margin-bottom: 20px;
+}
+
+.menu-item .name {
+  font-family: 'Cormorant', Georgia, serif;
+  font-size: 18px;
+  font-weight: 400;
+  margin-bottom: 4px;
+}
+
+.menu-item .desc {
+  font-size: 13px;
+  color: #806558;
+}
+
+.upload-zone {
+  border: 2px dashed rgba(161, 75, 56, 0.3);
+  border-radius: 20px;
+  padding: 40px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-bottom: 20px;
+}
+
+.upload-zone.drag-over {
+  border-color: #A14B38;
+  background: rgba(161, 75, 56, 0.05);
+}
+
+.upload-zone i {
+  font-size: 48px;
+  color: #A14B38;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.upload-zone .title {
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+
+.upload-zone .hint {
+  font-size: 12px;
+  color: #806558;
+}
+
+.upload-zone input {
+  display: none;
+}
+
+.previews {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.preview-item {
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+.preview-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.preview-remove {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #7A2A38;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.input-name {
+  width: 100%;
+  padding: 14px;
+  background: #EFE7D8;
+  border: 1px solid rgba(161, 75, 56, 0.2);
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 14px;
+  background: #A14B38;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: transform 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
 .btn-primary:active { transform: scale(0.98); }
 .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-.btn-secondary { width: 100%; padding: 12px; background: #7A2A38; color: white; border: none; border-radius: 12px; font-family: 'Outfit', sans-serif; font-size: 14px; letter-spacing: 1px; cursor: pointer; }
 
-/* Progress Bar */
-.progress-bar { height: 3px; background: #EFE7D8; border-radius: 3px; margin: 15px 0; overflow: hidden; display: none; }
-.progress-fill { height: 100%; background: #A14B38; width: 0%; transition: width 0.3s; }
+.btn-secondary {
+  width: 100%;
+  padding: 12px;
+  background: #7A2A38;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
 
-/* Galeria */
-.gallery-header { display: flex; justify-content: space-between; align-items: center; margin: 30px 0 20px; }
-.gallery-header h3 { font-family: 'Cormorant', Georgia, serif; font-size: 24px; font-weight: 300; }
-.gallery-refresh { background: none; border: none; font-size: 18px; cursor: pointer; color: #A14B38; }
-.gallery-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-.gallery-card { position: relative; aspect-ratio: 1; background: #EFE7D8; border-radius: 16px; overflow: hidden; cursor: pointer; }
-.gallery-card img { width: 100%; height: 100%; object-fit: cover; }
-.gallery-card .name { position: absolute; bottom: 0; left: 0; right: 0; padding: 12px 8px 8px; background: linear-gradient(transparent, rgba(0, 0, 0, 0.6)); color: white; font-size: 11px; font-family: 'Cormorant', Georgia, serif; font-style: italic; }
-.empty-gallery { text-align: center; padding: 60px 20px; color: #806558; grid-column: 1 / -1; }
-.empty-gallery i { font-size: 48px; margin-bottom: 16px; display: block; opacity: 0.5; }
+.progress-bar {
+  height: 3px;
+  background: #EFE7D8;
+  border-radius: 3px;
+  margin: 15px 0;
+  overflow: hidden;
+  display: none;
+}
 
-/* Mensagens */
-.msg-card { border-bottom: 1px solid #EFE7D8; padding: 16px 0; }
-.msg-card .name { font-size: 11px; letter-spacing: 1px; color: #A14B38; margin-bottom: 6px; text-transform: uppercase; }
-.msg-card .message { font-family: 'Cormorant', Georgia, serif; font-size: 18px; line-height: 1.4; margin-bottom: 6px; }
-.msg-card .date { font-size: 11px; color: #806558; }
+.progress-fill {
+  height: 100%;
+  background: #A14B38;
+  width: 0%;
+  transition: width 0.3s;
+}
 
-/* Toast */
-.toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1E1510; color: white; padding: 12px 24px; border-radius: 50px; font-size: 13px; opacity: 0; transition: opacity 0.3s; z-index: 10000; pointer-events: none; white-space: nowrap; }
+.gallery-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 30px 0 20px;
+}
+
+.gallery-header h3 {
+  font-family: 'Cormorant', Georgia, serif;
+  font-size: 24px;
+  font-weight: 300;
+}
+
+.gallery-refresh {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #A14B38;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.gallery-card {
+  position: relative;
+  aspect-ratio: 1;
+  background: #EFE7D8;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.gallery-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gallery-card .name {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px 8px 8px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.6));
+  color: white;
+  font-size: 11px;
+  font-family: 'Cormorant', Georgia, serif;
+  font-style: italic;
+}
+
+.empty-gallery {
+  text-align: center;
+  padding: 60px 20px;
+  color: #806558;
+  grid-column: 1 / -1;
+}
+
+.empty-gallery i {
+  font-size: 48px;
+  margin-bottom: 16px;
+  display: block;
+  opacity: 0.5;
+}
+
+.msg-card {
+  border-bottom: 1px solid #EFE7D8;
+  padding: 16px 0;
+}
+
+.msg-card .name {
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: #A14B38;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.msg-card .message {
+  font-family: 'Cormorant', Georgia, serif;
+  font-size: 18px;
+  line-height: 1.4;
+  margin-bottom: 6px;
+}
+
+.msg-card .date {
+  font-size: 11px;
+  color: #806558;
+}
+
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1E1510;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-size: 13px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 10000;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
 .toast.show { opacity: 1; }
 .toast.error { background: #7A2A38; }
 
-/* Footer */
-.footer { text-align: center; padding: 60px 24px 40px; border-top: 1px solid rgba(161, 75, 56, 0.1); }
-.footer .monogram { font-family: 'Cormorant', Georgia, serif; font-size: 28px; font-style: italic; color: #C9913A; margin-bottom: 12px; }
-.footer .date { font-size: 10px; letter-spacing: 3px; color: #806558; }
+.footer {
+  text-align: center;
+  padding: 60px 24px 40px;
+  border-top: 1px solid rgba(161, 75, 56, 0.1);
+}
+
+.footer .monogram {
+  font-family: 'Cormorant', Georgia, serif;
+  font-size: 28px;
+  font-style: italic;
+  color: #C9913A;
+  margin-bottom: 12px;
+}
+
+.footer .date {
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: #806558;
+}
 </style>
 </head>
 <body>
 
-<!-- HERO -->
 <div class="hero">
   <div>
     <h1>Lauane<br><span>&</span>Carolina</h1>
@@ -117,7 +467,6 @@ body { background: #F8F4EE; font-family: 'Outfit', system-ui, sans-serif; color:
   </div>
 </div>
 
-<!-- NAV -->
 <nav class="nav" id="nav">
   <button data-sec="cronograma" class="active"><i class="bi bi-calendar3"></i> Cronograma</button>
   <button data-sec="cardapio"><i class="bi bi-cup-hot"></i> Cardápio</button>
@@ -125,49 +474,36 @@ body { background: #F8F4EE; font-family: 'Outfit', system-ui, sans-serif; color:
   <button data-sec="mensagens"><i class="bi bi-envelope-heart"></i> Mensagens</button>
 </nav>
 
-<!-- CRONOGRAMA -->
 <section id="cronograma" class="sec">
   <h2>O dia mais <i>especial</i></h2>
   <div class="timeline-item"><div class="time">11h30</div><div class="title">Chegada & Aperitivos</div><div class="desc">Recepção com aperitivos de boas-vindas no jardim</div></div>
   <div class="timeline-item"><div class="time">12h30</div><div class="title">Cerimônia</div><div class="desc">Troca de votos</div></div>
   <div class="timeline-item"><div class="time">13h30</div><div class="title">Almoço e Brindes de Celebração</div><div class="desc">Com brinde e muita alegria</div></div>
   <div class="timeline-item"><div class="time">14h30</div><div class="title">Pista de Dança</div><div class="desc">Dj comanda a pista e open bar</div></div>
-  <div class="timeline-item"><div class="time">17h00</div><div class="title">Corte do Bolo</div><div class="desc">Momento mais doce da festa e a festa rola até o anoitecer</div></div>
+  <div class="timeline-item"><div class="time">17h00</div><div class="title">Corte do Bolo</div><div class="desc">Momento mais doce da festa</div></div>
 </section>
 
-<!-- CARDÁPIO -->
 <section id="cardapio" class="sec">
   <h2>Sabores <i>do amor</i></h2>
   <div class="menu-section"><h3>Aperitivos</h3>
-    <div class="menu-item"><div class="name">Sanduiches de Pães artesanais</div><div class="desc">Beterraba com paté de atum, cenoura e brócolis com paté de frango e trigo com queijo alface e tomante</div></div>
-    <div class="menu-item"><div class="name">Patês</div><div class="desc">Azeitona preta e frango com ervas</div></div>
+    <div class="menu-item"><div class="name">Sanduiches de Pães artesanais</div><div class="desc">Beterraba, cenoura, brócolis e trigo com patês especiais</div></div>
   </div>
   <div class="menu-section"><h3>Almoço</h3>
-    <div class="menu-item"><div class="name">Saladas Especiais</div><div class="desc">Mix de folhas, tomate cereja, palmito</div></div>
-    <div class="menu-item"><div class="name">Salada Marroquina</div><div class="desc">Cebola, alho , currt, gengibre, vinagre, mel e azeite</div></div>
-    <div class="menu-item"><div class="name">Saladas Abobrinha</div><div class="desc">Abobrinha, tomate, limão, alho. salsinha, azeite e azeitonas</div></div>
-    <div class="menu-item"><div class="name">Talharim de Massas Caseiras das Noivas</div><div class="desc">Talharim de massa caseira com molhos ao sugo, bechamel ou bolonhesa</div></div>
-    <div class="menu-item"><div class="name">Raviolli de Queijo Massas Caseiras das Noivas</div><div class="desc">Raviolli de queijo com molhos ao sugo, bechamel ou bolonhesa</div></div>
-    <div class="menu-item"><div class="name">Raviolli de Ricota Massas Caseiras das Noivas</div><div class="desc">Raviolli de ricota com molhos ao sugo, bechamel ou bolonhesa</div></div>
-    <div class="menu-item"><div class="name">Capeletti de Massas Fresca</div><div class="desc">Capeletti com molhos ao sugo, bechamel ou bolonhesa</div></div>
+    <div class="menu-item"><div class="name">Massas Caseiras das Noivas</div><div class="desc">Talharim, raviolli e capeletti com molhos ao sugo, branco ou bolonhesa</div></div>
     <div class="menu-item"><div class="name">Carnes</div><div class="desc">Fraudinha e frango grelhado na churrasqueira</div></div>
   </div>
   <div class="menu-section"><h3>Bebidas</h3>
-    <div class="menu-item"><div class="name">Cervejas</div><div class="desc">Nacionais e internacionais (com e sem álcool)</div></div>
-    <div class="menu-item"><div class="name">Sangria & Caipirinha</div><div class="desc">Sagria de vinho branco com frutas e Caipinha de cachaça com limão</div></div>
-    <div class="menu-item"><div class="name">Sucos & Refrigerantes</div><div class="desc">Suco de Laranja Natural, sucos uva e abacaxi, Coca-Cola, Guaraná, Fanta</div></div>
+    <div class="menu-item"><div class="name">Cervejas</div><div class="desc">Nacionais e internacionais</div></div>
+    <div class="menu-item"><div class="name">Sangria & Caipirinha</div><div class="desc">Vinho branco com frutas e cachaça com limão</div></div>
   </div>
   <div class="menu-section"><h3>Sobremesa</h3>
-    <div class="menu-item"><div class="name">Bolo de Casamento</div><div class="desc">Bolo de chocolate com recheio de ganache e bolo de branco com recheio de nozes.</div></div>
-    <div class="menu-item"><div class="name">Mesa de Doces</div><div class="desc">Trufas, barquinha recheada, brigadeiros gourmet.</div></div>
-    <div class="menu-item"><div class="name">Frutas</div><div class="desc">Frutas da estação.</div></div>
+    <div class="menu-item"><div class="name">Bolo de Casamento</div><div class="desc">Chocolate com ganache e branco com nozes</div></div>
   </div>
 </section>
 
-<!-- ÁLBUM -->
 <section id="album" class="sec">
   <h2>Registre esse <i>momento</i></h2>
-  <p style="color: #806558; margin-bottom: 30px;">Cada foto sua é um pedacinho desta memória que vamos guardar para sempre.</p>
+  <p style="color: #806558; margin-bottom: 30px;">Cada foto sua é um pedacinho desta memória.</p>
   
   <div class="upload-zone" id="dropZone">
     <i class="bi bi-cloud-arrow-up"></i>
@@ -181,21 +517,20 @@ body { background: #F8F4EE; font-family: 'Outfit', system-ui, sans-serif; color:
   <button class="btn-primary" id="uploadBtn" style="display: none;"><i class="bi bi-cloud-arrow-up"></i> Enviar Fotos</button>
   <div class="progress-bar" id="progressBar"><div class="progress-fill" id="progressFill"></div></div>
   
-  <div class="gallery-header"><h3>Galeria do Evento</h3><button class="gallery-refresh" id="refreshBtn" title="Atualizar"><i class="bi bi-arrow-clockwise"></i></button></div>
+  <div class="gallery-header"><h3>Galeria do Evento</h3><button class="gallery-refresh" id="refreshBtn"><i class="bi bi-arrow-clockwise"></i></button></div>
   <div class="gallery-grid" id="galleryGrid"><div class="empty-gallery"><i class="bi bi-camera"></i><p>Carregando fotos...</p></div></div>
 </section>
 
-<!-- MENSAGENS -->
 <section id="mensagens" class="sec">
   <h2>Uma mensagem <i>especial</i></h2>
-  <p style="color: #806558; margin-bottom: 30px;">Deixe aqui suas palavras — o maior presente que poderíamos receber hoje.</p>
+  <p style="color: #806558; margin-bottom: 30px;">Deixe aqui suas palavras.</p>
   
   <input type="text" id="msgName" class="input-name" placeholder="Seu nome">
-  <textarea id="msgText" class="input-name" rows="3" placeholder="Sua mensagem..." style="resize: vertical;"></textarea>
+  <textarea id="msgText" class="input-name" rows="3" placeholder="Sua mensagem..."></textarea>
   <button class="btn-secondary" id="sendMsgBtn"><i class="bi bi-send"></i> Enviar Mensagem</button>
   
   <div style="margin-top: 50px;">
-    <h3 style="font-family: 'Cormorant', serif; font-size: 24px; font-weight: 300; margin-bottom: 20px;">O que os convidados dizem</h3>
+    <h3 style="font-family: 'Cormorant', serif; font-size: 24px; font-weight: 300; margin-bottom: 20px;">Mensagens dos Convidados</h3>
     <div id="messagesList"></div>
   </div>
 </section>
@@ -204,7 +539,7 @@ body { background: #F8F4EE; font-family: 'Outfit', system-ui, sans-serif; color:
 <div class="toast" id="toast"></div>
 
 <script>
-// ==================== FIREBASE CONFIG ====================
+// Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyAf7gNoR5FnjgkweX-uoWRtuxCl3XEOKoo",
   authDomain: "expert-marriage-day-32ee3.firebaseapp.com",
@@ -220,7 +555,6 @@ const storage = firebase.storage();
 
 console.log('🔥 Firebase conectado!');
 
-// ==================== FUNÇÕES AUXILIARES ====================
 function showToast(msg, isError = false) {
   const toast = document.getElementById('toast');
   toast.textContent = msg;
@@ -238,7 +572,7 @@ function escapeHtml(str) {
   });
 }
 
-// ==================== NAVEGAÇÃO ====================
+// Navegação
 document.querySelectorAll('.nav button').forEach(btn => {
   btn.onclick = () => {
     document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
@@ -248,9 +582,8 @@ document.querySelectorAll('.nav button').forEach(btn => {
   };
 });
 
-// ==================== UPLOAD DE FOTOS ====================
+// UPLOAD
 let selectedFiles = [];
-
 const dropZone = document.getElementById('dropZone');
 const fileInput = document.getElementById('fileInput');
 const previewsDiv = document.getElementById('previews');
@@ -272,7 +605,7 @@ fileInput.onchange = (e) => addFiles(Array.from(e.target.files));
 function addFiles(files) {
   files.forEach(file => {
     if (file.size > 10 * 1024 * 1024) {
-      showToast(`${file.name} é muito grande (max 10MB)`, true);
+      showToast(`${file.name} é muito grande`, true);
       return;
     }
     selectedFiles.push(file);
@@ -301,7 +634,6 @@ function addFiles(files) {
   }
 }
 
-// 🔥 FLUXO DE UPLOAD: Storage + Firestore
 uploadBtn.onclick = async () => {
   if (selectedFiles.length === 0) return;
   
@@ -321,11 +653,9 @@ uploadBtn.onclick = async () => {
     const storageRef = storage.ref(`photos/${filename}`);
     
     try {
-      // 1. Upload para o Storage
       const snapshot = await storageRef.put(file);
       const url = await snapshot.ref.getDownloadURL();
       
-      // 2. Salvar no Firestore (CRIA O REGISTRO PERMANENTE)
       await db.collection('photos').add({
         url: url,
         name: name,
@@ -334,15 +664,12 @@ uploadBtn.onclick = async () => {
       
       successCount++;
       progressFill.style.width = `${((i + 1) / totalFiles) * 100}%`;
-      console.log(`✅ Foto enviada: ${filename}`);
-      
     } catch (err) {
-      console.error('Erro no upload:', err);
+      console.error('Erro:', err);
       showToast(`Erro: ${err.message}`, true);
     }
   }
   
-  // Limpar tudo
   selectedFiles = [];
   previewsDiv.innerHTML = '';
   uploadBtn.style.display = 'none';
@@ -355,10 +682,10 @@ uploadBtn.onclick = async () => {
   uploadBtn.innerHTML = '<i class="bi bi-cloud-arrow-up"></i> Enviar Fotos';
   
   showToast(`✅ ${successCount} de ${totalFiles} foto(s) enviada(s)!`);
-  await loadGallery();
+  loadGallery();
 };
 
-// ==================== GALERIA ====================
+// GALERIA
 async function loadGallery() {
   const grid = document.getElementById('galleryGrid');
   grid.innerHTML = '<div class="empty-gallery"><i class="bi bi-hourglass-split"></i><p>Carregando fotos...</p></div>';
@@ -367,7 +694,7 @@ async function loadGallery() {
     const snapshot = await db.collection('photos').orderBy('createdAt', 'desc').get();
     
     if (snapshot.empty) {
-      grid.innerHTML = '<div class="empty-gallery"><i class="bi bi-camera"></i><p>Nenhuma foto ainda. Seja o primeiro a enviar!</p></div>';
+      grid.innerHTML = '<div class="empty-gallery"><i class="bi bi-camera"></i><p>Nenhuma foto ainda. Seja o primeiro!</p></div>';
       return;
     }
     
@@ -378,20 +705,20 @@ async function loadGallery() {
       card.className = 'gallery-card';
       card.onclick = () => window.open(photo.url, '_blank');
       card.innerHTML = `
-        <img src="${photo.url}" alt="Foto de ${escapeHtml(photo.name)}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect fill=%22%23EFE7D8%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23806558%22%3E❌%3C/text%3E%3C/svg%3E'">
+        <img src="${photo.url}" alt="Foto de ${escapeHtml(photo.name)}">
         <div class="name">${escapeHtml(photo.name)}</div>
       `;
       grid.appendChild(card);
     });
   } catch (err) {
-    console.error('Erro ao carregar galeria:', err);
-    grid.innerHTML = `<div class="empty-gallery"><i class="bi bi-wifi-off"></i><p>Erro ao carregar fotos: ${err.message}</p></div>`;
+    console.error('Erro:', err);
+    grid.innerHTML = `<div class="empty-gallery"><i class="bi bi-wifi-off"></i><p>Erro: ${err.message}</p></div>`;
   }
 }
 
 document.getElementById('refreshBtn').onclick = () => loadGallery();
 
-// ==================== MENSAGENS ====================
+// MENSAGENS
 async function sendMessage() {
   const name = document.getElementById('msgName').value.trim();
   const message = document.getElementById('msgText').value.trim();
@@ -404,7 +731,6 @@ async function sendMessage() {
   btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Enviando...';
   
   try {
-    // 🔥 FLUXO DE MENSAGEM: Salva diretamente no Firestore
     await db.collection('messages').add({
       name: name,
       message: message,
@@ -426,13 +752,13 @@ async function sendMessage() {
 
 async function loadMessages() {
   const list = document.getElementById('messagesList');
-  list.innerHTML = '<div style="text-align: center; padding: 20px; color: #806558;">Carregando mensagens...</div>';
+  list.innerHTML = '<div style="text-align: center; padding: 20px;">Carregando...</div>';
   
   try {
     const snapshot = await db.collection('messages').orderBy('createdAt', 'desc').limit(20).get();
     
     if (snapshot.empty) {
-      list.innerHTML = '<div style="text-align: center; padding: 20px; color: #806558;">💬 Seja o primeiro a deixar uma mensagem!</div>';
+      list.innerHTML = '<div style="text-align: center; padding: 20px;">💬 Seja o primeiro a deixar uma mensagem!</div>';
       return;
     }
     
@@ -451,19 +777,15 @@ async function loadMessages() {
     });
   } catch (err) {
     console.error('Erro:', err);
-    list.innerHTML = `<div style="text-align: center; padding: 20px; color: #7A2A38;">❌ Erro ao carregar mensagens: ${err.message}</div>`;
+    list.innerHTML = `<div style="text-align: center; padding: 20px; color: #7A2A38;">❌ Erro: ${err.message}</div>`;
   }
 }
 
 document.getElementById('sendMsgBtn').onclick = sendMessage;
 
-// ==================== INICIAR ====================
-async function iniciar() {
-  await loadGallery();
-  await loadMessages();
-}
-
-iniciar();
+// INICIAR
+loadGallery();
+loadMessages();
 showToast('🔥 Bem-vindos ao nosso casamento!', false);
 </script>
 </body>
