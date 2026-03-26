@@ -160,13 +160,13 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const storage = firebase.storage();
 
-// IMPORTANTE: Use o caminho correto do seu banco de dados
+// CAMINHOS CORRETOS DO BANCO
 const FOTOS_COLLECTION = 'album123/photos';
 const MENSAGENS_COLLECTION = 'album123/messages';
 
 console.log('🔥 Firebase conectado');
-console.log('📁 Fotos collection:', FOTOS_COLLECTION);
-console.log('📁 Mensagens collection:', MENSAGENS_COLLECTION);
+console.log('📁 Fotos:', FOTOS_COLLECTION);
+console.log('📁 Mensagens:', MENSAGENS_COLLECTION);
 
 // Toast
 function toast(msg, isError = false) {
@@ -267,7 +267,6 @@ uploadBtn.onclick = async () => {
     try {
       const snapshot = await storage.ref(`photos/${filename}`).put(file);
       const url = await snapshot.ref.getDownloadURL();
-      // Usando o caminho correto: album123/photos
       await db.collection(FOTOS_COLLECTION).add({ 
         url, 
         name, 
@@ -281,7 +280,6 @@ uploadBtn.onclick = async () => {
     }
   }
   
-  // Limpar tudo
   selectedFiles = [];
   previewsDiv.innerHTML = '';
   uploadBtn.style.display = 'none';
@@ -300,9 +298,8 @@ async function loadGallery() {
   const grid = document.getElementById('galleryGrid');
   grid.innerHTML = '<div class="empty-gallery">📸 Carregando fotos...</div>';
   try {
-    // Usando o caminho correto: album123/photos
     const snap = await db.collection(FOTOS_COLLECTION).orderBy('createdAt', 'desc').get();
-    console.log(`📸 Fotos encontradas: ${snap.size}`);
+    console.log(`📸 Fotos encontradas no Firestore: ${snap.size}`);
     
     if (snap.empty) { 
       grid.innerHTML = '<div class="empty-gallery">📸 Nenhuma foto ainda. Seja o primeiro!</div>'; 
@@ -312,7 +309,6 @@ async function loadGallery() {
     grid.innerHTML = '';
     snap.forEach(doc => {
       const p = doc.data();
-      console.log('Foto:', p.name, p.url.substring(0, 60));
       const card = document.createElement('div');
       card.className = 'gallery-card';
       card.onclick = () => window.open(p.url, '_blank');
@@ -322,6 +318,66 @@ async function loadGallery() {
   } catch(e) { 
     console.error('Erro ao carregar galeria:', e);
     grid.innerHTML = `<div class="empty-gallery">❌ Erro: ${e.message}</div>`; 
+  }
+}
+
+// ==================== SINCRONIZAR FOTOS ANTIGAS ====================
+// Esta função busca todas as fotos do Storage e adiciona ao Firestore (roda apenas uma vez)
+async function sincronizarFotosAntigas() {
+  const sincronizado = localStorage.getItem('fotos_sincronizadas_album123');
+  if (sincronizado) {
+    console.log('✅ Fotos já sincronizadas anteriormente');
+    return;
+  }
+  
+  console.log('🔄 Sincronizando fotos antigas do Storage...');
+  
+  try {
+    // Buscar todas as fotos do Storage
+    const result = await storage.ref('photos').listAll();
+    console.log(`📸 Encontradas ${result.items.length} fotos no Storage`);
+    
+    if (result.items.length === 0) {
+      localStorage.setItem('fotos_sincronizadas_album123', 'true');
+      return;
+    }
+    
+    // Buscar URLs já existentes no Firestore
+    const snapshot = await db.collection(FOTOS_COLLECTION).get();
+    const urlsExistentes = new Set();
+    snapshot.forEach(doc => {
+      urlsExistentes.add(doc.data().url);
+    });
+    console.log(`📝 ${urlsExistentes.size} fotos já no Firestore`);
+    
+    let adicionadas = 0;
+    
+    for (const item of result.items) {
+      const url = await item.getDownloadURL();
+      
+      if (!urlsExistentes.has(url)) {
+        await db.collection(FOTOS_COLLECTION).add({
+          url: url,
+          name: "Convidado",
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        console.log(`✅ Foto sincronizada: ${item.name}`);
+        adicionadas++;
+      }
+    }
+    
+    if (adicionadas > 0) {
+      console.log(`🎉 ${adicionadas} foto(s) sincronizada(s) automaticamente!`);
+      await loadGallery();
+      toast(`📸 ${adicionadas} foto(s) antigas foram adicionadas!`);
+    } else {
+      console.log('✨ Todas as fotos já estavam sincronizadas');
+    }
+    
+    localStorage.setItem('fotos_sincronizadas_album123', 'true');
+    
+  } catch (err) {
+    console.error('❌ Erro na sincronização:', err);
   }
 }
 
@@ -335,7 +391,6 @@ async function sendMessage() {
   btn.disabled = true;
   btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Enviando...';
   try {
-    // Usando o caminho correto: album123/messages
     await db.collection(MENSAGENS_COLLECTION).add({ 
       name, 
       message: msg, 
@@ -357,7 +412,6 @@ async function loadMessages() {
   const list = document.getElementById('messagesList');
   list.innerHTML = '<div style="text-align:center; padding:20px">Carregando...</div>';
   try {
-    // Usando o caminho correto: album123/messages
     const snap = await db.collection(MENSAGENS_COLLECTION).orderBy('createdAt', 'desc').limit(20).get();
     console.log(`📝 Mensagens encontradas: ${snap.size}`);
     
@@ -380,8 +434,13 @@ async function loadMessages() {
 document.getElementById('sendMsgBtn').onclick = sendMessage;
 
 // ==================== INICIAR ====================
-loadGallery();
-loadMessages();
+async function iniciar() {
+  await sincronizarFotosAntigas();  // Sincroniza fotos antigas automaticamente
+  await loadGallery();
+  await loadMessages();
+}
+
+iniciar();
 toast('🔥 Bem-vindos ao nosso casamento!');
 </script>
 </body>
