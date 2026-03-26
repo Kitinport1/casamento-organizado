@@ -160,13 +160,11 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const storage = firebase.storage();
 
-// CAMINHOS CORRETOS DO BANCO
-const FOTOS_COLLECTION = 'album123/photos';
-const MENSAGENS_COLLECTION = 'album123/messages';
+// NOME DA COLEÇÃO PRINCIPAL
+const COLECAO = 'album123';
 
 console.log('🔥 Firebase conectado');
-console.log('📁 Fotos:', FOTOS_COLLECTION);
-console.log('📁 Mensagens:', MENSAGENS_COLLECTION);
+console.log('📁 Coleção:', COLECAO);
 
 // Toast
 function toast(msg, isError = false) {
@@ -267,9 +265,11 @@ uploadBtn.onclick = async () => {
     try {
       const snapshot = await storage.ref(`photos/${filename}`).put(file);
       const url = await snapshot.ref.getDownloadURL();
-      await db.collection(FOTOS_COLLECTION).add({ 
-        url, 
-        name, 
+      // Salvar na coleção album123 com tipo 'foto'
+      await db.collection(COLECAO).add({ 
+        tipo: 'foto',
+        url: url, 
+        nome: name, 
         createdAt: firebase.firestore.FieldValue.serverTimestamp() 
       });
       success++;
@@ -298,8 +298,13 @@ async function loadGallery() {
   const grid = document.getElementById('galleryGrid');
   grid.innerHTML = '<div class="empty-gallery">📸 Carregando fotos...</div>';
   try {
-    const snap = await db.collection(FOTOS_COLLECTION).orderBy('createdAt', 'desc').get();
-    console.log(`📸 Fotos encontradas no Firestore: ${snap.size}`);
+    // Buscar apenas documentos com tipo 'foto'
+    const snap = await db.collection(COLECAO)
+      .where('tipo', '==', 'foto')
+      .orderBy('createdAt', 'desc')
+      .get();
+    
+    console.log(`📸 Fotos encontradas: ${snap.size}`);
     
     if (snap.empty) { 
       grid.innerHTML = '<div class="empty-gallery">📸 Nenhuma foto ainda. Seja o primeiro!</div>'; 
@@ -312,7 +317,7 @@ async function loadGallery() {
       const card = document.createElement('div');
       card.className = 'gallery-card';
       card.onclick = () => window.open(p.url, '_blank');
-      card.innerHTML = `<img src="${p.url}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect fill=%22%23EFE7D8%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23806558%22%3E❌%3C/text%3E%3C/svg%3E'"><div class="name">${escapeHtml(p.name)}</div>`;
+      card.innerHTML = `<img src="${p.url}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect fill=%22%23EFE7D8%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23806558%22%3E❌%3C/text%3E%3C/svg%3E'"><div class="name">${escapeHtml(p.nome)}</div>`;
       grid.appendChild(card);
     });
   } catch(e) { 
@@ -322,9 +327,8 @@ async function loadGallery() {
 }
 
 // ==================== SINCRONIZAR FOTOS ANTIGAS ====================
-// Esta função busca todas as fotos do Storage e adiciona ao Firestore (roda apenas uma vez)
 async function sincronizarFotosAntigas() {
-  const sincronizado = localStorage.getItem('fotos_sincronizadas_album123');
+  const sincronizado = localStorage.getItem('fotos_sincronizadas_album123_v2');
   if (sincronizado) {
     console.log('✅ Fotos já sincronizadas anteriormente');
     return;
@@ -333,17 +337,16 @@ async function sincronizarFotosAntigas() {
   console.log('🔄 Sincronizando fotos antigas do Storage...');
   
   try {
-    // Buscar todas as fotos do Storage
     const result = await storage.ref('photos').listAll();
     console.log(`📸 Encontradas ${result.items.length} fotos no Storage`);
     
     if (result.items.length === 0) {
-      localStorage.setItem('fotos_sincronizadas_album123', 'true');
+      localStorage.setItem('fotos_sincronizadas_album123_v2', 'true');
       return;
     }
     
     // Buscar URLs já existentes no Firestore
-    const snapshot = await db.collection(FOTOS_COLLECTION).get();
+    const snapshot = await db.collection(COLECAO).where('tipo', '==', 'foto').get();
     const urlsExistentes = new Set();
     snapshot.forEach(doc => {
       urlsExistentes.add(doc.data().url);
@@ -356,9 +359,10 @@ async function sincronizarFotosAntigas() {
       const url = await item.getDownloadURL();
       
       if (!urlsExistentes.has(url)) {
-        await db.collection(FOTOS_COLLECTION).add({
+        await db.collection(COLECAO).add({
+          tipo: 'foto',
           url: url,
-          name: "Convidado",
+          nome: "Convidado",
           createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
         console.log(`✅ Foto sincronizada: ${item.name}`);
@@ -374,7 +378,7 @@ async function sincronizarFotosAntigas() {
       console.log('✨ Todas as fotos já estavam sincronizadas');
     }
     
-    localStorage.setItem('fotos_sincronizadas_album123', 'true');
+    localStorage.setItem('fotos_sincronizadas_album123_v2', 'true');
     
   } catch (err) {
     console.error('❌ Erro na sincronização:', err);
@@ -391,9 +395,10 @@ async function sendMessage() {
   btn.disabled = true;
   btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Enviando...';
   try {
-    await db.collection(MENSAGENS_COLLECTION).add({ 
-      name, 
-      message: msg, 
+    await db.collection(COLECAO).add({ 
+      tipo: 'mensagem',
+      nome: name, 
+      mensagem: msg, 
       createdAt: firebase.firestore.FieldValue.serverTimestamp() 
     });
     document.getElementById('msgName').value = '';
@@ -412,7 +417,12 @@ async function loadMessages() {
   const list = document.getElementById('messagesList');
   list.innerHTML = '<div style="text-align:center; padding:20px">Carregando...</div>';
   try {
-    const snap = await db.collection(MENSAGENS_COLLECTION).orderBy('createdAt', 'desc').limit(20).get();
+    const snap = await db.collection(COLECAO)
+      .where('tipo', '==', 'mensagem')
+      .orderBy('createdAt', 'desc')
+      .limit(20)
+      .get();
+    
     console.log(`📝 Mensagens encontradas: ${snap.size}`);
     
     if (snap.empty) { 
@@ -423,7 +433,7 @@ async function loadMessages() {
     snap.forEach(doc => {
       const m = doc.data();
       const date = m.createdAt ? new Date(m.createdAt.toDate()).toLocaleString('pt-BR') : '';
-      list.innerHTML += `<div class="msg-card"><div class="name">${escapeHtml(m.name)}</div><div class="message">${escapeHtml(m.message)}</div><div class="date">${date}</div></div>`;
+      list.innerHTML += `<div class="msg-card"><div class="name">${escapeHtml(m.nome)}</div><div class="message">${escapeHtml(m.mensagem)}</div><div class="date">${date}</div></div>`;
     });
   } catch(e) { 
     console.error('Erro ao carregar mensagens:', e);
@@ -433,9 +443,57 @@ async function loadMessages() {
 
 document.getElementById('sendMsgBtn').onclick = sendMessage;
 
+// ==================== MIGRAR DADOS EXISTENTES ====================
+async function migrarDadosExistentes() {
+  const migrado = localStorage.getItem('dados_migrados_album123');
+  if (migrado) return;
+  
+  console.log('🔄 Verificando dados antigos para migrar...');
+  
+  try {
+    // Tentar buscar fotos antigas que possam estar em outra estrutura
+    const fotosAntigas = await db.collection('photos').get();
+    if (!fotosAntigas.empty) {
+      console.log(`📸 Encontradas ${fotosAntigas.size} fotos na coleção antiga 'photos'`);
+      for (const doc of fotosAntigas.docs) {
+        const data = doc.data();
+        await db.collection(COLECAO).add({
+          tipo: 'foto',
+          url: data.url,
+          nome: data.name || 'Convidado',
+          createdAt: data.createdAt || firebase.firestore.FieldValue.serverTimestamp()
+        });
+        console.log(`✅ Foto migrada: ${data.url?.substring(0, 50)}`);
+      }
+    }
+    
+    const mensagensAntigas = await db.collection('messages').get();
+    if (!mensagensAntigas.empty) {
+      console.log(`📝 Encontradas ${mensagensAntigas.size} mensagens na coleção antiga 'messages'`);
+      for (const doc of mensagensAntigas.docs) {
+        const data = doc.data();
+        await db.collection(COLECAO).add({
+          tipo: 'mensagem',
+          nome: data.name,
+          mensagem: data.message,
+          createdAt: data.createdAt || firebase.firestore.FieldValue.serverTimestamp()
+        });
+        console.log(`✅ Mensagem migrada: ${data.name}`);
+      }
+    }
+    
+    localStorage.setItem('dados_migrados_album123', 'true');
+    console.log('🎉 Migração de dados antigos concluída!');
+    
+  } catch (err) {
+    console.log('ℹ️ Nenhum dado antigo para migrar ou erro:', err.message);
+  }
+}
+
 // ==================== INICIAR ====================
 async function iniciar() {
-  await sincronizarFotosAntigas();  // Sincroniza fotos antigas automaticamente
+  await migrarDadosExistentes();      // Migra dados das coleções antigas (photos, messages)
+  await sincronizarFotosAntigas();    // Sincroniza fotos do Storage
   await loadGallery();
   await loadMessages();
 }
