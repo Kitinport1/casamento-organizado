@@ -13,121 +13,719 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: #F8F4EE; font-family: 'Outfit', sans-serif; color: #1E1510; font-weight: 300; }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #F8F4EE;
+  font-family: 'Outfit', system-ui, sans-serif;
+  color: #1E1510;
+  font-weight: 300;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 8000;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='.032'/%3E%3C/svg%3E");
+}
 
 /* Hero */
-.hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; background: linear-gradient(135deg, #F8F4EE, #EFE7D8); padding: 20px; }
-.hero h1 { font-family: 'Cormorant', serif; font-size: clamp(48px, 12vw, 82px); font-weight: 300; color: #1E1510; line-height: 0.95; }
-.hero h1 span { display: block; font-style: italic; font-size: 0.5em; color: #A14B38; }
-.hero .date { color: #806558; letter-spacing: 4px; font-size: 12px; margin-top: 20px; }
+.hero {
+  min-height: 100dvh;
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #F8F4EE;
+}
+
+.hero__orbit {
+  position: absolute;
+  width: min(92vw, 460px);
+  height: min(92vw, 460px);
+  border-radius: 50%;
+  border: 1px solid rgba(201, 145, 58, 0.14);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.hero__orbit-2 {
+  position: absolute;
+  width: min(70vw, 340px);
+  height: min(70vw, 340px);
+  border-radius: 50%;
+  border: 1px solid rgba(201, 145, 58, 0.08);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.hero__botanical {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(100vw, 440px);
+  pointer-events: none;
+  opacity: 0;
+  animation: fadeUp 1.1s 0.2s forwards;
+}
+
+.hero__body {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0 32px;
+}
+
+.hero__occasion {
+  font-family: 'Outfit', sans-serif;
+  font-size: 8.5px;
+  font-weight: 400;
+  letter-spacing: 0.38em;
+  text-transform: uppercase;
+  color: #A14B38;
+  opacity: 0;
+  animation: fadeUp 0.7s 0.7s forwards;
+  margin-bottom: 32px;
+}
+
+.hero__names {
+  font-family: 'Cormorant', serif;
+  font-weight: 300;
+  font-size: clamp(54px, 14vw, 82px);
+  line-height: 0.92;
+  letter-spacing: -0.01em;
+  color: #1E1510;
+  opacity: 0;
+  animation: fadeUp 1.1s 0.9s forwards;
+}
+
+.hero__connector {
+  display: block;
+  font-style: italic;
+  font-size: 0.52em;
+  color: #A14B38;
+  line-height: 2;
+  letter-spacing: 0.06em;
+}
+
+.hero__line {
+  width: 1px;
+  height: 52px;
+  background: linear-gradient(to bottom, transparent, #C9913A, transparent);
+  margin: 30px auto;
+  opacity: 0;
+  animation: fadeUp 0.5s 1.4s forwards;
+}
+
+.hero__date {
+  font-size: 9.5px;
+  font-weight: 300;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #806558;
+  opacity: 0;
+  animation: fadeUp 0.6s 1.55s forwards;
+  margin-bottom: 14px;
+}
+
+.hero__poem {
+  font-family: 'Cormorant', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 16.5px;
+  line-height: 1.82;
+  color: #806558;
+  max-width: 240px;
+  opacity: 0;
+  animation: fadeUp 0.7s 1.7s forwards;
+}
+
+.hero__cue {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  opacity: 0;
+  animation: fadeUp 0.6s 2.2s forwards;
+}
+
+.hero__cue-label {
+  font-size: 8px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #806558;
+}
+
+.hero__cue-stem {
+  width: 1px;
+  height: 38px;
+  background: linear-gradient(to bottom, #C9913A, transparent);
+  animation: breathe 2.4s infinite;
+}
 
 /* Navegação */
-.nav { position: sticky; top: 0; background: rgba(248,244,238,0.95); backdrop-filter: blur(10px); display: flex; justify-content: center; gap: 20px; padding: 12px; border-bottom: 1px solid rgba(161,75,56,0.2); z-index: 100; flex-wrap: wrap; }
-.nav button { background: none; border: none; padding: 8px 16px; cursor: pointer; font-size: 12px; letter-spacing: 2px; color: #806558; transition: all 0.3s; }
-.nav button i { font-size: 16px; margin-right: 6px; vertical-align: middle; }
-.nav button.active { color: #A14B38; border-bottom: 2px solid #A14B38; }
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 600;
+  background: rgba(248, 244, 238, 0.88);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(161, 75, 56, 0.1);
+}
+
+.nav__row {
+  display: flex;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.nav__tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 6px 12px;
+  background: none;
+  border: none;
+  font-family: 'Outfit', sans-serif;
+  font-size: 8.5px;
+  font-weight: 300;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #806558;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s;
+}
+
+.nav__tab i {
+  font-size: 18px;
+}
+
+.nav__tab::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 12%;
+  right: 12%;
+  height: 1.5px;
+  background: #A14B38;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s;
+}
+
+.nav__tab.is-active {
+  color: #A14B38;
+}
+
+.nav__tab.is-active::after {
+  transform: scaleX(1);
+}
 
 /* Seções */
-.sec { max-width: 600px; margin: 0 auto; padding: 60px 24px; }
-.sec h2 { font-family: 'Cormorant', serif; font-size: 36px; font-weight: 300; margin-bottom: 30px; color: #1E1510; }
-.sec h2 i { font-style: italic; color: #A14B38; }
+.sec {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 72px 28px 80px;
+  position: relative;
+}
+
+.sec + .sec {
+  border-top: 1px solid rgba(161, 75, 56, 0.07);
+}
+
+.sec__tag {
+  font-family: 'Outfit', sans-serif;
+  font-size: 8px;
+  font-weight: 300;
+  letter-spacing: 0.36em;
+  text-transform: uppercase;
+  color: #A14B38;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.sec__tag i {
+  font-size: 12px;
+}
+
+.sec__h {
+  font-family: 'Cormorant', serif;
+  font-weight: 300;
+  font-size: clamp(36px, 9vw, 48px);
+  line-height: 1.06;
+  color: #1E1510;
+  margin-bottom: 36px;
+}
+
+.sec__h i {
+  font-style: italic;
+  color: #A14B38;
+}
 
 /* Timeline */
-.timeline-item { margin-bottom: 30px; padding-left: 30px; border-left: 1px solid rgba(161,75,56,0.2); position: relative; }
-.timeline-item .time { font-size: 12px; color: #A14B38; margin-bottom: 5px; }
-.timeline-item .title { font-family: 'Cormorant', serif; font-size: 20px; font-weight: 400; margin-bottom: 5px; }
-.timeline-item .desc { font-size: 14px; color: #806558; }
-.timeline-item::before { content: ''; position: absolute; left: -5px; top: 0; width: 9px; height: 9px; border-radius: 50%; background: #C9913A; border: 2px solid #F8F4EE; }
+.sched__pull {
+  font-family: 'Cormorant', serif;
+  font-style: italic;
+  font-size: 17px;
+  color: #806558;
+  border-left: 2px solid #C9913A;
+  padding-left: 18px;
+  margin-bottom: 48px;
+}
+
+.timeline {
+  position: relative;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 70px;
+  top: 10px;
+  bottom: 10px;
+  width: 1px;
+  background: linear-gradient(to bottom, rgba(201, 145, 58, 0.5), rgba(201, 145, 58, 0.06));
+}
+
+.tl-item {
+  display: grid;
+  grid-template-columns: 54px 32px 1fr;
+  padding-bottom: 38px;
+  position: relative;
+}
+
+.tl-item:last-child {
+  padding-bottom: 0;
+}
+
+.tl-time {
+  font-family: 'Cormorant', serif;
+  font-size: 12px;
+  color: #A14B38;
+  text-align: right;
+  padding-top: 2px;
+}
+
+.tl-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 4px;
+}
+
+.tl-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #C9913A;
+  border: 2px solid #F8F4EE;
+  outline: 1px solid #C9913A;
+  z-index: 1;
+}
+
+.tl-dot--accent {
+  background: #7A2A38;
+  outline-color: #7A2A38;
+}
+
+.tl-text {
+  padding-left: 14px;
+}
+
+.tl-name {
+  font-family: 'Cormorant', serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: #1E1510;
+  margin-bottom: 4px;
+}
+
+.tl-desc {
+  font-size: 13px;
+  color: #806558;
+}
 
 /* Menu */
-.menu-section { margin-bottom: 40px; }
-.menu-section h3 { font-size: 12px; letter-spacing: 3px; color: #A14B38; border-bottom: 1px solid rgba(161,75,56,0.2); padding-bottom: 8px; margin-bottom: 20px; text-transform: uppercase; }
-.menu-item { margin-bottom: 20px; }
-.menu-item .name { font-family: 'Cormorant', serif; font-size: 18px; font-weight: 400; margin-bottom: 4px; }
-.menu-item .desc { font-size: 13px; color: #806558; }
+.menu__intro {
+  font-family: 'Cormorant', serif;
+  font-style: italic;
+  font-size: 17px;
+  color: #806558;
+  margin-bottom: 48px;
+}
+
+.menu__chapter {
+  margin-bottom: 44px;
+}
+
+.menu__chapter:last-child {
+  margin-bottom: 0;
+}
+
+.menu__chapter-label {
+  font-size: 8px;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: #A14B38;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(161, 75, 56, 0.12);
+}
+
+.menu__dish {
+  padding: 13px 0;
+  border-bottom: 1px solid rgba(30, 21, 16, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.menu__dish:last-child {
+  border-bottom: none;
+}
+
+.menu__dish-name {
+  font-family: 'Cormorant', serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: #1E1510;
+}
+
+.menu__dish-desc {
+  font-size: 12.5px;
+  color: #806558;
+}
 
 /* Botão WhatsApp */
-.whatsapp-section { text-align: center; margin-top: 30px; margin-bottom: 20px; }
-.whatsapp-btn { display: inline-flex; align-items: center; justify-content: center; gap: 12px; background: #25D366; color: white; border: none; border-radius: 50px; padding: 16px 32px; font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 500; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; text-decoration: none; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); }
-.whatsapp-btn i { font-size: 24px; }
-.whatsapp-btn:hover { transform: scale(1.02); box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4); }
-.whatsapp-btn:active { transform: scale(0.98); }
+.whatsapp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: #25D366;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 16px 32px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  text-decoration: none;
+  box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+  margin-top: 20px;
+  width: 100%;
+}
 
-.whatsapp-note { font-size: 12px; color: #806558; margin-top: 12px; }
+.whatsapp-btn i {
+  font-size: 22px;
+}
 
-/* Toast */
-.toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1E1510; color: white; padding: 12px 24px; border-radius: 50px; font-size: 13px; opacity: 0; transition: opacity 0.3s; z-index: 10000; pointer-events: none; white-space: nowrap; }
-.toast.show { opacity: 1; }
+.whatsapp-btn:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+}
+
+.whatsapp-btn:active {
+  transform: scale(0.98);
+}
+
+.whatsapp-note {
+  font-size: 12px;
+  color: #806558;
+  margin-top: 12px;
+  text-align: center;
+}
+
+.album__statement {
+  font-family: 'Cormorant', serif;
+  font-style: italic;
+  font-size: clamp(26px, 7vw, 36px);
+  line-height: 1.2;
+  color: #1E1510;
+  margin-bottom: 16px;
+}
+
+.album__statement span {
+  color: #A14B38;
+}
+
+.album__body {
+  font-size: 14px;
+  color: #806558;
+  line-height: 1.82;
+  max-width: 320px;
+  margin-bottom: 36px;
+}
 
 /* Footer */
-.footer { text-align: center; padding: 60px 24px 40px; border-top: 1px solid rgba(161,75,56,0.1); }
-.footer .monogram { font-family: 'Cormorant', serif; font-size: 28px; font-style: italic; color: #C9913A; margin-bottom: 12px; }
-.footer .date { font-size: 10px; letter-spacing: 3px; color: #806558; }
+.footer {
+  text-align: center;
+  padding: 52px 24px 72px;
+  border-top: 1px solid rgba(161, 75, 56, 0.07);
+}
+
+.footer__mono {
+  font-family: 'Cormorant', serif;
+  font-style: italic;
+  font-size: 28px;
+  font-weight: 300;
+  color: #C9913A;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+}
+
+.footer__line {
+  font-size: 9px;
+  font-weight: 300;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #806558;
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1E1510;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-size: 13px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 10000;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.toast.show {
+  opacity: 1;
+}
+
+/* Animações */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes breathe {
+  0%, 100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: none;
+}
 </style>
 </head>
 <body>
 
+<!-- HERO - VERSÃO ORIGINAL COM SVG BOTÂNICO -->
 <div class="hero">
-  <div>
-    <h1>Lauane<br><span>&</span>Carolina</h1>
-    <div class="date">28 · MARÇO · 2026</div>
+  <div class="hero__orbit"></div>
+  <div class="hero__orbit-2"></div>
+
+  <svg class="hero__botanical" viewBox="0 0 440 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M165 298 C159 254 148 218 124 193 C102 171 74 153 44 138 C32 132 18 125 8 116" stroke="#A14B38" stroke-width="1.15" fill="none" stroke-linecap="round"/>
+    <path d="M124 193 C108 185 86 172 64 158" stroke="#A14B38" stroke-width=".85" fill="none" stroke-linecap="round"/>
+    <path d="M144 244 C126 235 104 220 86 205" stroke="#A14B38" stroke-width=".75" fill="none" stroke-linecap="round"/>
+    <ellipse cx="78" cy="163" rx="16" ry="5.5" transform="rotate(-40 78 163)" fill="#5C2A18" opacity=".20"/>
+    <ellipse cx="56" cy="150" rx="13" ry="4.5" transform="rotate(-55 56 150)" fill="#5C2A18" opacity=".17"/>
+    <ellipse cx="100" cy="183" rx="17" ry="5.2" transform="rotate(-26 100 183)" fill="#5C2A18" opacity=".19"/>
+    <ellipse cx="82" cy="207" rx="14" ry="4.8" transform="rotate(12 82 207)" fill="#5C2A18" opacity=".15"/>
+    <g transform="translate(44,138)">
+      <path d="M0-7.5 C4.5-4 4.5 4 0 0" fill="rgba(201,145,58,.2)" stroke="#C9913A" stroke-width=".5" stroke-linecap="round"/>
+      <path d="M0 7.5 C-4.5 4-4.5-4 0 0" fill="rgba(201,145,58,.2)" stroke="#C9913A" stroke-width=".5" stroke-linecap="round"/>
+      <path d="M-7.5 0 C-4 4.5 4 4.5 0 0" fill="rgba(201,145,58,.16)" stroke="#C9913A" stroke-width=".5" stroke-linecap="round"/>
+      <path d="M7.5 0 C4-4.5-4-4.5 0 0" fill="rgba(201,145,58,.16)" stroke="#C9913A" stroke-width=".5" stroke-linecap="round"/>
+      <circle cx="0" cy="0" r="2.8" fill="#A14B38" opacity=".88"/>
+    </g>
+    <g transform="translate(64,158)">
+      <circle cx="0" cy="0" r="6" fill="#7A2A38" opacity=".28"/>
+      <circle cx="0" cy="0" r="2.5" fill="#A14B38" opacity=".7"/>
+    </g>
+    <g transform="translate(86,205)">
+      <path d="M0-5.5 C3-3 3 3 0 0" fill="rgba(201,145,58,.18)" stroke="#C9913A" stroke-width=".5" stroke-linecap="round"/>
+      <path d="M0 5.5 C-3 3-3-3 0 0" fill="rgba(201,145,58,.18)" stroke="#C9913A" stroke-width=".5" stroke-linecap="round"/>
+      <path d="M-5.5 0 C-3 3 3 3 0 0" fill="rgba(201,145,58,.14)" stroke="#C9913A" stroke-width=".5" stroke-linecap="round"/>
+      <path d="M5.5 0 C3-3-3-3 0 0" fill="rgba(201,145,58,.14)" stroke="#C9913A" stroke-width=".5" stroke-linecap="round"/>
+      <circle cx="0" cy="0" r="2" fill="#A14B38" opacity=".8"/>
+    </g>
+    <path d="M220 298 C220 252 220 206 220 158 C220 110 220 68 220 26" stroke="#A14B38" stroke-width="1.15" fill="none" stroke-linecap="round"/>
+    <path d="M220 162 C204 150 192 136 186 118" stroke="#A14B38" stroke-width=".8" fill="none" stroke-linecap="round"/>
+    <path d="M220 122 C236 110 246 96 250 78" stroke="#A14B38" stroke-width=".8" fill="none" stroke-linecap="round"/>
+    <ellipse cx="202" cy="102" rx="14" ry="5" transform="rotate(-34 202 102)" fill="#5C2A18" opacity=".17"/>
+    <ellipse cx="238" cy="90" rx="14" ry="4.8" transform="rotate(32 238 90)" fill="#5C2A18" opacity=".17"/>
+    <g transform="translate(220,26)">
+      <path d="M0-9 C5.5-5 5.5 5 0 0" fill="rgba(201,145,58,.24)" stroke="#C9913A" stroke-width=".55" stroke-linecap="round"/>
+      <path d="M0 9 C-5.5 5-5.5-5 0 0" fill="rgba(201,145,58,.24)" stroke="#C9913A" stroke-width=".55" stroke-linecap="round"/>
+      <path d="M-9 0 C-5 5.5 5 5.5 0 0" fill="rgba(201,145,58,.2)" stroke="#C9913A" stroke-width=".55" stroke-linecap="round"/>
+      <path d="M9 0 C5-5.5-5-5.5 0 0" fill="rgba(201,145,58,.2)" stroke="#C9913A" stroke-width=".55" stroke-linecap="round"/>
+      <circle cx="0" cy="0" r="3.5" fill="#A14B38" opacity=".9"/>
+    </g>
+    <g transform="translate(186,118)">
+      <path d="M0-6 C3.5-3.5 3.5 3.5 0 0" fill="rgba(201,145,58,.2)" stroke="#C9913A" stroke-width=".5" stroke-linecap="round"/>
+      <path d="M0 6 C-3.5 3.5-3.5-3.5 0 0" fill="rgba(201,145,58,.2)" stroke="#C9913A" stroke-width=".5" stroke-linecap="round"/>
+      <path d="M-6 0 C-3.5 3.5 3.5 3.5 0 0" fill="rgba(201,145,58,.16)" stroke="#C9913A" stroke-width=".5" stroke-linecap="round"/>
+      <path d="M6 0 C3.5-3.5-3.5-3.5 0 0" fill="rgba(201,145,58,.16)" stroke="#C9913A" stroke-width=".5" stroke-linecap="round"/>
+      <circle cx="0" cy="0" r="2.3" fill="#A14B38" opacity=".85"/>
+    </g>
+    <circle cx="220" cy="58" r="4.5" fill="#7A2A38" opacity=".3"/>
+    <path d="M275 298 C281 254 292 218 316 193 C338 171 366 153 396 138 C408 132 422 125 432 116" stroke="#A14B38" stroke-width="1.15" fill="none" stroke-linecap="round"/>
+    <path d="M316 193 C332 185 354 172 376 158" stroke="#A14B38" stroke-width=".85" fill="none" stroke-linecap="round"/>
+    <path d="M296 244 C314 235 336 220 354 205" stroke="#A14B38" stroke-width=".75" fill="none" stroke-linecap="round"/>
+    <ellipse cx="362" cy="163" rx="16" ry="5.5" transform="rotate(40 362 163)" fill="#5C2A18" opacity=".20"/>
+    <ellipse cx="384" cy="150" rx="13" ry="4.5" transform="rotate(55 384 150)" fill="#5C2A18" opacity=".17"/>
+    <ellipse cx="340" cy="183" rx="17" ry="5.2" transform="rotate(26 340 183)" fill="#5C2A18" opacity=".19"/>
+    <ellipse cx="358" cy="207" rx="14" ry="4.8" transform="rotate(-12 358 207)" fill="#5C2A18" opacity=".15"/>
+    <g transform="translate(396,138)">
+      <path d="M0-7.5 C4.5-4 4.5 4 0 0" fill="rgba(201,145,58,.2)" stroke="#C9913A" stroke-width=".5" stroke-linecap="round"/>
+      <path d="M0 7.5 C-4.5 4-4.5-4 0 0" fill="rgba(201,145,58,.2)" stroke="#C9913A" stroke-width=".5" stroke-linecap="round"/>
+      <path d="M-7.5 0 C-4 4.5 4 4.5 0 0" fill="rgba(201,145,58,.16)" stroke="#C9913A" stroke-width=".5" stroke-linecap="round"/>
+      <path d="M7.5 0 C4-4.5-4-4.5 0 0" fill="rgba(201,145,58,.16)" stroke="#C9913A" stroke-width=".5" stroke-linecap="round"/>
+      <circle cx="0" cy="0" r="2.8" fill="#A14B38" opacity=".88"/>
+    </g>
+    <g transform="translate(376,158)">
+      <circle cx="0" cy="0" r="6" fill="#7A2A38" opacity=".28"/>
+      <circle cx="0" cy="0" r="2.5" fill="#A14B38" opacity=".7"/>
+    </g>
+    <g transform="translate(354,205)">
+      <path d="M0-5.5 C3-3 3 3 0 0" fill="rgba(201,145,58,.18)" stroke="#C9913A" stroke-width=".5" stroke-linecap="round"/>
+      <path d="M0 5.5 C-3 3-3-3 0 0" fill="rgba(201,145,58,.18)" stroke="#C9913A" stroke-width=".5" stroke-linecap="round"/>
+      <path d="M-5.5 0 C-3 3 3 3 0 0" fill="rgba(201,145,58,.14)" stroke="#C9913A" stroke-width=".5" stroke-linecap="round"/>
+      <path d="M5.5 0 C3-3-3-3 0 0" fill="rgba(201,145,58,.14)" stroke="#C9913A" stroke-width=".5" stroke-linecap="round"/>
+      <circle cx="0" cy="0" r="2" fill="#A14B38" opacity=".8"/>
+    </g>
+    <circle cx="220" cy="60" r="4.5" fill="#7A2A38" opacity=".3"/>
+  </svg>
+
+  <div class="hero__body">
+    <p class="hero__occasion">Celebração de Casamento</p>
+    <h1 class="hero__names">Lauane<span class="hero__connector">&amp;</span>Carolina</h1>
+    <div class="hero__line"></div>
+    <p class="hero__date">28 · Março · 2026 · São Paulo</p>
+    <p class="hero__poem">Amore, vino e una vita insieme.</p>
+  </div>
+  <div class="hero__cue" onclick="document.querySelector('.nav').scrollIntoView({behavior:'smooth'})">
+    <div class="hero__cue-stem"></div>
+    <span class="hero__cue-label">Explorar</span>
   </div>
 </div>
 
-<nav class="nav">
-  <button data-sec="cronograma" class="active"><i class="bi bi-calendar3"></i> Cronograma</button>
-  <button data-sec="cardapio"><i class="bi bi-cup-hot"></i> Cardápio</button>
-  <button data-sec="fotos"><i class="bi bi-camera"></i> Fotos</button>
+<!-- NAV -->
+<nav class="nav" id="main-nav">
+  <div class="nav__row">
+    <button class="nav__tab is-active" data-sec="cronograma"><i class="bi bi-hourglass-split"></i>Cronograma</button>
+    <button class="nav__tab" data-sec="cardapio"><i class="bi bi-bookmark"></i>Cardápio</button>
+    <button class="nav__tab" data-sec="album"><i class="bi bi-camera"></i>Fotos</button>
+  </div>
 </nav>
 
 <!-- CRONOGRAMA -->
-<section id="cronograma" class="sec">
-  <h2>O dia mais <i>especial</i></h2>
-  <div class="timeline-item"><div class="time">11h30</div><div class="title">Chegada & Aperitivos</div><div class="desc">Recepção com aperitivos de boas-vindas no jardim</div></div>
-  <div class="timeline-item"><div class="time">12h30</div><div class="title">Cerimônia</div><div class="desc">Troca de votos</div></div>
-  <div class="timeline-item"><div class="time">13h30</div><div class="title">Almoço e Brindes de Celebração</div><div class="desc">Com brinde e muita alegria</div></div>
-  <div class="timeline-item"><div class="time">14h30</div><div class="title">Pista de Dança</div><div class="desc">DJ comanda a pista e open bar</div></div>
-  <div class="timeline-item"><div class="time">17h00</div><div class="title">Corte do Bolo</div><div class="desc">Momento mais doce da festa</div></div>
+<section class="sec" id="cronograma">
+  <p class="sec__tag reveal"><i class="bi bi-calendar3"></i>Programação do dia</p>
+  <h2 class="sec__h reveal">O dia mais<br><i>especial</i></h2>
+  <blockquote class="sched__pull reveal">Cada momento foi pensado para que vocês vivam isso conosco de perto.</blockquote>
+  <div class="timeline">
+    <div class="tl-item reveal"><div class="tl-time">11h30</div><div class="tl-node"><div class="tl-dot"></div></div><div class="tl-text"><div class="tl-name">Chegada &amp; Aperitivos</div><div class="tl-desc">Recepção com aperitivos de boas-vindas no jardim</div></div></div>
+    <div class="tl-item reveal"><div class="tl-time">12h30</div><div class="tl-node"><div class="tl-dot"></div></div><div class="tl-text"><div class="tl-name">Cerimônia</div><div class="tl-desc">Troca de votos</div></div></div>
+    <div class="tl-item reveal"><div class="tl-time">13h30</div><div class="tl-node"><div class="tl-dot"></div></div><div class="tl-text"><div class="tl-name">Almoço e Brindes de Celebração</div><div class="tl-desc">Com brinde e muita alegria</div></div></div>
+    <div class="tl-item reveal"><div class="tl-time">14h30</div><div class="tl-node"><div class="tl-dot"></div></div><div class="tl-text"><div class="tl-name">Pista de Dança</div><div class="tl-desc">DJ comanda a pista e open bar</div></div></div>
+    <div class="tl-item reveal"><div class="tl-time">17h00</div><div class="tl-node"><div class="tl-dot tl-dot--accent"></div></div><div class="tl-text"><div class="tl-name">Corte do Bolo</div><div class="tl-desc">Momento mais doce da festa</div></div></div>
+  </div>
 </section>
 
 <!-- CARDÁPIO -->
-<section id="cardapio" class="sec">
-  <h2>Sabores <i>do amor</i></h2>
+<section class="sec" id="cardapio">
+  <p class="sec__tag reveal"><i class="bi bi-cup-hot"></i>Mesa posta</p>
+  <h2 class="sec__h reveal">Sabores<br><i>do amor</i></h2>
+  <p class="menu__intro reveal">Uma refeição pensada com cuidado, para celebrar com quem amamos.</p>
   
-  <div class="menu-section"><h3>Aperitivos</h3>
-    <div class="menu-item"><div class="name">Sanduíches de Pães Artesanais</div><div class="desc">Beterraba com patê de atum, cenoura e brócolis com patê de frango, trigo com queijo</div></div>
-    <div class="menu-item"><div class="name">Patês</div><div class="desc">Azeitona preta e frango com ervas</div></div>
+  <div class="menu__chapter reveal">
+    <div class="menu__chapter-label">Aperitivos</div>
+    <div class="menu__dish"><div class="menu__dish-name">Sanduíches de Pães Artesanais</div><div class="menu__dish-desc">Beterraba com patê de atum, cenoura e brócolis com patê de frango, trigo com queijo</div></div>
+    <div class="menu__dish"><div class="menu__dish-name">Patês</div><div class="menu__dish-desc">Azeitona preta e frango com ervas</div></div>
   </div>
   
-  <div class="menu-section"><h3>Almoço</h3>
-    <div class="menu-item"><div class="name">Saladas Especiais</div><div class="desc">Mix de folhas, tomate cereja, palmito</div></div>
-    <div class="menu-item"><div class="name">Salada Marroquina</div><div class="desc">Cebola, alho, currt, gengibre, vinagre, mel e azeite</div></div>
-    <div class="menu-item"><div class="name">Salada de Abobrinha</div><div class="desc">Abobrinha, tomate, limão, alho, salsinha, azeite e azeitonas</div></div>
-    <div class="menu-item"><div class="name">Massas Caseiras das Noivas</div><div class="desc">Talharim, raviolli de queijo, raviolli de ricota e capeletti com molhos ao sugo, bechamel ou bolonhesa</div></div>
-    <div class="menu-item"><div class="name">Carnes</div><div class="desc">Fraudinha e frango grelhado na churrasqueira</div></div>
+  <div class="menu__chapter reveal">
+    <div class="menu__chapter-label">Almoço</div>
+    <div class="menu__dish"><div class="menu__dish-name">Saladas Especiais</div><div class="menu__dish-desc">Mix de folhas, tomate cereja, palmito</div></div>
+    <div class="menu__dish"><div class="menu__dish-name">Salada Marroquina</div><div class="menu__dish-desc">Cebola, alho, currt, gengibre, vinagre, mel e azeite</div></div>
+    <div class="menu__dish"><div class="menu__dish-name">Salada de Abobrinha</div><div class="menu__dish-desc">Abobrinha, tomate, limão, alho, salsinha, azeite e azeitonas</div></div>
+    <div class="menu__dish"><div class="menu__dish-name">Massas Caseiras das Noivas</div><div class="menu__dish-desc">Talharim, raviolli de queijo, raviolli de ricota e capeletti com molhos ao sugo, bechamel ou bolonhesa</div></div>
+    <div class="menu__dish"><div class="menu__dish-name">Carnes</div><div class="menu__dish-desc">Fraudinha e frango grelhado na churrasqueira</div></div>
   </div>
   
-  <div class="menu-section"><h3>Bebidas</h3>
-    <div class="menu-item"><div class="name">Cervejas</div><div class="desc">Nacionais e internacionais (com e sem álcool)</div></div>
-    <div class="menu-item"><div class="name">Sangria & Caipirinha</div><div class="desc">Sangria de vinho branco com frutas e Caipirinha de cachaça com limão</div></div>
-    <div class="menu-item"><div class="name">Sucos & Refrigerantes</div><div class="desc">Laranja natural, uva, abacaxi, Coca-Cola, Guaraná, Fanta</div></div>
+  <div class="menu__chapter reveal">
+    <div class="menu__chapter-label">Bebidas</div>
+    <div class="menu__dish"><div class="menu__dish-name">Cervejas</div><div class="menu__dish-desc">Nacionais e internacionais (com e sem álcool)</div></div>
+    <div class="menu__dish"><div class="menu__dish-name">Sangria & Caipirinha</div><div class="menu__dish-desc">Sangria de vinho branco com frutas e Caipirinha de cachaça com limão</div></div>
+    <div class="menu__dish"><div class="menu__dish-name">Sucos & Refrigerantes</div><div class="menu__dish-desc">Laranja natural, uva, abacaxi, Coca-Cola, Guaraná, Fanta</div></div>
   </div>
   
-  <div class="menu-section"><h3>Sobremesa</h3>
-    <div class="menu-item"><div class="name">Bolo de Casamento</div><div class="desc">Chocolate com recheio de ganache e branco com recheio de nozes</div></div>
-    <div class="menu-item"><div class="name">Mesa de Doces</div><div class="desc">Trufas, barquinha recheada, brigadeiros gourmet</div></div>
-    <div class="menu-item"><div class="name">Frutas</div><div class="desc">Frutas da estação</div></div>
+  <div class="menu__chapter reveal">
+    <div class="menu__chapter-label">Sobremesa</div>
+    <div class="menu__dish"><div class="menu__dish-name">Bolo de Casamento</div><div class="menu__dish-desc">Chocolate com recheio de ganache e branco com recheio de nozes</div></div>
+    <div class="menu__dish"><div class="menu__dish-name">Mesa de Doces</div><div class="menu__dish-desc">Trufas, barquinha recheada, brigadeiros gourmet</div></div>
+    <div class="menu__dish"><div class="menu__dish-name">Frutas</div><div class="menu__dish-desc">Frutas da estação</div></div>
   </div>
 </section>
 
 <!-- FOTOS - GRUPO WHATSAPP -->
-<section id="fotos" class="sec">
-  <h2>Compartilhe seus <i>registros</i></h2>
-  <p style="color: #806558; margin-bottom: 30px;">Queremos ver todos os momentos especiais através do seu olhar. Participe do nosso grupo e compartilhe suas fotos!</p>
+<section class="sec" id="album">
+  <p class="sec__tag reveal"><i class="bi bi-images"></i>Memórias coletivas</p>
+  <h2 class="album__statement reveal">Registre esse momento<br><span>com a gente</span></h2>
+  <p class="album__body reveal">Queremos ver todos os momentos especiais através do seu olhar. Participe do nosso grupo e compartilhe suas fotos!</p>
   
-  <div class="whatsapp-section">
-    <a href="https://chat.whatsapp.com/J5mA223J67Y9IYyqFX7nWl?mode=gi_t" target="_blank" class="whatsapp-btn" id="whatsappBtn">
+  <div class="reveal">
+    <a href="https://chat.whatsapp.com/EWKpXYittyy7PDjS5q6MZn" target="_blank" class="whatsapp-btn">
       <i class="bi bi-whatsapp"></i>
       Participar do Grupo de Fotos
     </a>
@@ -136,22 +734,25 @@ body { background: #F8F4EE; font-family: 'Outfit', sans-serif; color: #1E1510; f
     </p>
   </div>
   
-  <div style="margin-top: 40px; text-align: center; padding: 30px; background: #EFE7D8; border-radius: 20px;">
-    <i class="bi bi-images" style="font-size: 48px; color: #A14B38; margin-bottom: 16px; display: block;"></i>
-    <h3 style="font-family: 'Cormorant', serif; font-size: 20px; margin-bottom: 12px;">Galeria Coletiva</h3>
-    <p style="font-size: 14px; color: #806558;">Todas as fotos enviadas no grupo serão reunidas aqui após o evento.</p>
+  <div class="reveal" style="margin-top: 48px;">
+    <div style="background: #EFE7D8; border-radius: 20px; padding: 32px 24px; text-align: center;">
+      <i class="bi bi-images" style="font-size: 48px; color: #A14B38; margin-bottom: 16px; display: block;"></i>
+      <h3 style="font-family: 'Cormorant', serif; font-size: 22px; font-weight: 400; margin-bottom: 12px;">Galeria Coletiva</h3>
+      <p style="font-size: 13px; color: #806558;">Todas as fotos enviadas no grupo serão reunidas aqui após o evento.</p>
+    </div>
   </div>
 </section>
 
+<!-- FOOTER -->
 <footer class="footer">
-  <div class="monogram">L & C</div>
-  <div class="date">28 · 03 · 2026</div>
+  <div class="footer__mono">L &amp; C</div>
+  <p class="footer__line">28 · 03 · 2026</p>
 </footer>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// Toast de notificação
+// Toast
 function toast(msg, isError = false) {
   const el = document.getElementById('toast');
   el.textContent = msg;
@@ -160,22 +761,46 @@ function toast(msg, isError = false) {
 }
 
 // Navegação
-document.querySelectorAll('.nav button').forEach(btn => {
-  btn.onclick = () => {
-    document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const sec = document.getElementById(btn.dataset.sec);
-    if (sec) sec.scrollIntoView({ behavior: 'smooth' });
-  };
+function navTo(btn) {
+  document.querySelectorAll('.nav__tab').forEach(t => t.classList.remove('is-active'));
+  btn.classList.add('is-active');
+  const sec = document.getElementById(btn.dataset.sec);
+  if (!sec) return;
+  const navH = document.getElementById('main-nav').offsetHeight + 16;
+  window.scrollTo({ top: sec.getBoundingClientRect().top + window.scrollY - navH, behavior: 'smooth' });
+}
+
+// Eventos de navegação
+document.querySelectorAll('.nav__tab').forEach(btn => {
+  btn.onclick = () => navTo(btn);
 });
 
-// Ao clicar no botão do WhatsApp
-document.getElementById('whatsappBtn')?.addEventListener('click', () => {
-  toast('📸 Você será redirecionado para o grupo! Compartilhe suas fotos!');
+// Scroll spy
+const nav = document.getElementById('main-nav');
+const spy = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      document.querySelectorAll('.nav__tab').forEach(t => {
+        t.classList.toggle('is-active', t.dataset.sec === e.target.id);
+      });
+    }
+  });
+}, { rootMargin: `-${nav.offsetHeight + 24}px 0px -58% 0px` });
+
+['cronograma', 'cardapio', 'album'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) spy.observe(el);
 });
+
+// Reveal animation
+const revObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.06 });
+
+document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
 
 // Mensagem de boas-vindas
-toast('💕 Bem-vindos ao nosso casamento! Participe do grupo e compartilhe suas fotos.', false);
+toast('💕 Bem-vindos ao nosso casamento! Participe do grupo e compartilhe suas fotos.');
 </script>
 </body>
 </html>
